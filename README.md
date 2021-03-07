@@ -8,6 +8,14 @@ use Tivins\Database\Connectors\MySQLConnector;
 
 $connector = new MySQLConnector('dbname', 'user', 'password');
 $db = new Database($connector);
+
+$users = $db->select('posts', 'p')
+    ->leftJoin('users', 'u', 'p.author_id = u.id')
+    ->fields('p')
+    ->addField('u', 'name', 'author_name')
+    ->execute()
+    ->fetchAll();
+
 ```
 
 ## Usage
