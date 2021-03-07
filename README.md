@@ -1,6 +1,30 @@
 # A PDO Wrapper
 
+## Example
+
+```php
+use Tivins\Database\Database;
+use Tivins\Database\Connectors\MySQLConnector;
+
+$connector = new MySQLConnector('dbname', 'user', 'password');
+$db = new Database($connector);
+```
+
 ## Usage
+
+### Connectors
+
+MySQL
+```php
+$connector = new MySQLConnector('dbname', 'user', 'password');
+$db = new Database($connector);
+```
+
+SQLite
+```php
+$connector = new SQLiteConnector('path/to/file');
+$db = new Database($connector);
+```
 
 ### Create queries
 
@@ -8,7 +32,7 @@ Both usages below are valid:
 
 ```php
 // from database object
-$query = $db->select('users', 'u');
+$query = $db->select('users', 'u'); // recommanded
 // from new object
 $query = new SelectQuery($db, 'users', 'u');
 ```
@@ -24,7 +48,7 @@ $db->select('books', 'b')
     ->fetchAll();
 ```
 
-**Join** Use as well `innerJoin`, `leftJoin`.
+**Join** (use as well `innerJoin`, `leftJoin`).
 ```php
 $db->select('books', 'b')
     ->addFields('b', ['id', 'title'])
@@ -73,13 +97,3 @@ $db->merge('book')
     ->execute();
 ```
 
-## Connectors
-
-```php
-$connector = new MySQLConnector('dbname', 'user', 'password');
-$db = new Database($connector);
-```
-```php
-$connector = new SQLiteConnector('path/to/file');
-$db = new Database($connector);
-```
