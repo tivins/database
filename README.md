@@ -1,5 +1,7 @@
 # A PDO Wrapper
 
+* Requires PHP 8.0 to run
+
 ## Example
 
 ```php
