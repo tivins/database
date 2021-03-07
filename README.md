@@ -1,8 +1,8 @@
-#An easy to use PDO Wrapper
+# A PDO Wrapper
 
 ## Usage
 
-## Create queries
+### Create queries
 
 Both usages below are valid:
 
