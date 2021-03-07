@@ -1,12 +1,6 @@
 {
     "name": "tivins/database",
     "description": "PDO wrapper",
-    "authors": [
-        {
-            "name": "Tivins",
-            "email": "tivins@elabo.fr"
-        }
-    ],
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
