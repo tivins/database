@@ -12,6 +12,9 @@ class Statement
     )
     {}
 
+    public function rowCount(): int {
+        return $this->statement->rowCount();
+    }
     public function fetchAll(): array {
         return $this->statement->fetchAll();
     }
