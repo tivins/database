@@ -11,6 +11,7 @@ class SelectQuery extends Query
     private array $orders = [];
     private array $placeholders = [];
     private array $limits = [];
+    private string $groupByExp;
 
     public function __construct(Database $db, string $tableName, string $tableAlias)
     {
@@ -77,6 +78,14 @@ class SelectQuery extends Query
         $this->orders[] = "$field $dir";
         return $this;
     }
+    /**
+     *
+     */
+    public function groupBy($exp)
+    {
+        $this->groupByExp = $exp;
+        return $this;
+    }
 
     /**
      *
@@ -112,14 +121,18 @@ class SelectQuery extends Query
         list($condSql, $condArgs) = $this->buildConditions();
         $args = array_merge($args, $condArgs);
         $order = '';
+        $group = '';
         if (!empty($this->orders)) {
             $order .= 'order by ' . implode(', ', $this->orders);
+        }
+        if (!empty($this->groupByExp)) {
+            $group .= 'group by ' . $this->groupByExp;
         }
         $limits = '';
         if (!empty($this->limits)) {
             $limits = 'limit ' . join(',', $this->limits);
         }
-        $sql  = "select {$what} from {$from} {$joins} {$condSql} {$order} {$limits}";
+        $sql  = "select {$what} from {$from} {$joins} {$condSql} {$group} {$order} {$limits}";
         return [$sql, $args];
     }
 }
