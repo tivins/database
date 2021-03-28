@@ -20,6 +20,17 @@ $users = $db->select('posts', 'p')
 
 ```
 
+## Summary
+
+* [Connectors](#connectors)
+* [Select query](#select-query)
+    * [Join](#join)
+    * [Expression](#expression)
+    * [Group by](#group-by)
+* [Insert query](#insert-query)
+* [Update query](#update-query)
+* [Merge query](#merge-query)
+
 ## Usage
 
 ### Connectors
@@ -77,6 +88,16 @@ $db->select('books', 'b')
     ->condition('b.reserved', 0)
     ->execute()
     ->fetchAll();
+```
+
+**Group by**
+```php
+$tagsQuery = App::db()->select('tags', 't')
+    ->innerJoin('book_tags', 'bt', 'bt.tag_id = t.id')
+    ->addFields('t')
+    ->addExpression('count(bt.book_id)', 'books_count')
+    ->groupBy('t.id')
+    ->orderBy('t.name', 'asc');
 ```
 
 ### Insert query
