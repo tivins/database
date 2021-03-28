@@ -8,8 +8,7 @@
 use Tivins\Database\Database;
 use Tivins\Database\Connectors\MySQLConnector;
 
-$connector = new MySQLConnector('dbname', 'user', 'password');
-$db = new Database($connector);
+$db = new Database(new MySQLConnector('dbname', 'user', 'password', 'localhost'));
 
 $users = $db->select('posts', 'p')
     ->leftJoin('users', 'u', 'p.author_id = u.id')
@@ -24,9 +23,6 @@ $users = $db->select('posts', 'p')
 
 * [Connectors](#connectors)
 * [Select query](#select-query)
-    * [Join](#join)
-    * [Expression](#expression)
-    * [Group by](#group-by)
 * [Insert query](#insert-query)
 * [Update query](#update-query)
 * [Merge query](#merge-query)
@@ -35,16 +31,13 @@ $users = $db->select('posts', 'p')
 
 ### Connectors
 
-MySQL
-```php
-$connector = new MySQLConnector('dbname', 'user', 'password');
-$db = new Database($connector);
-```
+Create a `Database` instance require a valid `Connector`.
 
-SQLite
 ```php
+# MySQL
+$connector = new MySQLConnector('dbname', 'user', 'password');
+# SQLite
 $connector = new SQLiteConnector('path/to/file');
-$db = new Database($connector);
 ```
 
 ### Create queries
@@ -53,7 +46,7 @@ Both usages below are valid:
 
 ```php
 // from database object
-$query = $db->select('users', 'u'); // recommanded
+$query = $db->select('users', 'u');
 // from new object
 $query = new SelectQuery($db, 'users', 'u');
 ```
@@ -63,7 +56,7 @@ $query = new SelectQuery($db, 'users', 'u');
 **Basic**
 ```php
 $db->select('books', 'b')
-    ->addField('b', 'title')
+    ->addFields('b')
     ->condition('b.reserved', 0)
     ->execute()
     ->fetchAll();
