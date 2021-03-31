@@ -60,7 +60,9 @@ class Conditions
      */
     public function buildConditions()
     {
-        if (empty($this->conditions)) return['', []];
+        if (empty($this->conditions) &&
+            empty($this->nestedConds))
+            return['', []];
 
         $query = implode(' ' . $this->mode . ' ', array_column($this->conditions, 'cond'));
         if ($this->mode == self::MODE_OR) $query = "($query)";
