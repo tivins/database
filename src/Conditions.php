@@ -71,7 +71,7 @@ class Conditions
         foreach ($this->nestedConds as $nestedConds) {
             list($subquery, $subparameters) = $nestedConds->buildConditions();
             if (!empty($subquery)) {
-                $query .= ' ' . $this->mode . ' ' . $subquery;
+                $query .= (empty($query) ? '' : ' ' . $this->mode . ' ') . $subquery;
                 $parameters = array_merge($parameters, $subparameters);
             }
         }
