@@ -26,6 +26,7 @@ $users = $db->select('posts', 'p')
 * [Insert query](#insert-query)
 * [Update query](#update-query)
 * [Merge query](#merge-query)
+* [Nested conditions](#nested-conditions)
 
 ## Usage
 
