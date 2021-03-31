@@ -7,7 +7,17 @@ namespace Tivins\Database;
  */
 class Conditions
 {
-    protected array $conditions;
+    const MODE_AND = 'and';
+    const MODE_OR  = 'or';
+
+    protected array $conditions = [];
+    protected array $nestedConds = [];
+    protected string $mode = self::MODE_AND;
+
+    public function __construct(string $mode = self::MODE_AND)
+    {
+        $this->mode = $mode;
+    }
 
     /**
      *
@@ -31,8 +41,13 @@ class Conditions
     /**
      *
      */
-    public function condition($field, $value, $operator = '=')
+    public function condition($field, $value = null, $operator = '=')
     {
+        if ($field instanceof Conditions) {
+            $this->nestedConds[] = $field;
+            return $this;
+        }
+
         if ($operator == 'in') return $this->whereIn($field, $value);
         if ($operator == 'like') return $this->like($field, $value);
         if (!in_array($operator, ['<','<=','=','!=','>=','>'])) throw new Exception('Invalid operator');
@@ -47,8 +62,18 @@ class Conditions
     {
         if (empty($this->conditions)) return['', []];
 
-        $query = 'where ' . implode(' and ', array_column($this->conditions, 'cond'));
+        $query = implode(' ' . $this->mode . ' ', array_column($this->conditions, 'cond'));
+        if ($this->mode == self::MODE_OR) $query = "($query)";
         $parameters = array_flatten(array_column($this->conditions, 'data'));
+
+        foreach ($this->nestedConds as $nestedConds) {
+            list($subquery, $subparameters) = $nestedConds->buildConditions();
+            if (!empty($subquery)) {
+                $query .= ' ' . $this->mode . ' ' . $subquery;
+                $parameters = array_merge($parameters, $subparameters);
+            }
+        }
+
         return [$query, $parameters];
     }
 

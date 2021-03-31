@@ -119,6 +119,7 @@ class SelectQuery extends Query
         $from = "{$this->tableName} {$this->tableAlias}";
         $joins = implode('', $this->joins);
         list($condSql, $condArgs) = $this->buildConditions();
+        if (!empty($condSql)) $condSql = "where $condSql";
         $args = array_merge($args, $condArgs);
         $order = '';
         $group = '';

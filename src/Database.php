@@ -116,6 +116,14 @@ class Database
     }
 
     /**
+     *
+     */
+    public function or(): Conditions
+    {
+        return new Conditions(Conditions::MODE_OR);
+    }
+
+    /**
      * Wrappers
      */
     public function transaction()
