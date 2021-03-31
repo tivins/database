@@ -26,6 +26,7 @@ $users = $db->select('posts', 'p')
 * [Insert query](#insert-query)
 * [Update query](#update-query)
 * [Merge query](#merge-query)
+* [Nested conditions](#nested-conditions)
 
 ## Usage
 
@@ -121,3 +122,17 @@ $db->merge('book')
     ->execute();
 ```
 
+### Nested conditions
+
+Conditions are available for `SelectQuery`, `UpdateQuery` and `DeleteQuery`.
+
+```php
+$db->select('book', 'b')
+    ->fields('b', ['id', 'title', 'author'])
+    ->condition(
+        $db->or()
+        ->condition('id', 3, '>')
+        ->condition('title', '%php%', 'like')
+    )
+    ->execute();
+```
