@@ -10,5 +10,7 @@
             "src/functions.php"
         ]
     },
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
 }

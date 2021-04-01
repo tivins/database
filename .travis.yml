@@ -1,0 +1,9 @@
+language: php
+php:
+  - '7.2'
+services:
+  - mysql
+script:
+   - composer install
+   - composer require --dev phpunit/phpunit ^9
+   - vendor/bin/phpunit
