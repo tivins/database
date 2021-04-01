@@ -133,7 +133,7 @@ class SelectQuery extends Query
         if (!empty($this->limits)) {
             $limits = 'limit ' . join(',', $this->limits);
         }
-        $sql  = "select {$what} from {$from} {$joins} {$condSql} {$group} {$order} {$limits}";
+        $sql  = trim("select {$what} from {$from} {$joins} {$condSql} {$group} {$order} {$limits}");
         return [$sql, $args];
     }
 }
