@@ -6,4 +6,4 @@ services:
 script:
    - composer install
    - composer require --dev phpunit/phpunit ^9
-   - vendor/bin/phpunit
+   - vendor/bin/phpunit tests/

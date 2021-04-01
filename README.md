@@ -2,6 +2,12 @@
 
 * Requires PHP 8.0 to run
 
+
+## CI
+
+<a href="https://travis-ci.org/tivins/Database"><img src="https://travis-ci.org/tivins/Database.svg" alt="Build Status"></a>
+
+
 ## Example
 
 ```php
