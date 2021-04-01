@@ -9,8 +9,9 @@ class SelectTest extends TestCase
     public function testSelect()
     {
         $db = new Database(new MySQLConnector('test', 'travis', '', '127.0.0.1'));
-        $query = $db->select('test', 't');
-        $build = $query->build();
-        $this->assertEquals(json_encode($build), '["select from test t",[]]');
+
+        $query = $db->select('test', 't')->addFields('t');
+        $build_data = json_encode($query->build());
+        $this->assertEquals($build_data, '["select t.* from test t",[]]');
     }
 }
