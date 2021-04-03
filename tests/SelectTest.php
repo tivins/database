@@ -1,27 +1,47 @@
 <?php
 
-use Tivins\Database\{ Database, SelectQuery };
+use Tivins\Database\{ Database, Query, SelectQuery };
 use Tivins\Database\Connectors\MySQLConnector;
 use PHPUnit\Framework\TestCase;
 
 class SelectTest extends TestCase
 {
-    public function testSelect()
-    {
-        $db = new Database(new MySQLConnector('test', 'travis', '', '127.0.0.1'));
+    private Database $db;
 
-        $query = $db->select('test', 't')->addFields('t');
-        $build_data = json_encode($query->build());
-        $this->assertEquals($build_data, '["select t.* from test t",[]]');
-    }
-
-    public function testEnv()
+    public function __construct()
     {
-        var_dump($_SERVER, get_defined_vars(),
-            getenv('DBNAME'),
-            getenv('DBUSER'),
-            getenv('DBPASS')
+        $this->db = new Database(
+            new MySQLConnector(
+                getenv('DBNAME'),
+                getenv('DBUSER'),
+                getenv('DBPASS'),
+                getenv('DBHOST')
+            )
         );
     }
 
+    private function checkQuery(Query $query, string $sql, array $params)
+    {
+        $query_data = json_encode($query->build());
+        $expected_data = json_encode([$sql, $params]);
+        $this->assertEquals($query_data, $expected_data);
+    }
+
+    public function testSelect()
+    {
+        $query = $this->db
+            ->select('test', 't')
+            ->addFields('t');
+        $this->checkQuery($query,
+            'select t.* from test t', []);
+    }
+
+    public function testSelectFieldAlias()
+    {
+        $query = $this->db
+            ->select('test', 't')
+            ->addField('t', 'id', 't_id');
+        $this->checkQuery($query,
+            'select t.id as t_id from test t', []);
+    }
 }
