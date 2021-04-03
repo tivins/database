@@ -8,14 +8,15 @@ class SelectTest extends TestCase
 {
     private Database $db;
 
-    public function __construct()
+    public function setUp(): void
     {
+        if (isset($this->db)) return;
         $this->db = new Database(
             new MySQLConnector(
                 getenv('DBNAME'),
                 getenv('DBUSER'),
                 getenv('DBPASS'),
-                getenv('DBHOST')
+                getenv('DBHOST'),
             )
         );
     }
@@ -36,12 +37,21 @@ class SelectTest extends TestCase
             'select t.* from test t', []);
     }
 
+    public function testSelectFieldWithoutAlias()
+    {
+        $query = $this->db
+            ->select('test', 't')
+            ->addField('t', 'id');
+        $this->checkQuery($query,
+            'select t.`id` from test t', []);
+    }
+
     public function testSelectFieldAlias()
     {
         $query = $this->db
             ->select('test', 't')
             ->addField('t', 'id', 't_id');
         $this->checkQuery($query,
-            'select t.id as t_id from test t', []);
+            'select t.`id` as t_id from test t', []);
     }
 }

@@ -8,6 +8,10 @@
 <a href="https://travis-ci.org/tivins/Database"><img src="https://travis-ci.org/tivins/Database.svg" alt="Build Status"></a>
 
 
+## Install
+
+    composer require tivins/database
+
 ## Example
 
 ```php
