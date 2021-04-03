@@ -14,4 +14,13 @@ class SelectTest extends TestCase
         $build_data = json_encode($query->build());
         $this->assertEquals($build_data, '["select t.* from test t",[]]');
     }
+
+    public function checkEnv()
+    {
+        var_dump($_SERVER, get_defined_vars(),
+            getenv('DBNAME'),
+            getenv('DBUSER'),
+            getenv('DBPASS')
+        );
+    }
 }

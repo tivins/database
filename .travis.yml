@@ -1,6 +1,8 @@
 language: php
 php:
   - '8.0'
+env:
+  - DBNAME=test DBUSER=travis DBPASS=
 services:
   - mysql
 before_install:
