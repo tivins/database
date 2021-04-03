@@ -15,7 +15,7 @@ class SelectTest extends TestCase
         $this->assertEquals($build_data, '["select t.* from test t",[]]');
     }
 
-    public function checkEnv()
+    public function testEnv()
     {
         var_dump($_SERVER, get_defined_vars(),
             getenv('DBNAME'),
@@ -23,4 +23,5 @@ class SelectTest extends TestCase
             getenv('DBPASS')
         );
     }
+
 }
