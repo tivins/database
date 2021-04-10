@@ -131,7 +131,7 @@ $db->merge('book')
     ->execute();
 ```
 
-## & Expression
+## Expressions
 
 You can use `SelectQuery::addExpression()` to add an expression to the selected fields.
 
@@ -162,6 +162,18 @@ $db->select('book', 'b')
     ->fields('b', ['id', 'title', 'author'])
     ->condition(
         $db->or()
+        ->condition('id', 3, '>')
+        ->condition('title', '%php%', 'like')
+    )
+    ->execute();
+```
+as equivalent to:
+
+```php
+$db->select('book', 'b')
+    ->fields('b', ['id', 'title', 'author'])
+    ->condition(
+        (new Conditions(Conditions::MODE_OR))
         ->condition('id', 3, '>')
         ->condition('title', '%php%', 'like')
     )
