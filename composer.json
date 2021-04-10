@@ -1,7 +1,7 @@
 {
     "name": "tivins/database",
     "description": "PDO wrapper",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "Tivins\\Database\\": "src/"

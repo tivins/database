@@ -7,7 +7,6 @@
 
 <a href="https://travis-ci.org/tivins/Database"><img src="https://travis-ci.org/tivins/Database.svg" alt="Build Status"></a>
 
-
 ## Install
 
     composer require tivins/database
@@ -132,9 +131,31 @@ $db->merge('book')
     ->execute();
 ```
 
+## & Expression
+
+You can use `SelectQuery::addExpression()` to add an expression to the selected fields.
+
+Signature : `->addExpression(string $expression, string $alias, array $args)`.
+
+```php
+$query = $db->select('books', 'b')
+    ->addExpression('concat(title, ?)', 'some_field', time())
+    ->execute();
+```
+
+## Conditions
+
+Some examples:
+
+    ->condition('table.field', 2); // where table.field = 2
+
+    ->condition('table.field', 2, '>'); // where table.field > 2
+
+    ->condition('table.field', 2, '<'); // where table.field < 2
+
 ### Nested conditions
 
-Conditions are available for `SelectQuery`, `UpdateQuery` and `DeleteQuery`.
+Conditions are available for [`SelectQuery`](blob/main/src/SelectQuery.php), [`UpdateQuery`](blob/main/src/UpdateQuery.php) and [`DeleteQuery`](blob/main/src/DeleteQuery.php).
 
 ```php
 $db->select('book', 'b')
@@ -145,4 +166,25 @@ $db->select('book', 'b')
         ->condition('title', '%php%', 'like')
     )
     ->execute();
+```
+
+## Run unit tests
+
+Add a `phpunit.xml` at the root of the repository.
+
+```xml
+<phpunit>
+    <php>
+        <env name="DBNAME" value="test"/>
+        <env name="DBUSER" value="username"/>
+        <env name="DBPASS" value="password"/>
+        <env name="DBHOST" value="localhost"/>
+    </php>
+</phpunit>
+```
+
+Then, run unit tests
+
+```bash
+vendor/bin/phpunit tests/
 ```

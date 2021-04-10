@@ -54,4 +54,15 @@ class SelectTest extends TestCase
         $this->checkQuery($query,
             'select t.`id` as t_id from test t', []);
     }
+
+    public function testSelectJoin()
+    {
+        $query = $this->db
+            ->select('test', 't')
+            ->addField('t', 'id', 't_id')
+            ->leftJoin('other', 'o', 'o.oid = t.id')
+            ;
+        $this->checkQuery($query,
+            'select t.`id` as t_id from test t left join `other` o on o.oid = t.id', []);
+    }
 }
