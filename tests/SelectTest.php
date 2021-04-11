@@ -1,36 +1,14 @@
 <?php
 
-use Tivins\Database\{ Database, Query, SelectQuery };
-use Tivins\Database\Connectors\MySQLConnector;
+use Tivins\Database\{ Query, SelectQuery };
+use Tivins\Database\Tests\{ TestConfig, TestBase };
 use PHPUnit\Framework\TestCase;
 
-class SelectTest extends TestCase
+class SelectTest extends TestBase
 {
-    private Database $db;
-
-    public function setUp(): void
-    {
-        if (isset($this->db)) return;
-        $this->db = new Database(
-            new MySQLConnector(
-                getenv('DBNAME'),
-                getenv('DBUSER'),
-                getenv('DBPASS'),
-                getenv('DBHOST'),
-            )
-        );
-    }
-
-    private function checkQuery(Query $query, string $sql, array $params)
-    {
-        $query_data = json_encode($query->build());
-        $expected_data = json_encode([$sql, $params]);
-        $this->assertEquals($query_data, $expected_data);
-    }
-
     public function testSelect()
     {
-        $query = $this->db
+        $query = TestConfig::db()
             ->select('test', 't')
             ->addFields('t');
         $this->checkQuery($query,
@@ -39,7 +17,7 @@ class SelectTest extends TestCase
 
     public function testSelectFieldWithoutAlias()
     {
-        $query = $this->db
+        $query = TestConfig::db()
             ->select('test', 't')
             ->addField('t', 'id');
         $this->checkQuery($query,
@@ -48,7 +26,7 @@ class SelectTest extends TestCase
 
     public function testSelectFieldAlias()
     {
-        $query = $this->db
+        $query = TestConfig::db()
             ->select('test', 't')
             ->addField('t', 'id', 't_id');
         $this->checkQuery($query,
@@ -57,7 +35,7 @@ class SelectTest extends TestCase
 
     public function testSelectJoin()
     {
-        $query = $this->db
+        $query = TestConfig::db()
             ->select('test', 't')
             ->addField('t', 'id', 't_id')
             ->leftJoin('other', 'o', 'o.oid = t.id')

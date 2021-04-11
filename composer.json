@@ -4,7 +4,8 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Tivins\\Database\\": "src/"
+            "Tivins\\Database\\": "src/",
+            "Tivins\\Database\\Tests\\": "tests/"
         },
         "files": [
             "src/functions.php"
