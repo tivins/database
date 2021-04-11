@@ -2,14 +2,18 @@
 
 * Requires PHP 8.0 to run
 
-
-## CI
+## CI & Stats
 
 <a href="https://travis-ci.org/tivins/Database"><img src="https://travis-ci.org/tivins/Database.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/tivins/database/stats"><img src="https://img.shields.io/packagist/dm/tivins/database.svg" alt="Donwload Status"></a>
 
 ## Install
 
     composer require tivins/database
+
+or
+
+    git clone git@github.com:tivins/database.git
 
 ## Example
 
@@ -155,7 +159,7 @@ Some examples:
 
 ### Nested conditions
 
-Conditions are available for [`SelectQuery`](blob/main/src/SelectQuery.php), [`UpdateQuery`](blob/main/src/UpdateQuery.php) and [`DeleteQuery`](blob/main/src/DeleteQuery.php).
+Conditions are available for [`SelectQuery`][1], [`UpdateQuery`][2] and [`DeleteQuery`][3].
 
 ```php
 $db->select('book', 'b')
@@ -167,7 +171,7 @@ $db->select('book', 'b')
     )
     ->execute();
 ```
-as equivalent to:
+And below is equivalent:
 
 ```php
 $db->select('book', 'b')
@@ -200,3 +204,8 @@ Then, run unit tests
 ```bash
 vendor/bin/phpunit tests/
 ```
+
+
+[1]: /tivins/database/blob/main/src/SelectQuery.php
+[2]: /tivins/database/blob/main/src/UpdateQuery.php
+[3]: /tivins/database/blob/main/src/DeleteQuery.php
