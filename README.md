@@ -151,11 +151,11 @@ $query = $db->select('books', 'b')
 
 Some examples:
 
-    ->condition('table.field', 2); // where table.field = 2
-
-    ->condition('table.field', 2, '>'); // where table.field > 2
-
-    ->condition('table.field', 2, '<'); // where table.field < 2
+```php
+->condition('table.field', 2); // where table.field = 2
+->condition('table.field', 2, '>'); // where table.field > 2
+->condition('table.field', 2, '<'); // where table.field < 2
+```
 
 ### Nested conditions
 
