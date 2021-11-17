@@ -15,9 +15,7 @@ class DBObject
 
     private function extractKeys($data)
     {
-        return array_filter($data, function($key) {
-            return in_array($key, $this->indexNames);
-        }, ARRAY_FILTER_USE_KEY);
+        return array_filter($data, fn($key) => in_array($key, $this->indexNames), ARRAY_FILTER_USE_KEY);
     }
 
     public function load($data)
