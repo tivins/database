@@ -4,7 +4,7 @@
 
 ## CI & Stats
 
-<a href="https://travis-ci.org/tivins/Database"><img src="https://travis-ci.org/tivins/Database.svg" alt="Build Status"></a>
+<a href="https://travis-ci.com/tivins/Database"><img src="https://travis-ci.org/tivins/Database.svg" alt="Build Status"></a>
 <a href="https://packagist.org/packages/tivins/database/stats"><img src="https://img.shields.io/packagist/dm/tivins/database.svg" alt="Download Status"></a>
 
 ## Install
