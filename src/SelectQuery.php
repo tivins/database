@@ -57,7 +57,7 @@ class SelectQuery extends Query
      */
     public function leftJoin(string $tableName, string $tableAlias, string $condition)
     {
-        $this->joins[] = "left join `{$tableName}` {$tableAlias} on {$condition}";
+        $this->joins[] = "left join `{$tableName}` `{$tableAlias}` on {$condition}";
         return $this;
     }
 
@@ -66,7 +66,7 @@ class SelectQuery extends Query
      */
     public function innerJoin(string $tableName, string $tableAlias, string $condition)
     {
-        $this->joins[] = "inner join `{$tableName}` {$tableAlias} on {$condition}";
+        $this->joins[] = "inner join `{$tableName}` `{$tableAlias}` on {$condition}";
         return $this;
     }
 
@@ -116,7 +116,7 @@ class SelectQuery extends Query
         }
         $what = implode(',', $what);
 
-        $from = "{$this->tableName} {$this->tableAlias}";
+        $from = "{$this->tableName} `{$this->tableAlias}`";
         $joins = implode(' ', $this->joins);
         list($condSql, $condArgs) = $this->buildConditions();
         if (!empty($condSql)) $condSql = "where $condSql";

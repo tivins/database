@@ -41,6 +41,6 @@ class SelectTest extends TestBase
             ->leftJoin('other', 'o', 'o.oid = t.id')
             ;
         $this->checkQuery($query,
-            'select t.`id` as t_id from test t left join `other` o on o.oid = t.id', []);
+            'select t.`id` as t_id from test `t` left join `other` `o` on o.oid = t.id', []);
     }
 }
