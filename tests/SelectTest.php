@@ -12,7 +12,7 @@ class SelectTest extends TestBase
             ->select('test', 't')
             ->addFields('t');
         $this->checkQuery($query,
-            'select t.* from test t', []);
+            'select t.* from test `t`', []);
     }
 
     public function testSelectFieldWithoutAlias()
@@ -21,7 +21,7 @@ class SelectTest extends TestBase
             ->select('test', 't')
             ->addField('t', 'id');
         $this->checkQuery($query,
-            'select t.`id` from test t', []);
+            'select t.`id` from test `t`', []);
     }
 
     public function testSelectFieldAlias()
@@ -30,7 +30,7 @@ class SelectTest extends TestBase
             ->select('test', 't')
             ->addField('t', 'id', 't_id');
         $this->checkQuery($query,
-            'select t.`id` as t_id from test t', []);
+            'select t.`id` as t_id from test `t`', []);
     }
 
     public function testSelectJoin()
