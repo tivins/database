@@ -2,6 +2,9 @@
 
 namespace Tivins\Database;
 
+/**
+ * Base class to manage database objects. 
+ */
 class DBObject
 {
     protected string $tableName;
@@ -9,7 +12,8 @@ class DBObject
     protected Database $db;
     protected ?object $object;
 
-    public function __construct(Database $db) {
+    public function __construct(Database $db) 
+    {
         $this->db = $db;
     }
 
