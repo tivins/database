@@ -28,10 +28,10 @@ class UpdateQuery extends Query
         $data = implode(',', $data);
 
         list($condSql, $condArgs) = $this->buildConditions();
-        if (!empty($condSql)) $condSql = "where $condSql";
+        if (!empty($condSql)) $condSql = " where $condSql";
         $args = array_merge($args, $condArgs);
 
-        $sql = "update {$this->tableName} set {$data} {$condSql}";
+        $sql = "update {$this->tableName} set {$data}{$condSql}";
         return [$sql, $args];
     }
 }
