@@ -17,11 +17,6 @@ class DBObject
         $this->db = $db;
     }
 
-    private function extractKeys($data)
-    {
-        return array_filter($data, fn($key) => in_array($key, $this->indexNames), ARRAY_FILTER_USE_KEY);
-    }
-
     public function load($data)
     {
         $q = $this->db->select($this->tableName, 't')
@@ -63,4 +58,10 @@ class DBObject
         }
         return $this->extractKeys($data);
     }
+
+    private function extractKeys($data)
+    {
+        return array_filter($data, fn($key) => in_array($key, $this->indexNames), ARRAY_FILTER_USE_KEY);
+    }
+
 }

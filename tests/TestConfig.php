@@ -24,6 +24,9 @@ class TestConfig
                     getenv('DBHOST'),
                 )
             );
+
+            self::$db->query('drop table if exists users');
+            self::$db->query('create table users (uid int unsigned auto_increment,name varchar(255),primary key(uid))');
         }
         return self::$db;
     }
