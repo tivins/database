@@ -26,7 +26,11 @@ class TestConfig
             );
 
             self::$db->query('drop table if exists users');
-            self::$db->query('create table users (uid int unsigned auto_increment,name varchar(255),primary key(uid))');
+            self::$db->query('create table users (
+                uid int unsigned auto_increment,
+                name varchar(255),
+                state int not null default 0,
+                primary key(uid))');
         }
         return self::$db;
     }

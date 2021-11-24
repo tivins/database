@@ -12,4 +12,7 @@ class User extends DBObject
     public function getName(): string {
         return $this->object->name ?? '';
     }
+    public function getState(): int {
+        return $this->object->state ?? 0;
+    }
 }
