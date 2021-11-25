@@ -1,6 +1,7 @@
 <?php
 
 namespace Tivins\Database;
+use Exception;
 
 /**
  *
@@ -22,7 +23,7 @@ class Conditions
     /**
      *
      */
-    public function whereIn(string $field, array $values)
+    public function whereIn(string $field, array $values): self
     {
         $stmt = "$field in (".implode(',',array_fill(0, count($values), '?')).")";
         $this->pushCondition($stmt, $values);
@@ -32,16 +33,22 @@ class Conditions
     /**
      *
      */
-    public function like(string $field, string $value)
+    public function like(string $field, string $value): self
     {
         $this->pushCondition("$field like ?", [$value]);
+        return $this;
+    }
+
+    public function isNull(string $field): self
+    {
+        $this->pushCondition("$field is null", []);
         return $this;
     }
 
     /**
      *
      */
-    public function condition($field, $value = null, $operator = '=')
+    public function condition($field, $value = null, $operator = '='): self
     {
         if ($field instanceof Conditions) {
             $this->nestedConds[] = $field;
@@ -58,7 +65,7 @@ class Conditions
     /**
      *
      */
-    public function buildConditions()
+    public function buildConditions(): array
     {
         if (empty($this->conditions) &&
             empty($this->nestedConds))
@@ -82,7 +89,7 @@ class Conditions
     /**
      *
      */
-    private function pushCondition(string $condition, array $data)
+    private function pushCondition(string $condition, array $data): void
     {
         $this->conditions[] = [
             'cond' => $condition,
