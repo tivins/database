@@ -4,16 +4,20 @@
 
 ## CI & Stats
 
-<a href="https://app.travis-ci.com/github/tivins/database"><img src="https://app.travis-ci.com/tivins/database.svg?branch=main" alt="Build Status"></a>
-<a href="https://packagist.org/packages/tivins/database/stats"><img src="https://img.shields.io/packagist/dm/tivins/database.svg" alt="Download Status"></a>
+[![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
+[![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
 
 ## Install
 
-    composer require tivins/database
+```sh
+composer require tivins/database
+```
 
 or
 
-    git clone git@github.com:tivins/database.git
+```sh
+git clone git@github.com:tivins/database.git
+```
 
 ## Example
 
@@ -29,7 +33,6 @@ $users = $db->select('posts', 'p')
     ->addField('u', 'name', 'author_name')
     ->execute()
     ->fetchAll();
-
 ```
 
 ## Summary
@@ -152,9 +155,13 @@ $query = $db->select('books', 'b')
 Some examples:
 
 ```php
-->condition('table.field', 2); // where table.field = 2
-->condition('table.field', 2, '>'); // where table.field > 2
-->condition('table.field', 2, '<'); // where table.field < 2
+->condition('table.field', 2); // eg: where table.field = 2
+->condition('table.field', 2, '>'); // eg: where table.field > 2
+->condition('table.field', 2, '<'); // eg: where table.field < 2
+->whereIn('table.field', [2,6,8]); // eg: where table.field int (2,6,8)
+->like('table.field', '%search%'); // eg: where table.field like '%search%'
+->isNull('table.field'); // eg: where table.field is null
+->isNotNull('table.field'); // eg: where table.field is not null
 ```
 
 ### Nested conditions

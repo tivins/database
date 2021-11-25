@@ -54,6 +54,15 @@ class Conditions
     /**
      *
      */
+    public function isNotNull(string $field): self
+    {
+        $this->pushCondition("$field is not null", []);
+        return $this;
+    }
+
+    /**
+     *
+     */
     public function condition($field, $value = null, $operator = '='): self
     {
         if ($field instanceof Conditions)
