@@ -206,6 +206,6 @@ vendor/bin/phpunit tests/
 ```
 
 
-[1]: /blob/main/src/SelectQuery.php
-[2]: /blob/main/src/UpdateQuery.php
-[3]: /blob/main/src/DeleteQuery.php
+[1]: /src/SelectQuery.php
+[2]: /src/UpdateQuery.php
+[3]: /src/DeleteQuery.php
