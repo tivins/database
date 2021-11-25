@@ -15,6 +15,9 @@ class Conditions
     protected array $nestedConds = [];
     protected string $mode = self::MODE_AND;
 
+    /**
+     *
+     */
     public function __construct(string $mode = self::MODE_AND)
     {
         $this->mode = $mode;
@@ -39,6 +42,9 @@ class Conditions
         return $this;
     }
 
+    /**
+     *
+     */
     public function isNull(string $field): self
     {
         $this->pushCondition("$field is null", []);
@@ -50,7 +56,8 @@ class Conditions
      */
     public function condition($field, $value = null, $operator = '='): self
     {
-        if ($field instanceof Conditions) {
+        if ($field instanceof Conditions)
+        {
             $this->nestedConds[] = $field;
             return $this;
         }
@@ -69,7 +76,9 @@ class Conditions
     {
         if (empty($this->conditions) &&
             empty($this->nestedConds))
+        {
             return['', []];
+        }
 
         $query = implode(' ' . $this->mode . ' ', array_column($this->conditions, 'cond'));
         if ($this->mode == self::MODE_OR) $query = "($query)";

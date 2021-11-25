@@ -167,7 +167,7 @@ $db->select('book', 'b')
     ->condition(
         $db->or()
         ->condition('id', 3, '>')
-        ->condition('title', '%php%', 'like')
+        ->like('title', '%php%')
     )
     ->execute();
 ```
@@ -179,7 +179,7 @@ $db->select('book', 'b')
     ->condition(
         (new Conditions(Conditions::MODE_OR))
         ->condition('id', 3, '>')
-        ->condition('title', '%php%', 'like')
+        ->like('title', '%php%')
     )
     ->execute();
 ```
@@ -206,6 +206,6 @@ vendor/bin/phpunit tests/
 ```
 
 
-[1]: /tivins/database/blob/main/src/SelectQuery.php
-[2]: /tivins/database/blob/main/src/UpdateQuery.php
-[3]: /tivins/database/blob/main/src/DeleteQuery.php
+[1]: /blob/main/src/SelectQuery.php
+[2]: /blob/main/src/UpdateQuery.php
+[3]: /blob/main/src/DeleteQuery.php
