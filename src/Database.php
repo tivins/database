@@ -124,6 +124,18 @@ class Database
     }
 
     /**
+     *
+     */
+    public function fetchRow(string $tableName, string $column, $value): ?object
+    {
+        return $this->select($tableName,'t')
+                    ->addFields('t')
+                    ->condition($column, $value)
+                    ->execute()
+                    ->fetch();
+    }
+
+    /**
      * Wrappers
      */
     public function transaction()

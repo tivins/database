@@ -155,13 +155,13 @@ $query = $db->select('books', 'b')
 Some examples:
 
 ```php
-->condition('table.field', 2); // eg: where table.field = 2
-->condition('table.field', 2, '>'); // eg: where table.field > 2
-->condition('table.field', 2, '<'); // eg: where table.field < 2
-->whereIn('table.field', [2,6,8]); // eg: where table.field int (2,6,8)
-->like('table.field', '%search%'); // eg: where table.field like '%search%'
-->isNull('table.field'); // eg: where table.field is null
-->isNotNull('table.field'); // eg: where table.field is not null
+->condition('field', 2);      // eg: where field = 2
+->condition('field', 2, '>'); // eg: where field > 2
+->condition('field', 2, '<'); // eg: where field < 2
+->whereIn('field', [2,6,8]);  // eg: where field int (2,6,8)
+->like('field', '%search%');  // eg: where field like '%search%'
+->isNull('field');            // eg: where field is null
+->isNotNull('field');         // eg: where field is not null
 ```
 
 ### Nested conditions
@@ -211,7 +211,6 @@ Then, run unit tests
 ```bash
 vendor/bin/phpunit tests/
 ```
-
 
 [1]: /src/SelectQuery.php
 [2]: /src/UpdateQuery.php
