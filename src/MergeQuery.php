@@ -27,7 +27,11 @@ class MergeQuery extends UpdateQuery
         }
         $data = $select->execute()->fetch();
         if (! $data) {
+            foreach ($this->keys as $key => $value) {
+                unset($this->fields[$key]);
+            }
             $query = $this->db->insert($this->tableName)->fields($this->fields);
+            var_dump($query->build());
         }
         else {
             $query = $this->db->update($this->tableName)->fields($this->fields);

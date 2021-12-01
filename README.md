@@ -191,6 +191,16 @@ $db->select('book', 'b')
     ->execute();
 ```
 
+## Having
+
+```php
+$db->select('maps_polygons', 'p')
+    ->condition('p.mid', $mapID)
+    ->having($db->and()->isNotNull('geom'))
+    ->execute()
+    ->fetchAll();
+```
+
 ## Run unit tests
 
 Add a `phpunit.xml` at the root of the repository.

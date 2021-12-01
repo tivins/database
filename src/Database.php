@@ -122,6 +122,13 @@ class Database
     {
         return new Conditions(Conditions::MODE_OR);
     }
+    /**
+     *
+     */
+    public function and(): Conditions
+    {
+        return new Conditions(Conditions::MODE_AND);
+    }
 
     /**
      *
