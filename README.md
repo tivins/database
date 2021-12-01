@@ -195,10 +195,11 @@ $db->select('book', 'b')
 
 ```php
 $db->select('maps_polygons', 'p')
-    ->condition('p.mid', $mapID)
+    // ->...
     ->having($db->and()->isNotNull('geom'))
     ->execute()
-    ->fetchAll();
+    //...
+    ;
 ```
 
 ## Run unit tests
