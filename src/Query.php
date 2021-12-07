@@ -10,6 +10,7 @@ class Query extends Conditions
 
     public function __construct(Database $db, string $tableName)
     {
+        parent::__construct();
         $this->db  = $db;
         $this->tableName  = $tableName;
     }

@@ -2,6 +2,8 @@
 
 namespace Tivins\Database;
 
+use Exception;
+
 /**
  *
  */
@@ -18,6 +20,9 @@ class MergeQuery extends UpdateQuery
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     public function build(): array
     {
         $select = $this->db->select($this->tableName, 't');
@@ -31,7 +36,6 @@ class MergeQuery extends UpdateQuery
                 unset($this->fields[$key]);
             }
             $query = $this->db->insert($this->tableName)->fields($this->fields);
-            var_dump($query->build());
         }
         else {
             $query = $this->db->update($this->tableName)->fields($this->fields);

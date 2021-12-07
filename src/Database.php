@@ -19,6 +19,7 @@ class Database
      * @var Callable|null
      */
     private $logCallback = null;
+    private PDO $dbhandler;
 
     /**
      *
@@ -66,7 +67,7 @@ class Database
     /**
      *
      */
-    public function lastId()
+    public function lastId(): int
     {
         return $this->dbhandler->lastInsertId();
     }

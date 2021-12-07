@@ -62,6 +62,7 @@ class Conditions
 
     /**
      *
+     * @throws Exception
      */
     public function condition($field, $value = null, $operator = '='): self
     {
