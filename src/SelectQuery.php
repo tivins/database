@@ -25,7 +25,7 @@ class SelectQuery extends Query
      */
     public function addField(string $tableAlias, string $field, string $fieldAlias = ''): self
     {
-        $this->fields[] = "{$tableAlias}.`{$field}`" . ($fieldAlias ? " as {$fieldAlias}" : '');
+        $this->fields[] = "$tableAlias.`$field`" . ($fieldAlias ? " as $fieldAlias" : '');
         return $this;
     }
 
@@ -35,10 +35,10 @@ class SelectQuery extends Query
     public function addFields(string $tableAlias, ?array $fields = null): self
     {
         if (is_null($fields)) {
-            $this->fields[] = "{$tableAlias}.*";
+            $this->fields[] = "$tableAlias.*";
         } else {
             foreach ($fields as $field) {
-                $this->fields[] = "{$tableAlias}.`{$field}`";
+                $this->fields[] = "$tableAlias.`$field`";
             }
         }
         return $this;
@@ -49,7 +49,7 @@ class SelectQuery extends Query
      */
     public function addExpression(string $expression, string $fieldAlias, array $values = []): self
     {
-        $this->expressions[] = ['sql' => "{$expression} as {$fieldAlias}", 'data' => $values];
+        $this->expressions[] = ['sql' => "$expression as $fieldAlias", 'data' => $values];
         return $this;
     }
 
@@ -58,7 +58,7 @@ class SelectQuery extends Query
      */
     public function leftJoin(string $tableName, string $tableAlias, string $condition): self
     {
-        $this->joins[] = "left join `{$tableName}` `{$tableAlias}` on {$condition}";
+        $this->joins[] = "left join `$tableName` `$tableAlias` on $condition";
         return $this;
     }
 
@@ -67,7 +67,7 @@ class SelectQuery extends Query
      */
     public function innerJoin(string $tableName, string $tableAlias, string $condition): self
     {
-        $this->joins[] = "inner join `{$tableName}` `{$tableAlias}` on {$condition}";
+        $this->joins[] = "inner join `$tableName` `$tableAlias` on $condition";
         return $this;
     }
 
@@ -129,31 +129,31 @@ class SelectQuery extends Query
         }
         $what = implode(',', $what);
 
-        $from = "{$this->tableName} `{$this->tableAlias}`";
-        $joins = implode(' ', $this->joins);
-        list($condSql, $condArgs) = $this->buildConditions();
-        if (!empty($condSql)) $condSql = "where $condSql";
+        $from = "$this->tableName `$this->tableAlias`";
+        $joins = ' ' . implode(' ', $this->joins);
+        [$condSql, $condArgs] = $this->buildConditions();
+        if (!empty($condSql)) $condSql = " where $condSql";
         $args = array_merge($args, $condArgs);
         $order = '';
         $group = '';
         $having = '';
 
         if (!empty($this->orders)) {
-            $order .= 'order by ' . implode(', ', $this->orders);
+            $order .= ' order by ' . implode(', ', $this->orders);
         }
         if (!empty($this->groupByExp)) {
-            $group .= 'group by ' . $this->groupByExp;
+            $group .= ' group by ' . $this->groupByExp;
         }
         $limits = '';
         if (!empty($this->limits)) {
-            $limits = 'limit ' . join(',', $this->limits);
+            $limits = ' limit ' . join(',', $this->limits);
         }
         if (!is_null($this->having)) {
             list($havingSql, $havingArgs) = $this->having->buildConditions();
             $having = ' having ' . $havingSql;
             $args = array_merge($args, $havingArgs);
         }
-        $sql  = trim("select {$what} from {$from} {$joins} {$condSql} {$group} {$order} {$limits}{$having}");
+        $sql  = trim("select $what from $from$joins$condSql$group$order$limits$having");
         return [$sql, $args];
     }
 }
