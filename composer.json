@@ -1,19 +1,19 @@
 {
-    "name": "tivins/database",
-    "description": "PDO wrapper",
-    "minimum-stability": "stable",
-    "autoload": {
-        "psr-4": {
-            "Tivins\\Database\\": "src/",
-            "Tivins\\Database\\Tests\\": "tests/"
-        },
-        "files": [
-            "src/functions.php"
-        ]
+  "name": "tivins/database",
+  "description": "PDO wrapper",
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Tivins\\Database\\": "src/",
+      "Tivins\\Database\\Tests\\": "tests/"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^9"
-    },
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9"
+  },
   "require": {
     "ext-pdo": "*"
   }

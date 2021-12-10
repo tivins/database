@@ -3,8 +3,22 @@
 namespace Tivins\Database\Connectors;
 
 use PDO;
+use PDOException;
 
-interface Connector
+abstract class Connector
 {
-    public function connect(): PDO;
+    abstract public function createHandler(): PDO;
+    /**
+     * @throws ConnectionException
+     */
+    public function connect(): PDO
+    {
+        try {
+            return $this->createHandler();
+        }
+        catch (PDOException $pdoException)
+        {
+            throw new ConnectionException();
+        }
+    }
 }

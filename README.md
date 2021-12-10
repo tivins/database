@@ -43,6 +43,7 @@ $users = $db->select('posts', 'p')
 * [Update query](#update-query)
 * [Merge query](#merge-query)
 * [Nested conditions](#nested-conditions)
+* [Transactions](#transactions)
 
 ## Usage
 
@@ -200,6 +201,24 @@ $db->select('maps_polygons', 'p')
     ->execute()
     //...
     ;
+```
+
+## Transactions
+
+```php
+use Tivins\Database{ Database, DatabaseException };
+function makeSomething()
+{
+    $db = new Database();
+    $db->transaction()
+    try {
+        // do some queries require NONE of them throws any DatabaseException
+    }
+    catch (DatabaseException $exception) {
+        $db->rollback();
+        // log exception...
+    }
+}
 ```
 
 ## Run unit tests

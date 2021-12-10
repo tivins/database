@@ -21,12 +21,16 @@ class CreateQuery extends Query
 
     /**
      * This function is indented to be called using named parameters.
-     * Ex: `$query->addString('field', nullable: false, length: 64)`
+     *
+     * Example:
+     * ```php
+     * $query->addString('field', nullable: false, length: 64)
+     * ```
      *
      * @param string $name The column name.
      * @param int $length The length of the string.
      * @param bool $nullable Is it nullable or not ?
-     * @return $this
+     * @return $this The current object.
      */
     public function addString(string $name, int $length = 255, bool $nullable = true): self
     {
@@ -43,6 +47,33 @@ class CreateQuery extends Query
         $this->fields[] = [
             'type' => 'tinyint(1)',
             'attr' => 'not null default ' . $default,
+            'name' => $name,
+        ];
+        return $this;
+    }
+
+    /**
+     * This function is indented to be called using named parameters.
+     *
+     * Examples:
+     * ```php
+     * $query->addInteger('field', -1);
+     * $query->addInteger('field', 0, nullable: false);
+     * $query->addInteger('field', null, nullable: true, unsigned: true);
+     * ```
+     *
+     * @param string $name The column name.
+     * @param int|null $default The default value. If `null` is given, the $nullable will automatically set to `true`.
+     * @param bool $unsigned Does the integer unsigned or not ?
+     * @param bool $nullable Can column contain null value or not ?
+     * @return $this The current object.
+     */
+    public function addInteger(string $name, ?int $default, bool $unsigned = false, bool $nullable = false): self
+    {
+        $this->fields[] = [
+            'type' => 'int' . ($unsigned ? ' unsigned' : ''),
+            'attr' => trim(($nullable || is_null($default) ? '' : 'not null')
+                    . ' default ' . (is_null($default) ? 'null' : $default)),
             'name' => $name,
         ];
         return $this;

@@ -2,9 +2,11 @@
 
 namespace Tivins\Database\Connectors;
 
+use Exception;
 use PDO;
+use PDOException;
 
-class MySQLConnector implements Connector
+class MySQLConnector extends Connector
 {
     private $dsn;
     private $user;
@@ -17,7 +19,7 @@ class MySQLConnector implements Connector
         $this->password = $password;
     }
 
-    public function connect(): PDO
+    public function createHandler(): PDO
     {
         return new PDO($this->dsn, $this->user, $this->password);
     }

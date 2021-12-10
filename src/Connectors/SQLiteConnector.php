@@ -3,8 +3,9 @@
 namespace Tivins\Database\Connectors;
 
 use PDO;
+use PDOException;
 
-class SQLiteConnector implements Connector
+class SQLiteConnector extends Connector
 {
     private $dsn;
 
@@ -13,7 +14,7 @@ class SQLiteConnector implements Connector
         $this->dsn = 'sqlite:' . $filename;
     }
 
-    public function connect(): PDO
+    public function createHandler(): PDO
     {
         return new PDO($this->dsn);
     }

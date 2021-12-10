@@ -2,6 +2,7 @@
 
 namespace Tivins\Database;
 
+use Exception;
 use PDO;
 use PDOException;
 use Tivins\Database\Connectors\Connector;
@@ -28,6 +29,7 @@ class Database
 
     /**
      * Initialize a new Database object from the given connector.
+     * @throws Connectors\ConnectionException
      */
     public function __construct(Connector $connector)
     {
@@ -35,6 +37,13 @@ class Database
         $this->configureAttributes();
     }
 
+    /**
+     * Define a string prefix for all tables of the database.
+     * For example, if a prefix is set to `test_`, then, the table name `user` will be turned into `test_user`.
+     *
+     * @param string $prefix
+     * @return $this
+     */
     public function setTablePrefix(string $prefix): self
     {
         $this->prefix = $prefix;
@@ -44,7 +53,7 @@ class Database
     /**
      * Defines a callback sent before executing the query.
      *
-     * Signature : function(string $sql, array $parameters): void;
+     * Signature : ```php function(string $sql, array $parameters): void;```
      */
     public function setLogCallback(Callable $callback): void
     {
@@ -61,17 +70,22 @@ class Database
     }
 
     /**
-     * @throws PDOException
+     * @throws DatabaseException
      */
-    public function query(string $query, array $parameters = []): Statement
+    public function query(string $query, array $parameters = []): ?Statement
     {
         if ($this->logCallback) {
             call_user_func($this->logCallback, $query, $parameters);
         }
 
-
         $sth = $this->handler->prepare($query);
-        $sth->execute($parameters);
+        try {
+            $sth->execute($parameters);
+        }
+        catch (PDOException $exception)
+        {
+            throw new DatabaseException();
+        }
         return new Statement($sth);
     }
 
@@ -161,13 +175,20 @@ class Database
      */
     public function fetchRow(string $tableName, string $column, $value): ?object
     {
-        return $this->select($tableName,'t')
-                    ->addFields('t')
-                    ->condition($column, $value)
-                    ->execute()
-                    ->fetch();
+        try {
+            return $this->select($tableName, 't')
+                ->addFields('t')
+                ->condition($column, $value)
+                ->execute()
+                ->fetch();
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
+    /**
+     * @throws DatabaseException
+     */
     public function dropTable(string $tableName): self
     {
         $tableName = $this->prefixTableName($tableName);
@@ -175,6 +196,11 @@ class Database
         return $this;
     }
 
+    /**
+     * Destroy all records of the table $tableName and reset auto-increment index.
+     *
+     * @throws DatabaseException
+     */
     public function truncateTable(string $tableName): self
     {
         $tableName = $this->prefixTableName($tableName);
@@ -188,16 +214,27 @@ class Database
     }
 
     /**
-     * Wrappers
+     * Alias of PDO::beginTransaction()
+     * @throws PDOException
      */
     public function transaction()
     {
         $this->handler->beginTransaction();
     }
+
+    /**
+     * Alias of PDO::rollback()
+     * @throws PDOException
+     */
     public function rollback()
     {
         $this->handler->rollBack();
     }
+
+    /**
+     * Alias of PDO::commit()
+     * @throws PDOException
+     */
     public function commit()
     {
         $this->handler->commit();
