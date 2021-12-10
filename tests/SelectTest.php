@@ -44,6 +44,18 @@ class SelectTest extends TestBase
             'select t.`id` as t_id from test `t` left join `other` `o` on o.oid = t.id', []);
     }
 
+    public function testNull()
+    {
+        $query = TestConfig::db()
+            ->select('test', 't')
+            ->addFields('t')
+            ->isNull('t.field')
+            ->isNotNull('t.another_field')
+            ;
+        $this->checkQuery($query,
+            'select t.* from test `t` where t.field is null and t.another_field is not null', []);
+    }
+
     /*
     public function testSelectLike()
     {

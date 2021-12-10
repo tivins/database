@@ -12,7 +12,7 @@ class Conditions
     const MODE_OR  = 'or';
 
     protected array $conditions = [];
-    protected array $nestedConds = [];
+    protected array $nestedConditions = [];
     protected string $mode = self::MODE_AND;
 
     /**
@@ -68,7 +68,7 @@ class Conditions
     {
         if ($field instanceof Conditions)
         {
-            $this->nestedConds[] = $field;
+            $this->nestedConditions[] = $field;
             return $this;
         }
 
@@ -94,11 +94,11 @@ class Conditions
         if ($this->mode == self::MODE_OR) $query = "($query)";
         $parameters = array_flatten(array_column($this->conditions, 'data'));
 
-        foreach ($this->nestedConds as $nestedConds) {
-            list($subquery, $subparameters) = $nestedConds->buildConditions();
-            if (!empty($subquery)) {
-                $query .= (empty($query) ? '' : ' ' . $this->mode . ' ') . $subquery;
-                $parameters = array_merge($parameters, $subparameters);
+        foreach ($this->nestedConditions as $nestedConditions) {
+            list($subQuery, $subParameters) = $nestedConditions->buildConditions();
+            if (!empty($subQuery)) {
+                $query .= (empty($query) ? '' : ' ' . $this->mode . ' ') . $subQuery;
+                $parameters = array_merge($parameters, $subParameters);
             }
         }
 

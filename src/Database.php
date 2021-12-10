@@ -19,14 +19,14 @@ class Database
      * @var Callable|null
      */
     private $logCallback = null;
-    private PDO $dbhandler;
+    private PDO $handler;
 
     /**
      *
      */
     public function __construct(Connector $connector)
     {
-        $this->dbhandler = $connector->connect();
+        $this->handler = $connector->connect();
         $this->configureAttributes();
     }
 
@@ -45,8 +45,8 @@ class Database
      */
     private function configureAttributes()
     {
-        $this->dbhandler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        $this->dbhandler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+        $this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
@@ -59,7 +59,7 @@ class Database
         }
 
 
-        $sth = $this->dbhandler->prepare($query);
+        $sth = $this->handler->prepare($query);
         $sth->execute($parameters);
         return new Statement($sth);
     }
@@ -69,7 +69,7 @@ class Database
      */
     public function lastId(): int
     {
-        return $this->dbhandler->lastInsertId();
+        return $this->handler->lastInsertId();
     }
 
     /*
@@ -81,7 +81,7 @@ class Database
      */
     public function select(string $tableName, string $alias): SelectQuery
     {
-        return new SelectQuery($this, $tableName, $alias);
+        return new SelectQuery($this, $this->prefix . $tableName, $alias);
     }
 
     /**
@@ -89,7 +89,7 @@ class Database
      */
     public function merge(string $tableName): MergeQuery
     {
-        return new MergeQuery($this, $tableName);
+        return new MergeQuery($this, $this->prefix . $tableName);
     }
 
     /**
@@ -97,7 +97,7 @@ class Database
      */
     public function insert(string $tableName): InsertQuery
     {
-        return new InsertQuery($this, $tableName);
+        return new InsertQuery($this, $this->prefix . $tableName);
     }
 
     /**
@@ -105,7 +105,7 @@ class Database
      */
     public function update(string $tableName): UpdateQuery
     {
-        return new UpdateQuery($this, $tableName);
+        return new UpdateQuery($this, $this->prefix . $tableName);
     }
 
     /**
@@ -113,7 +113,7 @@ class Database
      */
     public function delete(string $tableName): DeleteQuery
     {
-        return new DeleteQuery($this, $tableName);
+        return new DeleteQuery($this, $this->prefix . $tableName);
     }
 
     /**
@@ -148,14 +148,19 @@ class Database
      */
     public function transaction()
     {
-        $this->dbhandler?->beginTransaction();
+        $this->handler?->beginTransaction();
     }
     public function rollback()
     {
-        $this->dbhandler?->rollBack();
+        $this->handler?->rollBack();
     }
     public function commit()
     {
-        $this->dbhandler?->commit();
+        $this->handler?->commit();
+    }
+
+    public function prefixTableName(string $tableName): string
+    {
+        return $this->prefix . $tableName;
     }
 }

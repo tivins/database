@@ -14,7 +14,7 @@ class MergeQuery extends UpdateQuery
     /**
      *
      */
-    public function keys($data)
+    public function keys($data): self
     {
         $this->keys = $data;
         return $this;

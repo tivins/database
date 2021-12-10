@@ -9,7 +9,7 @@ class InsertQuery extends Query
 {
     private array $fields;
 
-    public function fields(array $data)
+    public function fields(array $data): self
     {
         $this->fields = $data;
         return $this;
@@ -19,9 +19,9 @@ class InsertQuery extends Query
     {
         $keys = '`' . implode('`,`', array_keys($this->fields)) . '`';
 
-        $placehoders = implode(',', array_fill(0, count($this->fields), '?'));
+        $placeholders = implode(',', array_fill(0, count($this->fields), '?'));
 
-        $sql = "insert into `{$this->tableName}` ({$keys}) values ({$placehoders})";
+        $sql = "insert into `$this->tableName` ($keys) values ($placeholders)";
 
         return [$sql, array_values($this->fields)];
     }

@@ -9,7 +9,6 @@ class SelectQuery extends Query
     private array $expressions = [];
     private array $joins = [];
     private array $orders = [];
-    private array $placeholders = [];
     private array $limits = [];
     private ?Conditions $having = null;
     private string $groupByExp;
@@ -58,6 +57,7 @@ class SelectQuery extends Query
      */
     public function leftJoin(string $tableName, string $tableAlias, string $condition): self
     {
+        $tableName = $this->db->prefixTableName($tableName);
         $this->joins[] = "left join `$tableName` `$tableAlias` on $condition";
         return $this;
     }
@@ -67,6 +67,7 @@ class SelectQuery extends Query
      */
     public function innerJoin(string $tableName, string $tableAlias, string $condition): self
     {
+        $tableName = $this->db->prefixTableName($tableName);
         $this->joins[] = "inner join `$tableName` `$tableAlias` on $condition";
         return $this;
     }
@@ -130,7 +131,7 @@ class SelectQuery extends Query
         $what = implode(',', $what);
 
         $from = "$this->tableName `$this->tableAlias`";
-        $joins = ' ' . implode(' ', $this->joins);
+        $joins = empty($this->joins) ? '' : ' ' . implode(' ', $this->joins);
         [$condSql, $condArgs] = $this->buildConditions();
         if (!empty($condSql)) $condSql = " where $condSql";
         $args = array_merge($args, $condArgs);

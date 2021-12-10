@@ -15,7 +15,7 @@ class DeleteQuery extends Query
     {
         list($condSql, $params) = $this->buildConditions();
         if (!empty($condSql)) $condSql = "where $condSql";
-        $sql = "delete from `{$this->tableName}` {$condSql}";
+        $sql = "delete from `$this->tableName` $condSql";
         return [$sql, $params];
     }
 }
