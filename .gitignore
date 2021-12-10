@@ -1,4 +1,9 @@
-composer.lock
+# Composer
 vendor/
+
+# PHP Unit
 phpunit.xml
 .phpunit.result.cache
+
+# IDE
+.idea/
