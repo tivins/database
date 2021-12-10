@@ -204,15 +204,24 @@ $db->select('maps_polygons', 'p')
 
 ## Run unit tests
 
+Create a test database, and a grant to a user on it.
 Add a `phpunit.xml` at the root of the repository.
+
+```mysql
+/* NB: This is a quick-start example. */
+create database test_db;
+create user test_user@localhost identified by 'test_passwd';
+grant all on test_db.* to test_user@localhost;
+flush privileges;
+```
 
 ```xml
 <phpunit>
     <php>
-        <env name="DBNAME" value="test"/>
-        <env name="DBUSER" value="username"/>
-        <env name="DBPASS" value="password"/>
-        <env name="DBHOST" value="localhost"/>
+        <env name="DB_NAME" value="test_db"/>
+        <env name="DB_USER" value="test_user"/>
+        <env name="DB_PASS" value="test_password"/>
+        <env name="DB_HOST" value="localhost"/>
     </php>
 </phpunit>
 ```

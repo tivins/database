@@ -2,8 +2,7 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Database;
-use Tivins\Database\Connectors\MySQLConnector;
+use Tivins\{Database\CreateQuery, Database\Database, Database\Connectors\MySQLConnector};
 
 /**
  * Static class used to get the database object during tests.
@@ -14,24 +13,30 @@ class TestConfig
 
     public static function db() : Database
     {
-        if (! isset(self::$db))
+        if (isset(self::$db))
         {
-            self::$db = new Database(
-                new MySQLConnector(
-                    getenv('DBNAME'),
-                    getenv('DBUSER'),
-                    getenv('DBPASS'),
-                    getenv('DBHOST'),
-                )
-            );
-
-            self::$db->query('drop table if exists users');
-            self::$db->query('create table users (
-                uid int unsigned auto_increment,
-                name varchar(255),
-                state int not null default 0,
-                primary key(uid))');
+            return self::$db;
         }
+
+        self::$db = new Database(
+            new MySQLConnector(
+                getenv('DB_NAME'),
+                getenv('DB_USER'),
+                getenv('DB_PASS'),
+                getenv('DB_HOST'),
+            )
+        );
+        self::$db->setTablePrefix('t_');
+
+        self::$db->dropTable('users');
+
+        self::$db->create('users')
+            ->addAutoIncrement('uid', true)
+            ->addString('name', nullable: false)
+            ->addBool('state', 0)
+            ->setUnique(['name'])
+            ->execute();
+
         return self::$db;
     }
 }

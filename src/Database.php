@@ -3,6 +3,7 @@
 namespace Tivins\Database;
 
 use PDO;
+use PDOException;
 use Tivins\Database\Connectors\Connector;
 
 /**
@@ -19,15 +20,25 @@ class Database
      * @var Callable|null
      */
     private $logCallback = null;
-    private PDO $handler;
 
     /**
      *
+     */
+    private PDO $handler;
+
+    /**
+     * Initialize a new Database object from the given connector.
      */
     public function __construct(Connector $connector)
     {
         $this->handler = $connector->connect();
         $this->configureAttributes();
+    }
+
+    public function setTablePrefix(string $prefix): self
+    {
+        $this->prefix = $prefix;
+        return $this;
     }
 
     /**
@@ -43,14 +54,14 @@ class Database
     /**
      *
      */
-    private function configureAttributes()
+    private function configureAttributes(): void
     {
         $this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         $this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
-     *
+     * @throws PDOException
      */
     public function query(string $query, array $parameters = []): Statement
     {
@@ -117,6 +128,14 @@ class Database
     }
 
     /**
+     * Creates a CreateQuery for $tableName.
+     */
+    public function create(string $tableName): CreateQuery
+    {
+        return new CreateQuery($this, $this->prefix . $tableName);
+    }
+
+    /**
      *
      */
     public function or(): Conditions
@@ -132,7 +151,13 @@ class Database
     }
 
     /**
+     * Shortcut to get a single row from the given table, column, value.
      *
+     * @example
+     *
+     * ```php
+     * $db_user = $db->fetchRow('users', 'uid', $userId);
+     * ```
      */
     public function fetchRow(string $tableName, string $column, $value): ?object
     {
@@ -143,24 +168,38 @@ class Database
                     ->fetch();
     }
 
-    /**
-     * Wrappers
-     */
-    public function transaction()
+    public function dropTable(string $tableName): self
     {
-        $this->handler?->beginTransaction();
+        $tableName = $this->prefixTableName($tableName);
+        $this->query("drop table if exists `$tableName`");
+        return $this;
     }
-    public function rollback()
+
+    public function truncateTable(string $tableName): self
     {
-        $this->handler?->rollBack();
-    }
-    public function commit()
-    {
-        $this->handler?->commit();
+        $tableName = $this->prefixTableName($tableName);
+        $this->query("truncate table `$tableName`");
+        return $this;
     }
 
     public function prefixTableName(string $tableName): string
     {
         return $this->prefix . $tableName;
+    }
+
+    /**
+     * Wrappers
+     */
+    public function transaction()
+    {
+        $this->handler->beginTransaction();
+    }
+    public function rollback()
+    {
+        $this->handler->rollBack();
+    }
+    public function commit()
+    {
+        $this->handler->commit();
     }
 }

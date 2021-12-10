@@ -21,7 +21,7 @@ class UpdateQuery extends Query
                 $data[] = $value;
             }
             else {
-                $data[] = "`{$key}`=?";
+                $data[] = "`$key`=?";
                 $args[] = $value;
             }
         }
@@ -31,7 +31,7 @@ class UpdateQuery extends Query
         if (!empty($condSql)) $condSql = " where $condSql";
         $args = array_merge($args, $condArgs);
 
-        $sql = "update {$this->tableName} set {$data}{$condSql}";
+        $sql = "update $this->tableName set $data$condSql";
         return [$sql, $args];
     }
 }

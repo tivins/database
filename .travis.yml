@@ -2,7 +2,7 @@ language: php
 php:
   - '8.0'
 env:
-  - DBNAME=test DBUSER=travis DBPASS= DBHOST=127.0.0.1
+  - DB_NAME=test DB_USER=travis DB_PASS= DB_HOST=127.0.0.1
 services:
   - mysql
 before_install:

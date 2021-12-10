@@ -1,8 +1,6 @@
 <?php
 
-use Tivins\Database\{ Query, SelectQuery };
-use Tivins\Database\Tests\{ TestConfig, TestBase };
-use PHPUnit\Framework\TestCase;
+namespace Tivins\Database\Tests;
 
 class SelectTest extends TestBase
 {
@@ -12,7 +10,7 @@ class SelectTest extends TestBase
             ->select('test', 't')
             ->addFields('t');
         $this->checkQuery($query,
-            'select t.* from test `t`', []);
+            'select t.* from t_test `t`', []);
     }
 
     public function testSelectFieldWithoutAlias()
@@ -21,7 +19,7 @@ class SelectTest extends TestBase
             ->select('test', 't')
             ->addField('t', 'id');
         $this->checkQuery($query,
-            'select t.`id` from test `t`', []);
+            'select t.`id` from t_test `t`', []);
     }
 
     public function testSelectFieldAlias()
@@ -30,7 +28,7 @@ class SelectTest extends TestBase
             ->select('test', 't')
             ->addField('t', 'id', 't_id');
         $this->checkQuery($query,
-            'select t.`id` as t_id from test `t`', []);
+            'select t.`id` as t_id from t_test `t`', []);
     }
 
     public function testSelectJoin()
@@ -41,7 +39,7 @@ class SelectTest extends TestBase
             ->leftJoin('other', 'o', 'o.oid = t.id')
             ;
         $this->checkQuery($query,
-            'select t.`id` as t_id from test `t` left join `other` `o` on o.oid = t.id', []);
+            'select t.`id` as t_id from t_test `t` left join `t_other` `o` on o.oid = t.id', []);
     }
 
     public function testNull()
@@ -53,7 +51,7 @@ class SelectTest extends TestBase
             ->isNotNull('t.another_field')
             ;
         $this->checkQuery($query,
-            'select t.* from test `t` where t.field is null and t.another_field is not null', []);
+            'select t.* from t_test `t` where t.field is null and t.another_field is not null', []);
     }
 
     /*
