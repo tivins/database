@@ -7,9 +7,7 @@ use Tivins\Database\Exceptions\{ConditionException, ConnectionException, Databas
 class MergeTest extends TestBase
 {
     /**
-     * @throws ConnectionException
-     * @throws DatabaseException
-     * @throws ConditionException
+     * @throws ConnectionException | DatabaseException | ConditionException
      */
     public function testMerge()
     {

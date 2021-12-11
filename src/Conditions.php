@@ -1,7 +1,6 @@
 <?php
 
 namespace Tivins\Database;
-use Exception;
 use Tivins\Database\Exceptions\ConditionException;
 
 /**
@@ -9,8 +8,8 @@ use Tivins\Database\Exceptions\ConditionException;
  */
 class Conditions
 {
-    const MODE_AND = 'and';
-    const MODE_OR  = 'or';
+    public const MODE_AND = 'and';
+    public const MODE_OR  = 'or';
 
     protected array $conditions = [];
     protected array $nestedConditions = [];

@@ -2,12 +2,12 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Exceptions\ConnectionException;
+use Tivins\Database\Exceptions\{ConnectionException, DatabaseException};
 
 class SelectTest extends TestBase
 {
     /**
-     * @throws ConnectionException
+     * @throws ConnectionException | DatabaseException
      */
     public function testSelect()
     {
@@ -20,7 +20,7 @@ class SelectTest extends TestBase
     }
 
     /**
-     * @throws ConnectionException
+     * @throws ConnectionException | DatabaseException
      */
     public function testSelectFieldWithoutAlias()
     {
@@ -33,7 +33,7 @@ class SelectTest extends TestBase
     }
 
     /**
-     * @throws ConnectionException
+     * @throws ConnectionException | DatabaseException
      */
     public function testSelectFieldAlias()
     {
@@ -46,7 +46,7 @@ class SelectTest extends TestBase
     }
 
     /**
-     * @throws ConnectionException
+     * @throws ConnectionException | DatabaseException
      */
     public function testSelectJoin()
     {
@@ -61,7 +61,7 @@ class SelectTest extends TestBase
     }
 
     /**
-     * @throws ConnectionException
+     * @throws ConnectionException | DatabaseException
      */
     public function testNull()
     {
@@ -78,7 +78,7 @@ class SelectTest extends TestBase
     }
 
     /**
-     * @throws ConnectionException
+     * @throws ConnectionException | DatabaseException
      */
     public function testGroupBy()
     {

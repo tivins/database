@@ -6,8 +6,7 @@ use Tivins\Database\Exceptions\{ ConnectionException, DatabaseException };
 class InsertTest extends TestBase
 {
     /**
-     * @throws ConnectionException
-     * @throws DatabaseException
+     * @throws ConnectionException | DatabaseException
      */
     public function testInsert()
     {

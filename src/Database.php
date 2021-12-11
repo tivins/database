@@ -154,7 +154,9 @@ class Database
                 ->condition($column, $value)
                 ->execute()
                 ->fetch();
-        } catch (Exception $e) {
+        }
+        catch (Exception $exception) {
+            /** @todo LogException($exception) */
             return null;
         }
     }

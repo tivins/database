@@ -2,7 +2,8 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\{Database\Connectors\MySQLConnector, Database\Database, Database\Exceptions\ConnectionException};
+use Tivins\Database\{Database, Connectors\MySQLConnector};
+use Tivins\Database\Exceptions\{ConnectionException, DatabaseException};
 
 /**
  * Static class used to get the database object during tests.
@@ -13,7 +14,7 @@ class TestConfig
 
     /**
      *
-     * @throws ConnectionException
+     * @throws ConnectionException | DatabaseException
      */
     public static function db(): Database
     {
@@ -35,6 +36,7 @@ class TestConfig
     }
 
     /**
+     * @throws DatabaseException
      */
     public static function initializeTables(): void
     {

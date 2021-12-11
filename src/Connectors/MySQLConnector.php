@@ -2,9 +2,7 @@
 
 namespace Tivins\Database\Connectors;
 
-use Exception;
 use PDO;
-use PDOException;
 
 class MySQLConnector extends Connector
 {
