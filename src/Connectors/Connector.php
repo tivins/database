@@ -4,10 +4,10 @@ namespace Tivins\Database\Connectors;
 
 use PDO;
 use PDOException;
+use Tivins\Database\Exceptions\ConnectionException;
 
 abstract class Connector
 {
-    abstract public function createHandler(): PDO;
     /**
      * @throws ConnectionException
      */
@@ -15,10 +15,10 @@ abstract class Connector
     {
         try {
             return $this->createHandler();
-        }
-        catch (PDOException $pdoException)
-        {
+        } catch (PDOException $pdoException) {
             throw new ConnectionException();
         }
     }
+
+    abstract public function createHandler(): PDO;
 }

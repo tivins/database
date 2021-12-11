@@ -22,8 +22,8 @@ git clone git@github.com:tivins/database.git
 ## Example
 
 ```php
-use Tivins\Database\Database;
-use Tivins\Database\Connectors\MySQLConnector;
+
+use Tivins\Database\{Database, Connectors\MySQLConnector};
 
 $db = new Database(new MySQLConnector('dbname', 'user', 'password', 'localhost'));
 
@@ -43,6 +43,8 @@ $users = $db->select('posts', 'p')
 * [Update query](#update-query)
 * [Merge query](#merge-query)
 * [Nested conditions](#nested-conditions)
+* [Expressions](#expression)
+* [Having](#having)
 * [Transactions](#transactions)
 
 ## Usage
@@ -80,7 +82,10 @@ $db->select('books', 'b')
     ->fetchAll();
 ```
 
-**Join** (use as well `innerJoin`, `leftJoin`).
+**Join** 
+
+use as well `innerJoin`, `leftJoin`.
+
 ```php
 $db->select('books', 'b')
     ->addFields('b', ['id', 'title'])
@@ -136,6 +141,17 @@ $db->update('book')
 $db->merge('book')
     ->keys(['ean' => '123456'])
     ->fields(['title' => 'Book title', 'author' => 'John Doe'])
+    ->execute();
+```
+
+### Delete query
+
+Perform a `delete` query on the given table.
+All methods of [`Conditions`][4] can be used on a [`DeleteQuery`][3] object.
+
+```php
+$db->delete('book')
+    ->whereIn('id', [3, 4, 5])
     ->execute();
 ```
 
@@ -206,13 +222,12 @@ $db->select('maps_polygons', 'p')
 ## Transactions
 
 ```php
-use Tivins\Database{ Database, DatabaseException };
-function makeSomething()
+use Tivins\Database{ Database, DatabaseException, MySQLConnector };
+function makeSomething(Database $db)
 {
-    $db = new Database();
     $db->transaction()
     try {
-        // do some queries require NONE of them throws any DatabaseException
+        // do some stuff
     }
     catch (DatabaseException $exception) {
         $db->rollback();
@@ -254,3 +269,4 @@ vendor/bin/phpunit tests/
 [1]: /src/SelectQuery.php
 [2]: /src/UpdateQuery.php
 [3]: /src/DeleteQuery.php
+[4]: /src/Conditions.php

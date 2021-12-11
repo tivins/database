@@ -3,7 +3,6 @@
 namespace Tivins\Database\Connectors;
 
 use PDO;
-use PDOException;
 
 class SQLiteConnector extends Connector
 {

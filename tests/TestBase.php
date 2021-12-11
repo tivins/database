@@ -11,6 +11,6 @@ class TestBase extends TestCase
     {
         $query_data = json_encode($query->build());
         $expected_data = json_encode([$expectedQueryString, $expectedParams]);
-        $this->assertEquals($query_data, $expected_data);
+        $this->assertEquals($expected_data, $query_data);
     }
 }

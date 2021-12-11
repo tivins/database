@@ -5,7 +5,7 @@ namespace Tivins\Database;
 use Exception;
 use PDO;
 use PDOException;
-use Tivins\Database\Connectors\Connector;
+use Tivins\Database\{Connectors\Connector, Exceptions\ConnectionException, Exceptions\DatabaseException};
 
 /**
  *
@@ -29,12 +29,21 @@ class Database
 
     /**
      * Initialize a new Database object from the given connector.
-     * @throws Connectors\ConnectionException
+     * @throws ConnectionException
      */
     public function __construct(Connector $connector)
     {
         $this->handler = $connector->connect();
         $this->configureAttributes();
+    }
+
+    /**
+     *
+     */
+    private function configureAttributes(): void
+    {
+        $this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+        $this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
@@ -55,38 +64,9 @@ class Database
      *
      * Signature : ```php function(string $sql, array $parameters): void;```
      */
-    public function setLogCallback(Callable $callback): void
+    public function setLogCallback(callable $callback): void
     {
         $this->logCallback = $callback;
-    }
-
-    /**
-     *
-     */
-    private function configureAttributes(): void
-    {
-        $this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        $this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-
-    /**
-     * @throws DatabaseException
-     */
-    public function query(string $query, array $parameters = []): ?Statement
-    {
-        if ($this->logCallback) {
-            call_user_func($this->logCallback, $query, $parameters);
-        }
-
-        $sth = $this->handler->prepare($query);
-        try {
-            $sth->execute($parameters);
-        }
-        catch (PDOException $exception)
-        {
-            throw new DatabaseException();
-        }
-        return new Statement($sth);
     }
 
     /**
@@ -97,18 +77,6 @@ class Database
         return $this->handler->lastInsertId();
     }
 
-    /*
-        Select, Insert, Update, Merge, Delete
-    */
-
-    /**
-     * Creates a MergeQuery for $tableName.
-     */
-    public function select(string $tableName, string $alias): SelectQuery
-    {
-        return new SelectQuery($this, $this->prefix . $tableName, $alias);
-    }
-
     /**
      * Creates a MergeQuery for $tableName.
      */
@@ -116,6 +84,10 @@ class Database
     {
         return new MergeQuery($this, $this->prefix . $tableName);
     }
+
+    /*
+        Select, Insert, Update, Merge, Delete
+    */
 
     /**
      * Creates an InsertQuery for $tableName.
@@ -156,6 +128,7 @@ class Database
     {
         return new Conditions(Conditions::MODE_OR);
     }
+
     /**
      *
      */
@@ -187,6 +160,14 @@ class Database
     }
 
     /**
+     * Creates a MergeQuery for $tableName.
+     */
+    public function select(string $tableName, string $alias): SelectQuery
+    {
+        return new SelectQuery($this, $this->prefix . $tableName, $alias);
+    }
+
+    /**
      * @throws DatabaseException
      */
     public function dropTable(string $tableName): self
@@ -194,6 +175,29 @@ class Database
         $tableName = $this->prefixTableName($tableName);
         $this->query("drop table if exists `$tableName`");
         return $this;
+    }
+
+    public function prefixTableName(string $tableName): string
+    {
+        return $this->prefix . $tableName;
+    }
+
+    /**
+     * @throws DatabaseException
+     */
+    public function query(string $query, array $parameters = []): ?Statement
+    {
+        if ($this->logCallback) {
+            call_user_func($this->logCallback, $query, $parameters);
+        }
+
+        $sth = $this->handler->prepare($query);
+        try {
+            $sth->execute($parameters);
+        } catch (PDOException $exception) {
+            throw new DatabaseException();
+        }
+        return new Statement($sth);
     }
 
     /**
@@ -206,11 +210,6 @@ class Database
         $tableName = $this->prefixTableName($tableName);
         $this->query("truncate table `$tableName`");
         return $this;
-    }
-
-    public function prefixTableName(string $tableName): string
-    {
-        return $this->prefix . $tableName;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tivins\Database\Connectors;
+namespace Tivins\Database\Exceptions;
 
 use Exception;
 

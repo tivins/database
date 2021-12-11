@@ -2,7 +2,7 @@
 
 namespace Tivins\Database;
 
-use Exception;
+use Tivins\Database\Exceptions\DatabaseException;
 
 class Query extends Conditions
 {
@@ -28,6 +28,9 @@ class Query extends Conditions
         return $this->db->query(...$this->build());
     }
 
+    /**
+     * @return array
+     */
     public function build(): array
     {
         return [];

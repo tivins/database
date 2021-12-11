@@ -5,5 +5,8 @@ vendor/
 phpunit.xml
 .phpunit.result.cache
 
+# Doxygen
+docs/
+
 # IDE
 .idea/

@@ -2,8 +2,7 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\{Database\Connectors\ConnectionException, Database\Database, Database\Connectors\MySQLConnector};
-use Exception;
+use Tivins\{Database\Connectors\MySQLConnector, Database\Database, Database\Exceptions\ConnectionException};
 
 /**
  * Static class used to get the database object during tests.

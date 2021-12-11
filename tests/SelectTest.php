@@ -2,6 +2,8 @@
 
 namespace Tivins\Database\Tests;
 
+use Tivins\Database\Exceptions\ConnectionException;
+
 class SelectTest extends TestBase
 {
     public function testSelect()
@@ -42,17 +44,39 @@ class SelectTest extends TestBase
             'select t.`id` as t_id from t_test `t` left join `t_other` `o` on o.oid = t.id', []);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function testNull()
     {
-        $query = TestConfig::db()
+        $db = TestConfig::db();
+
+        $query = $db
             ->select('test', 't')
             ->addFields('t')
             ->isNull('t.field')
             ->isNotNull('t.another_field')
             ;
         $this->checkQuery($query,
-            'select t.* from t_test `t` where t.field is null and t.another_field is not null', []);
+            'select t.* from t_test `t` where t.field is null and t.another_field is not null',
+            []);
     }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function testGroupBy()
+    {
+        $db = TestConfig::db();
+
+        $query = $db->select('geometries', 'g')
+            ->addExpression('ST_Simplify(g.geom, 1024)', 'geom')
+            ->having($db->and()->isNotNull('geom'))
+        ;
+        $this->checkQuery($query, 'select ST_Simplify(g.geom, 1024) as geom from t_geometries `g` having geom is not null', []);
+
+    }
+
 
     /*
     public function testSelectLike()

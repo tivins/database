@@ -1,6 +1,6 @@
 <?php
 
-namespace Tivins\Database;
+namespace Tivins\Database\Exceptions;
 
 class DatabaseException extends \Exception
 {

@@ -2,8 +2,8 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Connectors\ConnectionException;
-use Tivins\Database\DatabaseException;
+use Tivins\Database\Exceptions\ConnectionException;
+use Tivins\Database\Exceptions\DatabaseException;
 
 class CreateTest extends TestBase
 {
