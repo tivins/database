@@ -2,15 +2,14 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Exceptions\{ConnectionException, DatabaseException};
-use Exception;
+use Tivins\Database\Exceptions\{ConditionException, ConnectionException, DatabaseException};
 
 class MergeTest extends TestBase
 {
     /**
      * @throws ConnectionException
      * @throws DatabaseException
-     * @throws Exception
+     * @throws ConditionException
      */
     public function testMerge()
     {

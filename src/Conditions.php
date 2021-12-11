@@ -63,7 +63,7 @@ class Conditions
 
     /**
      *
-     * @throws Exception
+     * @throws ConditionException
      */
     public function condition($field, $value = null, $operator = '='): self
     {
@@ -85,10 +85,8 @@ class Conditions
      */
     public function buildConditions(): array
     {
-        if (empty($this->conditions) &&
-            empty($this->nestedConds))
-        {
-            return['', []];
+        if (empty($this->conditions) && empty($this->nestedConds)) {
+            return ['', []];
         }
 
         $query = implode(' ' . $this->mode . ' ', array_column($this->conditions, 'cond'));
@@ -96,7 +94,7 @@ class Conditions
         $parameters = array_flatten(array_column($this->conditions, 'data'));
 
         foreach ($this->nestedConditions as $nestedConditions) {
-            list($subQuery, $subParameters) = $nestedConditions->buildConditions();
+            [$subQuery, $subParameters] = $nestedConditions->buildConditions();
             if (!empty($subQuery)) {
                 $query .= (empty($query) ? '' : ' ' . $this->mode . ' ') . $subQuery;
                 $parameters = array_merge($parameters, $subParameters);
