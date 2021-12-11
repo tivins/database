@@ -44,7 +44,7 @@ class TestConfig
             ->addAutoIncrement('uid', true)
             ->addString('name', nullable: false)
             ->addBool('state', 0)
-            ->setUnique(['name'])
+            ->addUniqueKey(['name'])
             ->execute();
 
     }

@@ -1,8 +1,15 @@
 <?php
 namespace Tivins\Database\Tests;
 
+use Tivins\Database\Exceptions\ConnectionException;
+use Tivins\Database\Exceptions\DatabaseException;
+
 class InsertTest extends TestBase
 {
+    /**
+     * @throws ConnectionException
+     * @throws DatabaseException
+     */
     public function testInsert()
     {
         TestConfig::db()->truncateTable('users');

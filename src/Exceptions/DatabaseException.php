@@ -2,6 +2,8 @@
 
 namespace Tivins\Database\Exceptions;
 
-class DatabaseException extends \Exception
+use Exception;
+
+class DatabaseException extends Exception
 {
 }

@@ -6,37 +6,49 @@ use Tivins\Database\Exceptions\ConnectionException;
 
 class SelectTest extends TestBase
 {
+    /**
+     * @throws ConnectionException
+     */
     public function testSelect()
     {
-        $query = TestConfig::db()
-            ->select('test', 't')
+        $db = TestConfig::db();
+        $query = $db->select('test', 't')
             ->addFields('t');
         $this->checkQuery($query,
             'select t.* from t_test `t`', []);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function testSelectFieldWithoutAlias()
     {
-        $query = TestConfig::db()
-            ->select('test', 't')
+        $db = TestConfig::db();
+        $query = $db->select('test', 't')
             ->addField('t', 'id');
         $this->checkQuery($query,
             'select t.`id` from t_test `t`', []);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function testSelectFieldAlias()
     {
-        $query = TestConfig::db()
-            ->select('test', 't')
+        $db = TestConfig::db();
+        $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id');
         $this->checkQuery($query,
             'select t.`id` as t_id from t_test `t`', []);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function testSelectJoin()
     {
-        $query = TestConfig::db()
-            ->select('test', 't')
+        $db = TestConfig::db();
+        $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id')
             ->leftJoin('other', 'o', 'o.oid = t.id')
             ;
@@ -50,7 +62,6 @@ class SelectTest extends TestBase
     public function testNull()
     {
         $db = TestConfig::db();
-
         $query = $db
             ->select('test', 't')
             ->addFields('t')

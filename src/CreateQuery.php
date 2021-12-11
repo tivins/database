@@ -79,9 +79,14 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function setUnique(array $columns): self
+    public function addUniqueKey(array $columns): self
     {
         $this->indexes[] = ['type' => 'unique', 'columns' => $columns];
+        return $this;
+    }
+    public function addIndex(array $columns): self
+    {
+        $this->indexes[] = ['type' => 'index', 'columns' => $columns];
         return $this;
     }
 
