@@ -27,7 +27,7 @@ class UpdateQuery extends Query
         }
         $data = implode(',', $data);
 
-        list($condSql, $condArgs) = $this->buildConditions();
+        [$condSql, $condArgs] = $this->buildConditions();
         if (!empty($condSql)) $condSql = " where $condSql";
         $args = array_merge($args, $condArgs);
 

@@ -1,8 +1,7 @@
 <?php
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Exceptions\ConnectionException;
-use Tivins\Database\Exceptions\DatabaseException;
+use Tivins\Database\Exceptions\{ ConnectionException, DatabaseException };
 
 class InsertTest extends TestBase
 {

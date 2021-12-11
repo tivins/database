@@ -15,7 +15,8 @@ class SelectTest extends TestBase
         $query = $db->select('test', 't')
             ->addFields('t');
         $this->checkQuery($query,
-            'select t.* from t_test `t`', []);
+            'select t.* from t_test `t`',
+            []);
     }
 
     /**
@@ -27,7 +28,8 @@ class SelectTest extends TestBase
         $query = $db->select('test', 't')
             ->addField('t', 'id');
         $this->checkQuery($query,
-            'select t.`id` from t_test `t`', []);
+            'select t.`id` from t_test `t`',
+            []);
     }
 
     /**
@@ -39,7 +41,8 @@ class SelectTest extends TestBase
         $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id');
         $this->checkQuery($query,
-            'select t.`id` as t_id from t_test `t`', []);
+            'select t.`id` as t_id from t_test `t`',
+            []);
     }
 
     /**
@@ -53,7 +56,8 @@ class SelectTest extends TestBase
             ->leftJoin('other', 'o', 'o.oid = t.id')
             ;
         $this->checkQuery($query,
-            'select t.`id` as t_id from t_test `t` left join `t_other` `o` on o.oid = t.id', []);
+            'select t.`id` as t_id from t_test `t` left join `t_other` `o` on o.oid = t.id',
+            []);
     }
 
     /**
@@ -83,16 +87,11 @@ class SelectTest extends TestBase
         $query = $db->select('geometries', 'g')
             ->addExpression('ST_Simplify(g.geom, 1024)', 'geom')
             ->having($db->and()->isNotNull('geom'))
-        ;
-        $this->checkQuery($query, 'select ST_Simplify(g.geom, 1024) as geom from t_geometries `g` having geom is not null', []);
+            ;
+
+        $this->checkQuery($query,
+            'select ST_Simplify(g.geom, 1024) as geom from t_geometries `g` having geom is not null',
+            []);
 
     }
-
-
-    /*
-    public function testSelectLike()
-    {
-        // To do
-    }
-    */
 }

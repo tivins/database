@@ -84,6 +84,7 @@ class CreateQuery extends Query
         $this->indexes[] = ['type' => 'unique', 'columns' => $columns];
         return $this;
     }
+
     public function addIndex(array $columns): self
     {
         $this->indexes[] = ['type' => 'index', 'columns' => $columns];
@@ -99,7 +100,6 @@ class CreateQuery extends Query
         foreach ($this->indexes as $index) {
             $statements[] = $index['type'] . ' (' . implode(',', $index['columns']) . ')';
         }
-
         $statements = implode(', ', $statements);
         $sql = "create table if not exists `$this->tableName` ($statements)";
         return [$sql, []];

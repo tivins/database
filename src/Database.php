@@ -82,7 +82,7 @@ class Database
      */
     public function merge(string $tableName): MergeQuery
     {
-        return new MergeQuery($this, $this->prefix . $tableName);
+        return new MergeQuery($this, $tableName);
     }
 
     /*
@@ -195,7 +195,7 @@ class Database
         try {
             $sth->execute($parameters);
         } catch (PDOException $exception) {
-            throw new DatabaseException();
+            throw new DatabaseException($exception);
         }
         return new Statement($sth);
     }

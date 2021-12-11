@@ -43,7 +43,7 @@ $users = $db->select('posts', 'p')
 * [Update query](#update-query)
 * [Merge query](#merge-query)
 * [Nested conditions](#nested-conditions)
-* [Expressions](#expression)
+* [Expressions](#expressions)
 * [Having](#having)
 * [Transactions](#transactions)
 

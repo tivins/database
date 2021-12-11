@@ -16,7 +16,7 @@ abstract class Connector
         try {
             return $this->createHandler();
         } catch (PDOException $pdoException) {
-            throw new ConnectionException();
+            throw new ConnectionException($pdoException->getMessage());
         }
     }
 
