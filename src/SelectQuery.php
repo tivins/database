@@ -52,6 +52,12 @@ class SelectQuery extends Query
         return $this;
     }
 
+    public function addCount(string $field, string $fieldAlias): self
+    {
+        $this->expressions[] = ['sql' => "count($field) as $fieldAlias", 'data' => []];
+        return $this;
+    }
+
     /**
      *
      */

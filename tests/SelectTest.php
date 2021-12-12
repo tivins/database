@@ -51,12 +51,37 @@ class SelectTest extends TestBase
     public function testSelectJoin()
     {
         $db = TestConfig::db();
+
         $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id')
             ->leftJoin('other', 'o', 'o.oid = t.id')
             ;
         $this->checkQuery($query,
             'select t.`id` as t_id from t_test `t` left join `t_other` `o` on o.oid = t.id',
+            []);
+
+        $query = $db->select('test', 't')
+            ->addField('t', 'id', 't_id')
+            ->innerJoin('other', 'o', 'o.oid = t.id')
+        ;
+        $this->checkQuery($query,
+            'select t.`id` as t_id from t_test `t` inner join `t_other` `o` on o.oid = t.id',
+            []);
+    }
+
+    /**
+     * @throws ConnectionException | DatabaseException
+     */
+    public function testOrderBy()
+    {
+        $db = TestConfig::db();
+
+        $query = $db->select('test', 't')
+            ->addFields('t')
+            ->groupBy('t.value')
+        ;
+        $this->checkQuery($query,
+            'select t.* from t_test `t` group by t.value',
             []);
     }
 
