@@ -22,7 +22,7 @@ class UpdateQuery extends Query
             }
             elseif ($value instanceof InsertExpression)
             {
-                $data[] = $value->getExpression();
+                $data[] = "`$key`={$value->getExpression()}";
                 $args = array_merge($args, $value->getParameters());
             }
             else {
