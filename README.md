@@ -126,6 +126,28 @@ $db->insert('book')
     ->execute();
 ```
 
+#### Insert expressions
+
+Expressions can be used inside the array given to `fields()` function.
+
+
+```php
+$db->insert('geom')
+    ->fields([
+        'name'     => $name,
+        'position' => new InsertExpression('POINT(?,?)', $x, $y)
+    ])
+    ->execute();
+```
+
+Will execute a following query/arguments
+```sql
+insert into `geom` (`name`, `position`) values (?, POINT(?,?))
+```
+```php
+[$name, $x, $y]
+```
+
 ### Update query
 
 ```php

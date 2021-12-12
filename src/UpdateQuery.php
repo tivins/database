@@ -20,6 +20,11 @@ class UpdateQuery extends Query
             if (is_numeric($key)) {
                 $data[] = $value;
             }
+            elseif ($value instanceof InsertExpression)
+            {
+                $data[] = $value->getExpression();
+                $args = array_merge($args, $value->getParameters());
+            }
             else {
                 $data[] = "`$key`=?";
                 $args[] = $value;
