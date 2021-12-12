@@ -20,6 +20,7 @@ class CreateTest extends TestBase
             ->addInteger('counter', 0, unsigned: true, nullable: false)
             ->addInteger('null_val', null, nullable: false)
             ->addGeometry('geom_field')
+            ->addJSON('data')
             ->addIndex(['null_val']);
 
         $this->checkQuery($query,
@@ -28,6 +29,7 @@ class CreateTest extends TestBase
             . '`counter` int unsigned not null default 0, '
             . '`null_val` int default null, '
             . '`geom_field` geometry, '
+            . '`data` json default null, '
             . 'primary key (id), '
             . 'index (null_val)'
             . ')'

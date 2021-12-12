@@ -85,6 +85,16 @@ class CreateQuery extends Query
         return $this;
     }
 
+    public function addJSON(string $name, ?string $default = null, bool $nullable = true): self
+    {
+        $this->fields[] = [
+            'type' => 'json',
+            'attr' => trim(($nullable || is_null($default) ? '' : 'not null')
+                . ' default ' . (is_null($default) ? 'null' : $default)),
+            'name' => $name];
+        return $this;
+    }
+
     public function addUniqueKey(array $columns): self
     {
         $this->indexes[] = ['type' => 'unique', 'columns' => $columns];
