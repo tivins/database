@@ -7,7 +7,7 @@ namespace Tivins\Database;
  */
 class InsertQuery extends Query
 {
-    private array $fields;
+    private array $fields = [];
 
     public function fields(array $data): self
     {
@@ -17,12 +17,25 @@ class InsertQuery extends Query
 
     public function build(): array
     {
-        $keys = '`' . implode('`,`', array_keys($this->fields)) . '`';
+        $keys   = [];
+        $values = [];
+        $params = [];
 
-        $placeholders = implode(',', array_fill(0, count($this->fields), '?'));
-
-        $sql = "insert into `$this->tableName` ($keys) values ($placeholders)";
-
-        return [$sql, array_values($this->fields)];
+        foreach ($this->fields as $key => $value)
+        {
+            $keys[] = "`$key`";
+            if ($value instanceof InsertExpression) // expression
+            {
+                $values[] = $value->getExpression();
+                $params = array_merge($params, $value->getParameters());
+            }
+            else
+            {
+                $values[] = '?';
+                $params[] = $value;
+            }
+        }
+        $sql = sprintf("insert into `%s` (%s) values (%s)", $this->tableName, implode(',',$keys), implode(',',$values));
+        return [$sql, $params];
     }
 }
