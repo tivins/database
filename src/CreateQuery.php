@@ -79,6 +79,12 @@ class CreateQuery extends Query
         return $this;
     }
 
+    public function addGeometry(string $name): self
+    {
+        $this->fields[] = ['type' => 'geometry', 'attr' => '', 'name' => $name];
+        return $this;
+    }
+
     public function addUniqueKey(array $columns): self
     {
         $this->indexes[] = ['type' => 'unique', 'columns' => $columns];
@@ -95,7 +101,7 @@ class CreateQuery extends Query
     {
         $statements = [];
         foreach ($this->fields as $field) {
-            $statements[] = "`$field[name]` $field[type] $field[attr]";
+            $statements[] = trim("`$field[name]` $field[type] $field[attr]");
         }
         foreach ($this->indexes as $index) {
             $statements[] = $index['type'] . ' (' . implode(',', $index['columns']) . ')';
