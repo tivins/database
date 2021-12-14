@@ -34,7 +34,7 @@ $db = new Database(new MySQLConnector('dbname', 'user', 'password', 'localhost')
 
 $users = $db->select('posts', 'p')
     ->leftJoin('users', 'u', 'p.author_id = u.id')
-    ->fields('p')
+    ->addFields('p')
     ->addField('u', 'name', 'author_name')
     ->execute()
     ->fetchAll();
@@ -43,14 +43,17 @@ $users = $db->select('posts', 'p')
 ## Summary
 
 * [Connectors](#connectors)
-* [Select query](#select-query)
-* [Insert query](#insert-query)
-* [Update query](#update-query)
-* [Merge query](#merge-query)
-* [Nested conditions](#nested-conditions)
-* [Expressions](#expressions)
-* [Having](#having)
-* [Transactions](#transactions)
+* Queries :
+  * [Select query](#select-query)
+  * [Insert query](#insert-query)
+  * [Update query](#update-query)
+  * [Merge query](#merge-query)
+  * [Nested conditions](#nested-conditions)
+  * [Expressions](#expressions)
+  * [Having](#having)
+  * [Transactions](#transactions)
+* [Error handling](#error-handling)
+* [Unit tests](#unit-tests)
 
 ## Usage
 
@@ -159,6 +162,8 @@ insert into `geom` (`name`, `position`) values (?, POINT(?,?))
 ```php
 [$name, $x, $y]
 ```
+
+InsertExpression are also allowed with a MergeQuery.
 
 ### Update query
 
@@ -270,7 +275,42 @@ function makeSomething(Database $db)
 }
 ```
 
-## Run unit tests
+## Error handling
+
+There are three main exception thrown by Database.
+
+* [ConnectionException][5], raised by the Database constructor, if a connection cannot be established.
+* [DatabaseException][7], thrown when a PDO exception is raised from the query execution.
+* [ConditionException][6], raised when a given operator is not allowed.
+
+All of these exceptions has an explicit message (from PDO, essentially).
+
+Usage short example:
+
+```php
+try {
+    $this->db = new Database($connector);
+}
+catch (ConnectionException $exception) {
+    $this->logErrorInternally($exception->getMessage());
+    $this->displayError("Cannot join the database.");
+}
+```
+```php
+try {
+    $this->db->insert('users')
+        ->fields([
+            'name' => 'DuplicateName',
+        ])
+        ->execute();  
+}
+catch (DatabaseException $exception) {
+    $this->logErrorInternally($exception->getMessage());
+    $this->displayError("Cannot create the user.");
+}
+```
+
+## Unit tests
 
 Create a test database, and a grant to a user on it.
 Add a `phpunit.xml` at the root of the repository.
@@ -304,3 +344,6 @@ vendor/bin/phpunit tests/
 [2]: /src/UpdateQuery.php
 [3]: /src/DeleteQuery.php
 [4]: /src/Conditions.php
+[5]: /src/Exceptions/ConnectionException.php
+[6]: /src/Exceptions/ConditionException.php
+[7]: /src/Exceptions/DatabaseException.php
