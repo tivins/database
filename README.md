@@ -1,6 +1,6 @@
 # A PDO Wrapper
 
-* Requires PHP 8.0 to run
+A fluent, lightweight, and efficient PDO wrapper.
 
 ## CI & Stats
 
@@ -9,13 +9,18 @@
 
 ## Install
 
+### Requirements
+
+* PHP >= 8.0
+* PDO extension
+* (dev-only) PHPUnit
+
+### Download
+
 ```sh
+# composer
 composer require tivins/database
-```
-
-or
-
-```sh
+# github
 git clone git@github.com:tivins/database.git
 ```
 
@@ -75,7 +80,7 @@ $query = new SelectQuery($db, 'users', 'u');
 
 **Basic**
 ```php
-$db->select('books', 'b')
+$data = $db->select('books', 'b')
     ->addFields('b')
     ->condition('b.reserved', 0)
     ->execute()
@@ -108,12 +113,19 @@ $db->select('books', 'b')
 
 **Group by**
 ```php
-$tagsQuery = App::db()->select('tags', 't')
+$tagsQuery = $db->select('tags', 't')
     ->innerJoin('book_tags', 'bt', 'bt.tag_id = t.id')
     ->addFields('t')
     ->addExpression('count(bt.book_id)', 'books_count')
     ->groupBy('t.id')
     ->orderBy('t.name', 'asc');
+```
+
+**Range/Limit**
+```php
+$query->limit(10);          # implicit start from 0.
+$query->limitFrom(0, 10);   # explicit start from 0.
+$query->limitFrom(100, 50); # will fetch 50 rows from 100th row.
 ```
 
 ### Insert query

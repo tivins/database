@@ -1,6 +1,8 @@
 {
   "name": "tivins/database",
-  "description": "PDO wrapper",
+  "description": "A fluent, lightweight, and efficient PDO wrapper.",
+  "type":  "library",
+  "license": "MIT",
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {

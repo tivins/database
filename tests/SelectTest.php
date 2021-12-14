@@ -119,4 +119,44 @@ class SelectTest extends TestBase
             []);
 
     }
+
+    /**
+     * @throws ConnectionException
+     * @throws DatabaseException
+     */
+    public function testLimits()
+    {
+        $db = TestConfig::db();
+        
+        $db->truncateTable('users');
+        foreach (range(0, 19) as $index) {
+            $db->insert('users')
+                ->fields(['name' => 'user' . $index])
+                ->execute();
+        }
+
+        $num = $db->select('users', 'u')
+            ->addCount('*', 'count')
+            ->execute()
+            ->fetchField();
+        $this->assertEquals(20, $num);
+
+        $query = $db->select('users', 'u')
+            ->addFields('u')
+            ->limit(5)
+            ->orderBy('u.uid', 'asc');
+        $this->checkQuery($query, 'select u.* from t_users `u` order by u.uid asc limit 5', []);
+        $results = $query->execute()->fetchAll();
+        $this->assertCount(5, $results);
+        $this->assertEquals('user0', reset($results)->name);
+
+
+        $query = $db->select('users', 'u')
+            ->addFields('u')
+            ->limitFrom(5, 5)
+            ->orderBy('u.uid', 'asc');
+        $results = $query->execute()->fetchAll();
+        $this->assertCount(5, $results);
+        $this->assertEquals('user5', reset($results)->name);
+    }
 }
