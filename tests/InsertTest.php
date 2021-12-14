@@ -2,7 +2,6 @@
 namespace Tivins\Database\Tests;
 
 use Tivins\Database\Exceptions\{ ConnectionException, DatabaseException };
-use Tivins\Database\Database;
 use Tivins\Database\InsertExpression;
 
 class InsertTest extends TestBase
@@ -42,7 +41,7 @@ class InsertTest extends TestBase
         $db->dropTable('geom');
         $db->create('geom')
             ->addAutoIncrement('gid')
-            ->addString('name', 255, nullable: false)
+            ->addString('name')
             ->addGeometry('position')
             ->addGeometry('boundary')
             ->execute();

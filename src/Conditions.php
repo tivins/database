@@ -62,6 +62,7 @@ class Conditions
 
     /**
      *
+     * @see https://dev.mysql.com/doc/refman/8.0/en/comparison-operators.html
      * @throws ConditionException
      */
     public function condition($field, $value = null, $operator = '='): self
@@ -74,7 +75,7 @@ class Conditions
 
         if ($operator == 'in') return $this->whereIn($field, $value);
         if ($operator == 'like') return $this->like($field, $value);
-        if (!in_array($operator, ['<','<=','=','!=','>=','>'])) throw new ConditionException('Invalid operator');
+        if (!in_array($operator, ['<','<=','=','!=','>=','>','<=>','<>'])) throw new ConditionException('Invalid operator');
         $this->pushCondition("$field $operator ?", [$value]);
         return $this;
     }
