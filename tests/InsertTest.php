@@ -39,28 +39,33 @@ class InsertTest extends TestBase
     {
         $db = TestConfig::db();
 
+        $db->dropTable('geom');
         $db->create('geom')
             ->addAutoIncrement('gid')
             ->addString('name', 255, nullable: false)
             ->addGeometry('position')
+            ->addGeometry('boundary')
             ->execute();
 
         $name = 'g_' . time();
         $x = 123;
         $y = 456;
+        $coords = ["0 0", "0 1", "1 1", "1 0", "0 0"];
+        $polygon = 'POLYGON(('.implode(',', $coords).'))';
 
         $query = $db
             ->insert('geom')
             ->fields([
                 'name'     => $name,
-                'position' => new InsertExpression('POINT(?,?)', $x, $y)
+                'position' => new InsertExpression('POINT(?,?)', $x, $y),
+                'boundary' => new InsertExpression('ST_GeomFromText(?)', $polygon),
             ])
             ;
         $query->execute();
 
         $this->checkQuery($query,
-            'insert into `t_geom` (`name`,`position`) values (?,POINT(?,?))',
-            [$name, $x, $y]
+            'insert into `t_geom` (`name`,`position`,`boundary`) values (?,POINT(?,?),ST_GeomFromText(?))',
+            [$name, $x, $y, $polygon]
         );
 
     }
