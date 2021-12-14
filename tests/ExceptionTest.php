@@ -7,27 +7,22 @@ use Tivins\Database\Exceptions\{ConditionException, ConnectionException, Databas
 class ExceptionTest extends TestBase
 {
     /**
-     * @throws ConnectionException
-     * @throws DatabaseException
+     * @throws ConnectionException | DatabaseException
      */
     public function testException()
     {
         $db = TestConfig::db();
         $this->expectException(DatabaseException::class);
-        $db->select('table_not_found', 't')
-                ->addFields('t')
-                ->execute()
-                ->fetchAll();
+        $db->select('table_not_found', 't')->addFields('t')->execute();
     }
 
     /**
-     * @throws ConnectionException
-     * @throws DatabaseException
+     * @throws ConnectionException | ConditionException | DatabaseException
      */
     public function testConditionException()
     {
         $db = TestConfig::db();
         $this->expectException(ConditionException::class);
-        $db->select('table','t')->condition('t.field', 12, '=>');
+        $db->and()->condition('t.field', 12, '=>');
     }
 }

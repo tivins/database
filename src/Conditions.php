@@ -4,7 +4,8 @@ namespace Tivins\Database;
 use Tivins\Database\Exceptions\ConditionException;
 
 /**
- *
+ * Base class of Query.
+ * Allow adding conditions on queries, like 'is null' et 'like %%', operators, ...
  */
 class Conditions
 {
@@ -34,7 +35,9 @@ class Conditions
     }
 
     /**
+     * Search on the given field's value for a value matching the given value.
      *
+     * @param string $value A string using `%` character(s) as wildcard (ex. `"%search%"`).
      */
     public function like(string $field, string $value): self
     {
@@ -43,7 +46,7 @@ class Conditions
     }
 
     /**
-     *
+     * Search on the given field's value for a NULL value.
      */
     public function isNull(string $field): self
     {
@@ -61,11 +64,17 @@ class Conditions
     }
 
     /**
+     * Add a specific condition to the current query.
      *
-     * @see https://dev.mysql.com/doc/refman/8.0/en/comparison-operators.html
+     * @param Conditions|string $field
+     * @param null $value
+     * @param string $operator
+     * @return Conditions
      * @throws ConditionException
+     * @see Query
+     * @see https://dev.mysql.com/doc/refman/8.0/en/comparison-operators.html
      */
-    public function condition($field, $value = null, $operator = '='): self
+    public function condition(Conditions|string $field, $value = null, $operator = '='): self
     {
         if ($field instanceof Conditions)
         {
@@ -81,7 +90,13 @@ class Conditions
     }
 
     /**
+     * Return an array with two values :
+     * 1. The SQL string for the condition,
+     * 2. An array containing the condition's parameters.
      *
+     * This function can use a recursive call in case of nested conditions.
+     * In this case, the query strings are 'glued' using their own condition mode ('and','or'),
+     * and the parameters are concatenated.
      */
     public function buildConditions(): array
     {
@@ -105,7 +120,8 @@ class Conditions
     }
 
     /**
-     *
+     * Private function used by most of the conditions shortcuts.
+     * Push the given condition and parameters to the current query.
      */
     private function pushCondition(string $condition, array $data): void
     {

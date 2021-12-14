@@ -32,28 +32,33 @@ use Tivins\Database\{Database, Connectors\MySQLConnector};
 
 $db = new Database(new MySQLConnector('dbname', 'user', 'password', 'localhost'));
 
-$users = $db->select('posts', 'p')
-    ->leftJoin('users', 'u', 'p.author_id = u.id')
-    ->addFields('p')
+$posts = $db->select('books', 'b')
+    ->leftJoin('users', 'u', 'b.author_id = u.id')
+    ->addFields('b')
     ->addField('u', 'name', 'author_name')
+    ->condition('b.year', 2010)
     ->execute()
     ->fetchAll();
 ```
 
 ## Summary
 
-* [Connectors](#connectors)
-* Queries :
-  * [Select query](#select-query)
-  * [Insert query](#insert-query)
-  * [Update query](#update-query)
-  * [Merge query](#merge-query)
-  * [Nested conditions](#nested-conditions)
-  * [Expressions](#expressions)
-  * [Having](#having)
-  * [Transactions](#transactions)
-* [Error handling](#error-handling)
-* [Unit tests](#unit-tests)
+* Usage 
+  * [Connectors](#connectors)
+  * Queries :
+    * [Select query](#select-query)
+    * [Insert query](#insert-query)
+      * [insert expression](#insert-expressions)
+    * [Update query](#update-query)
+    * [Merge query](#merge-query)
+    * [Nested conditions](#nested-conditions)
+    * [Expressions](#expressions)
+    * [Having](#having)
+    * [Transactions](#transactions)
+  * [Error handling](#error-handling)
+* Development
+<!--  * [Insight](#insight) --> 
+  * [Unit tests](#unit-tests)
 
 ## Usage
 
@@ -163,7 +168,7 @@ insert into `geom` (`name`, `position`) values (?, POINT(?,?))
 [$name, $x, $y]
 ```
 
-InsertExpression are also allowed with a MergeQuery.
+InsertExpression are also allowed with a [MergeQuery](#merge-query).
 
 ### Update query
 
@@ -347,3 +352,4 @@ vendor/bin/phpunit tests/
 [5]: /src/Exceptions/ConnectionException.php
 [6]: /src/Exceptions/ConditionException.php
 [7]: /src/Exceptions/DatabaseException.php
+[8]: /src/MergeQuery.php
