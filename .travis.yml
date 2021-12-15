@@ -6,7 +6,17 @@ env:
 services:
   - mysql
 before_install:
+  - sudo apt update
+  - sudo apt-get -y install libxml2-dev
+  - >-
+    sudo apt install -y lsb-release ca-certificates apt-transport-https
+    software-properties-common gnupg2
+  - 'wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -'
   - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
+dist: focal
+install:
+  - sudo apt install php8.1
+  - sudo update-alternatives --set php /usr/bin/php8.1
 script:
    - composer install
    - composer require --dev phpunit/phpunit ^9
