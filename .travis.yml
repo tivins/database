@@ -5,12 +5,16 @@ env:
   - DB_NAME=test DB_USER=travis DB_PASS= DB_HOST=127.0.0.1
 services:
   - mysql
+addons:
+  apt:
+    packages: null
+    sources:
+      - sourceline: 'ppa:ondrej/php'
+    update: true
 before_install:
   - sudo apt update
   - sudo apt-get -y install libxml2-dev
-  - >-
-    sudo apt install -y lsb-release ca-certificates apt-transport-https
-    software-properties-common gnupg2
+  - sudo apt install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
   - 'wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -'
   - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
 dist: focal
