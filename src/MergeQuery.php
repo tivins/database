@@ -10,9 +10,9 @@ class MergeQuery extends UpdateQuery
     private array $keys = [];
 
     /**
-     *
+     * @param array<string, mixed> $data
      */
-    public function keys($data): self
+    public function keys(array $data): self
     {
         $this->keys = $data;
         return $this;

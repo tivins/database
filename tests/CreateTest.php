@@ -23,6 +23,7 @@ class CreateTest extends TestBase
             ->addInteger('null_val', null, nullable: false)
             ->addGeometry('geom_field')
             ->addJSON('data')
+            ->addText('body')
             ->addIndex(['null_val']);
 
         $this->checkQuery($query,
@@ -32,6 +33,7 @@ class CreateTest extends TestBase
             . '`null_val` int default null, '
             . '`geom_field` geometry, '
             . '`data` json default null, '
+            . '`body` text, '
             . 'primary key (id), '
             . 'index (null_val)'
             . ')'

@@ -5,6 +5,9 @@ namespace Tivins\Database;
 use BackedEnum;
 use UnitEnum;
 
+/**
+ * Most of the parameters of this object are intended to be used with named-parameters.
+ */
 class CreateQuery extends Query
 {
     private array $fields = [];
@@ -50,6 +53,16 @@ class CreateQuery extends Query
         $this->fields[] = [
             'type' => 'tinyint(1)',
             'attr' => 'not null default ' . $default,
+            'name' => $name,
+        ];
+        return $this;
+    }
+
+    public function addText(string $name, bool $nullable = true): self
+    {
+        $this->fields[] = [
+            'type' => 'text',
+            'attr' => ($nullable ? '' : ' not null'),
             'name' => $name,
         ];
         return $this;
