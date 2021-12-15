@@ -89,14 +89,22 @@ class CreateQuery extends Query
     }
 
     /**
+     * Add SQL enum from PHP enum.
+     *
+     *     Enum Fruits { case Apple; case Banana; }
+     *     $query->addEnum('fruits', Fruits::cases());
+     *
      * @param string $name
      * @param UnitEnum[] $cases
+     *      Use the `value` property of the BackedEnum if available, or `name` property of the Enum otherwise.
+     *
+     * @param UnitEnum|null $default
      * @return $this
      */
-    public function addEnum(string $name, array $cases): self
+    public function addEnum(string $name, array $cases, ?UnitEnum $default = null): self
     {
-        $values = array_map(fn(UnitEnum $e) => '"' . $e->toString() . '"', $cases);
-        $this->fields[] = ['type' => 'enum('.implode(',',$values).')', 'attr' => '', 'name' => $name];
+        $values = array_map(fn(UnitEnum $enum) => '"' . ($enum->value ?? $enum->name) . '"', $cases);
+        $this->fields[] = ['type' => 'enum(' . implode(',', $values) . ')', 'attr' => '', 'name' => $name];
         return $this;
     }
 
