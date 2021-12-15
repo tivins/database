@@ -1,6 +1,6 @@
 language: php
 php:
-  - '8.0'
+  - '8.1'
 env:
   - DB_NAME=test DB_USER=travis DB_PASS= DB_HOST=127.0.0.1
 services:
