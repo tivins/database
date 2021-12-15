@@ -2,6 +2,9 @@
 
 namespace Tivins\Database;
 
+use BackedEnum;
+use UnitEnum;
+
 class CreateQuery extends Query
 {
     private array $fields = [];
@@ -82,6 +85,18 @@ class CreateQuery extends Query
     public function addGeometry(string $name): self
     {
         $this->fields[] = ['type' => 'geometry', 'attr' => '', 'name' => $name];
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param UnitEnum[] $cases
+     * @return $this
+     */
+    public function addEnum(string $name, array $cases): self
+    {
+        $values = array_map(fn(UnitEnum $e) => '"' . $e->toString() . '"', $cases);
+        $this->fields[] = ['type' => 'enum('.implode(',',$values).')', 'attr' => '', 'name' => $name];
         return $this;
     }
 

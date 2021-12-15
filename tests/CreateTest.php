@@ -3,6 +3,8 @@
 namespace Tivins\Database\Tests;
 
 use Tivins\Database\Exceptions\{ ConnectionException, DatabaseException };
+use Tivins\Database\Tests\data\Fruits;
+
 
 class CreateTest extends TestBase
 {
@@ -37,4 +39,25 @@ class CreateTest extends TestBase
 
         $query->execute();
     }
+
+    /**
+     * @throws ConnectionException | DatabaseException
+     */
+    public function testCreateEnum()
+    {
+        $db = TestConfig::db();
+
+        $db->dropTable('sample');
+        $query = $db->create('sample')
+            ->addAutoIncrement(name: 'id')
+            ->addEnum('fruits', Fruits::cases());
+        
+        $this->checkQuery($query, 
+            'create table if not exists `t_sample` (`id` int unsigned auto_increment, `fruits` enum("apple","banana","peach"), primary key (id))', 
+            []);
+        
+        $query->execute();
+        $this->assertTrue(true);
+    }        
+
 }

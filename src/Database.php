@@ -23,6 +23,12 @@ class Database
     private $logCallback = null;
 
     /**
+     * @var Callable|null
+     */
+    private $failureCallback = null;
+
+
+    /**
      *
      */
     private PDO $handler;
@@ -67,6 +73,25 @@ class Database
     public function setLogCallback(callable $callback): void
     {
         $this->logCallback = $callback;
+    }
+
+    /**
+     * Define a failure callback called when an exception is thrown in the query() function.
+     * The prototype of the callback should be :
+     *
+     *     function(Database $db, DatabaseException $exception): bool;
+     *
+     * Where the function's return TRUE to abort exception, FALSE to keep unchanged the exception flow.
+     *
+     * if $failureCallback is null, the callback feature is cancelled.
+     *
+     * @param Callable|null $failureCallback
+     * @return Database
+     */
+    public function setFailureCallback(?callable $failureCallback): Database
+    {
+        $this->failureCallback = $failureCallback;
+        return $this;
     }
 
     /**
@@ -187,17 +212,22 @@ class Database
     /**
      * @throws DatabaseException
      */
-    public function query(string $query, array $parameters = []): ?Statement
+    public function query(string $query, array $parameters = []): Statement
     {
         if ($this->logCallback) {
             call_user_func($this->logCallback, $query, $parameters);
         }
-
         $sth = $this->handler->prepare($query);
         try {
             $sth->execute($parameters);
         } catch (PDOException $exception) {
-            throw new DatabaseException($exception);
+            $cancelException = false;
+            if ($this->failureCallback && call_user_func($this->failureCallback, $this, $exception)) {
+                $cancelException = true;
+            }
+            if (!$cancelException) {
+                throw new DatabaseException($exception);
+            }
         }
         return new Statement($sth);
     }
