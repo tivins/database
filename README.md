@@ -4,14 +4,14 @@ A fluent, lightweight, and efficient PDO wrapper.
 
 ## CI & Stats
 
-[![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
+[![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database) (PHP 8.1 Travis)
 [![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
 
 ## Install
 
 ### Requirements
 
-* PHP >= 8.0
+* PHP >= 8.1
 * PDO extension
 * (dev-only) PHPUnit
 
