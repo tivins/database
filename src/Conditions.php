@@ -89,6 +89,12 @@ class Conditions
         return $this;
     }
 
+    public function conditionExpression(string $expression, ...$args): self
+    {
+        $this->pushCondition($expression, $args);
+        return $this;
+    }
+
     /**
      * Return an array with two values :
      * 1. The SQL string for the condition,

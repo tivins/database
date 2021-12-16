@@ -159,4 +159,27 @@ class SelectTest extends TestBase
         $this->assertCount(5, $results);
         $this->assertEquals('user5', reset($results)->name);
     }
+
+    /**
+     * @throws ConnectionException|DatabaseException
+     */
+    public function testConditionExpression()
+    {
+        $db = TestConfig::db();
+
+        $db->truncateTable('users');
+        foreach (range(0, 19) as $index) {
+            $db->insert('users')
+                ->fields(['name' => 'user' . $index])
+                ->execute();
+        }
+
+        $query = $db->select('users', 'u')
+            ->conditionExpression('concat("user",?) = name', 12)
+            ->addFields('u');
+
+        $this->checkQuery($query, 'select u.* from t_users `u` where concat("user",?) = name', [12]);
+
+        $out = $query->execute()->fetchAll();
+    }
 }
