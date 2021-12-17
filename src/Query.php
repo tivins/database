@@ -4,7 +4,7 @@ namespace Tivins\Database;
 
 use Tivins\Database\Exceptions\DatabaseException;
 
-class Query extends Conditions
+abstract class Query extends Conditions
 {
     protected Database $db;
     protected string $tableName;
@@ -31,8 +31,5 @@ class Query extends Conditions
     /**
      * @return array
      */
-    public function build(): array
-    {
-        return [];
-    }
+    abstract public function build(): array;
 }

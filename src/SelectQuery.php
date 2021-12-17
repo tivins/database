@@ -2,6 +2,8 @@
 
 namespace Tivins\Database;
 
+use Tivins\Database\Tests\SelectTest;
+
 class SelectQuery extends Query
 {
     private string $tableAlias;
@@ -52,9 +54,24 @@ class SelectQuery extends Query
         return $this;
     }
 
-    public function addCount(string $field, string $fieldAlias): self
+    /**
+     * Add a count() field in the current query.
+     *
+     * ```php
+     * $query->addCount('*');
+     * $query->addCount('b.*');
+     * $query->addCount('b.author', 'nb_authors');
+     *
+     * $total = $db->select('table','t')->addCount('*')->execute()->fetchField();
+     *
+     * ```
+
+     * @param string $field The field to count. It could be '*'.
+     * @param string|null $fieldAlias The alias for the expression. If null, no alias will be generated.
+     */
+    public function addCount(string $field, ?string $fieldAlias = null): self
     {
-        $this->expressions[] = ['sql' => "count($field) as $fieldAlias", 'data' => []];
+        $this->expressions[] = ['sql' => "count($field)" . ($fieldAlias ? " as $fieldAlias" : ''), 'data' => []];
         return $this;
     }
 
@@ -96,7 +113,7 @@ class SelectQuery extends Query
     }
 
     /**
-     *
+     * @see SelectTest::testLimits()
      */
     public function limit($count): self
     {

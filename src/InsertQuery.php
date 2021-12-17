@@ -35,7 +35,7 @@ class InsertQuery extends Query
                 $params[] = $value;
             }
         }
-        $sql = sprintf("insert into `%s` (%s) values (%s)", $this->tableName, implode(',',$keys), implode(',',$values));
+        $sql = sprintf("insert into `%s` (%s) values (%s)", $this->tableName, implode(',', $keys), implode(',', $values));
         return [$sql, $params];
     }
 }

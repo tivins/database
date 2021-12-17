@@ -2,6 +2,8 @@
 
 namespace Tivins\Database;
 
+use Tivins\Database\Exceptions\{ConditionException, DatabaseException};
+
 /**
  *
  */
@@ -19,8 +21,7 @@ class MergeQuery extends UpdateQuery
     }
 
     /**
-     * @throws Exceptions\ConditionException
-     * @throws Exceptions\DatabaseException
+     * @throws ConditionException | DatabaseException
      */
     public function build(): array
     {

@@ -46,7 +46,7 @@ class Conditions
     }
 
     /**
-     * Search on the given field's value for a NULL value.
+     * Search on the given field for a NULL value.
      */
     public function isNull(string $field): self
     {
@@ -55,7 +55,7 @@ class Conditions
     }
 
     /**
-     *
+     * Search on the given field for a non-NULL value.
      */
     public function isNotNull(string $field): self
     {
@@ -89,6 +89,19 @@ class Conditions
         return $this;
     }
 
+    /**
+     * Add an expression to the current conditions.
+     *
+     * ```php
+     * $query->conditionExpression('concat(field, ?) = another_field', $someValue);
+     * ```
+     *
+     * @param string $expression The SQL expression.
+     * @param mixed ...$args The parameters for the given expression.
+     * @return self The current request.
+     *
+     * @see SelectTest::testConditionExpression();
+     */
     public function conditionExpression(string $expression, ...$args): self
     {
         $this->pushCondition($expression, $args);
@@ -96,7 +109,9 @@ class Conditions
     }
 
     /**
-     * Return an array with two values :
+     * Build the query string for the (nested) conditions with according parameters.
+     *
+     * Return_ an array with two values :
      * 1. The SQL string for the condition,
      * 2. An array containing the condition's parameters.
      *

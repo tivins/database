@@ -121,8 +121,7 @@ class SelectTest extends TestBase
     }
 
     /**
-     * @throws ConnectionException
-     * @throws DatabaseException
+     * @throws ConnectionException | DatabaseException
      */
     public function testLimits()
     {
@@ -161,7 +160,7 @@ class SelectTest extends TestBase
     }
 
     /**
-     * @throws ConnectionException|DatabaseException
+     * @throws ConnectionException | DatabaseException
      */
     public function testConditionExpression()
     {
