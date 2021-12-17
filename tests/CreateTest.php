@@ -26,6 +26,8 @@ class CreateTest extends TestBase
             ->addText('body')
             ->addIndex(['null_val']);
 
+        $currentEngine = $query->getEngine();
+        $this->assertEquals('InnoDB', $currentEngine);
         $this->checkQuery($query,
             'create table if not exists `t_sample` ('
             . '`id` int unsigned auto_increment, '
@@ -36,10 +38,14 @@ class CreateTest extends TestBase
             . '`body` text, '
             . 'primary key (id), '
             . 'index (null_val)'
-            . ')'
+            . ') engine=' . $currentEngine
             , []);
 
         $query->execute();
+
+
+        $query = $db->create('test')->setEngine('memory');
+        $this->checkQuery($query, 'create table if not exists `t_test` () engine=memory', []);
     }
 
     /**
@@ -55,7 +61,11 @@ class CreateTest extends TestBase
             ->addEnum('fruits', Fruits::cases());
         
         $this->checkQuery($query, 
-            'create table if not exists `t_sample` (`id` int unsigned auto_increment, `fruits` enum("apple","banana","peach"), primary key (id))', 
+            'create table if not exists `t_sample` ('
+                . '`id` int unsigned auto_increment, '
+                . '`fruits` enum("apple","banana","peach"), '
+                . 'primary key (id)'
+                . ') engine=InnoDB',
             []);
         
         $query->execute();

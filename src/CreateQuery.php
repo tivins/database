@@ -14,6 +14,19 @@ class CreateQuery extends Query
 
     private array $indexes = [];
 
+    private string $engine = 'InnoDB';
+
+    public function getEngine(): string
+    {
+        return $this->engine;
+    }
+
+    public function setEngine(string $engine): CreateQuery
+    {
+        $this->engine = $engine;
+        return $this;
+    }
+
     public function addAutoIncrement(string $name, bool $unsigned = true): self
     {
         $this->fields[] = [
@@ -153,7 +166,8 @@ class CreateQuery extends Query
             $statements[] = $index['type'] . ' (' . implode(',', $index['columns']) . ')';
         }
         $statements = implode(', ', $statements);
-        $sql = "create table if not exists `$this->tableName` ($statements)";
+        $sql = "create table if not exists `$this->tableName` ($statements) engine=$this->engine";
         return [$sql, []];
     }
+
 }
