@@ -1,5 +1,10 @@
 name: PHP Composer
 
+env:
+  DB_DATABASE: test_db
+  DB_USER: root
+  DB_PASSWORD: root
+  
 on:
   push:
     branches: [ main ]
@@ -10,20 +15,17 @@ jobs:
 
     runs-on: ubuntu-20.04
     
-    services:
-      mysql:
-        image: mysql
-        env:
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: test_user
-          MYSQL_PASSWORD: test_password
-          MYSQL_ROOT_PASSWORD: root_password
-
     steps:
+    
     - uses: actions/checkout@v2
 
     - run: echo "Testing on branch $GITHUB_REF"
-      
+    
+    - name: Set up MySQL
+      run: |
+        sudo /etc/init.d/mysql start
+        mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+        
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
@@ -46,6 +48,6 @@ jobs:
       run: vendor/bin/phpunit tests/
       env:
         DB_NAME: test_db
-        DB_USER: test_user
-        DB_PASS: test_password
+        DB_USER: root
+        DB_PASS: root
         DB_HOST: 127.0.0.1
