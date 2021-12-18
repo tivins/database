@@ -5,6 +5,12 @@ namespace Tivins\Database;
 use BackedEnum;
 use UnitEnum;
 
+enum TextSize: string {
+    case Standard = '';
+    case Medium = 'medium';
+    case Long = 'long';
+}
+
 /**
  * Most of the parameters of this object are intended to be used with named-parameters.
  */
@@ -71,10 +77,10 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function addText(string $name, bool $nullable = true): self
+    public function addText(string $name, bool $nullable = true, TextSize $size = TextSize::Standard): self
     {
         $this->fields[] = [
-            'type' => 'text',
+            'type' => $size->value . 'text',
             'attr' => ($nullable ? '' : ' not null'),
             'name' => $name,
         ];
