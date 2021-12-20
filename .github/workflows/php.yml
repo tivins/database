@@ -25,8 +25,8 @@ jobs:
     
     - name: Set up MySQL
       run: |
-        sudo /etc/init.d/mysql start
-        mysql -e 'CREATE DATABASE ${{ env.DB_NAME }};' -u${{ env.DB_USER }} -p${{ env.DB_PASS }}
+        sudo systemctl start mysql.service
+        mysql -e 'CREATE DATABASE ${{ env.DB_NAME }}' -u${{ env.DB_USER }} -p${{ env.DB_PASS }}
         
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
