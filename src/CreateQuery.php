@@ -114,6 +114,17 @@ class CreateQuery extends Query
         return $this;
     }
 
+    /**
+     * Adds an unsigned integer field, with 0 as default value and is not nullable.
+     *
+     * @param string $name The field name.
+     * @return $this The current object.
+     */
+    public function addPointer(string $name): self
+    {
+        return $this->addInteger($name, 0, unsigned: true);
+    }
+
     public function addGeometry(string $name): self
     {
         $this->fields[] = ['type' => 'geometry', 'attr' => '', 'name' => $name];

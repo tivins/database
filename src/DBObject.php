@@ -2,6 +2,8 @@
 
 namespace Tivins\Database;
 
+use Tivins\Database\Exceptions\{ConditionException, DatabaseException};
+
 /**
  * Base class to manage database objects. 
  */
@@ -17,7 +19,11 @@ class DBObject
         $this->db = $db;
     }
 
-    public function load($data)
+    /**
+     * @throws ConditionException
+     * @throws DatabaseException
+     */
+    public function load($data): ?object
     {
         $q = $this->db->select($this->tableName, 't')
             ->addFields('t');
@@ -29,14 +35,22 @@ class DBObject
         return $this->object;
     }
 
-    public function save($data)
+    /**
+     * @throws ConditionException
+     * @throws DatabaseException
+     */
+    public function save($data): array
     {
         $exists = $this->load($data);
         if ($exists) { return $this->update($data); }
         return $this->insert($data);
     }
 
-    private function update($data)
+    /**
+     * @throws ConditionException
+     * @throws DatabaseException
+     */
+    private function update($data): array
     {
         $q = $this->db->update($this->tableName)
             ->fields($data);
@@ -48,7 +62,10 @@ class DBObject
         return $keys;
     }
 
-    private function insert($data)
+    /**
+     * @throws DatabaseException
+     */
+    private function insert($data): array
     {
         $this->db->insert($this->tableName)
             ->fields($data)
@@ -59,7 +76,7 @@ class DBObject
         return $this->extractKeys($data);
     }
 
-    private function extractKeys($data)
+    private function extractKeys($data): array
     {
         return array_filter($data, fn($key) => in_array($key, $this->indexNames), ARRAY_FILTER_USE_KEY);
     }

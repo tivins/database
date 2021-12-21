@@ -24,6 +24,7 @@ class CreateTest extends TestBase
             ->addGeometry('geom_field')
             ->addJSON('data')
             ->addText('body')
+            ->addPointer('reference_id')
             ->addIndex(['null_val']);
 
         $currentEngine = $query->getEngine();
@@ -36,6 +37,7 @@ class CreateTest extends TestBase
             . '`geom_field` geometry, '
             . '`data` json default null, '
             . '`body` text, '
+            . '`reference_id` int unsigned not null default 0, '
             . 'primary key (id), '
             . 'index (null_val)'
             . ') engine=' . $currentEngine
