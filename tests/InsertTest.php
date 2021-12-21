@@ -34,6 +34,63 @@ class InsertTest extends TestBase
     /**
      * @throws ConnectionException | DatabaseException
      */
+    public function testInsertMultiples()
+    {
+        $db = TestConfig::db();
+
+        $db->dropTable('book')
+            ->create('book')
+            ->addAutoIncrement('id')
+            ->addText('title')
+            ->addText('author')
+            ->execute();
+
+        $db->insert('book')
+            ->fields([
+                'title' => 'Book title',
+                'author' => 'John Doe',
+            ])
+            ->execute();
+
+        $books = $db->select('book','b')
+            ->addFields('b')
+            ->execute()
+            ->fetchAll();
+
+        $expected = [
+            ['id' => 1, 'title' => 'Book title', 'author' => 'John Doe'],
+        ];
+
+        $this->assertEquals(json_encode($expected), json_encode($books));
+
+        $db->truncateTable('book');
+
+        $expected = [
+            ['title' => 'title1', 'author' => 'author1'],
+            ['title' => 'title2', 'author' => 'author2'],
+            ['title' => 'title3', 'author' => 'author3'],
+        ];
+
+        $query = $db->insert('book')
+            ->multipleFields($expected)
+            ->execute();
+
+        $books = $db->select('book','b')
+            ->addFields('b')
+            ->execute()
+            ->fetchAll();
+
+        $expectedList = [
+            ['id' => 1, 'title' => 'title1', 'author' => 'author1'],
+            ['id' => 2, 'title' => 'title2', 'author' => 'author2'],
+            ['id' => 3, 'title' => 'title3', 'author' => 'author3'],
+        ];
+        $this->assertEquals(json_encode($expectedList), json_encode($books));
+    }
+
+    /**
+     * @throws ConnectionException | DatabaseException
+     */
     public function testInsertExpression()
     {
         $db = TestConfig::db();

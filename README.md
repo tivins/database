@@ -156,6 +156,32 @@ $db->insert('book')
     ->execute();
 ```
 
+#### Multiples inserts
+
+
+```php
+$db->insert('book')
+    ->multipleFields([
+        ['title' => 'Book title', 'author' => 'John Doe'],
+        ['title' => 'Another book title', 'author' => 'John Doe Jr'],
+    ])
+    ->execute();
+```
+
+Execute() will insert two rows in the table `book`.
+<details>
+  <summary>See the build result</summary>
+
+  * Query 
+    ```sql
+    insert into `book` (`title`,`author`) values (?,?), (?,?);
+    ```
+  * Parameters
+    ```json
+    ["Book title","John Doe","Another book title","John Doe Jr"]
+    ```
+</details>
+
 #### Insert expressions
 
 Expressions can be used inside the array given to `fields()` function.

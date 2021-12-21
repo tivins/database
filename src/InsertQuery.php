@@ -2,40 +2,70 @@
 
 namespace Tivins\Database;
 
+use Stringable;
+
 /**
  *
  */
 class InsertQuery extends Query
 {
-    private array $fields = [];
+    /**
+     * @var array[]
+     */
+    private array  $fields    = [];
+    private ?array $fixedKeys = null;
 
+    /**
+     * @param array<Stringable, Stringable> $data
+     * @return $this The current object.
+     */
     public function fields(array $data): self
     {
-        $this->fields = $data;
+        $this->fields = [$data];
+        return $this;
+    }
+
+    /**
+     * @param array[] $data
+     * @param array|null $keys The fixed keys, in case of $data is not key-indexed
+     * @return $this The current object.
+     * @see $fixedKeys
+     */
+    public function multipleFields(array $data, ?array $keys = null): self
+    {
+        $this->fields    = $data;
+        $this->fixedKeys = $keys;
         return $this;
     }
 
     public function build(): array
     {
-        $keys   = [];
-        $values = [];
-        $params = [];
+        $keys             = [];
+        $values           = [];
+        $params           = [];
+        $valuesStatements = [];
 
-        foreach ($this->fields as $key => $value)
+        foreach ($this->fields as $fields) // foreach groups
         {
-            $keys[] = "`$key`";
-            if ($value instanceof InsertExpression) // expression
+            foreach ($fields as $key => $value) // foreach dataset
             {
-                $values[] = $value->getExpression();
-                $params = array_merge($params, $value->getParameters());
+                $keys[$key] = "`$key`";
+                if ($value instanceof InsertExpression) // expression
+                {
+                    $values[] = $value->getExpression();
+                    $params   = array_merge($params, $value->getParameters());
+                } else {
+                    $values[] = '?';
+                    $params[] = $value;
+                }
             }
-            else
-            {
-                $values[] = '?';
-                $params[] = $value;
-            }
+            $valuesStatements[] = '(' . implode(',', $values) . ')';
+            $values             = [];
         }
-        $sql = sprintf("insert into `%s` (%s) values (%s)", $this->tableName, implode(',', $keys), implode(',', $values));
+        if (!empty($this->fixedKeys)) {
+            $keys = $this->fixedKeys;
+        }
+        $sql = sprintf("insert into `%s` (%s) values %s", $this->tableName, implode(',', $keys), implode(',', $valuesStatements));
         return [$sql, $params];
     }
 }

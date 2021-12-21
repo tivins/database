@@ -2,7 +2,6 @@
 
 namespace Tivins\Database;
 
-use BackedEnum;
 use UnitEnum;
 
 enum TextSize: string {
