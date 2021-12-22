@@ -60,12 +60,14 @@ class CreateTest extends TestBase
         $db->dropTable('sample');
         $query = $db->create('sample')
             ->addAutoIncrement(name: 'id')
-            ->addEnum('fruits', Fruits::cases());
+            ->addEnum('fruits', Fruits::cases())
+            ->addStdEnum('colors', ['blue','green','yellow','black\'n\'white']);
         
         $this->checkQuery($query, 
             'create table if not exists `t_sample` ('
                 . '`id` int unsigned auto_increment, '
                 . '`fruits` enum("apple","banana","peach"), '
+                . '`colors` enum("blue","green","yellow","black\'n\'white"), '
                 . 'primary key (id)'
                 . ') engine=InnoDB',
             []);

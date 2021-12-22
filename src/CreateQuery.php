@@ -131,21 +131,41 @@ class CreateQuery extends Query
     }
 
     /**
-     * Add SQL enum from PHP enum.
+     * Add SQL enum from PHP enum (UnitEnum or BackedEnum).
      *
      *     Enum Fruits { case Apple; case Banana; }
      *     $query->addEnum('fruits', Fruits::cases());
      *
-     * @param string $name
+     * @param string $name The field name.
      * @param UnitEnum[] $cases
      *      Use the `value` property of the BackedEnum if available, or `name` property of the Enum otherwise.
      *
      * @param UnitEnum|null $default
-     * @return $this
+     * @return $this The current object.
+     *
+     * @see addStdEnum()
      */
     public function addEnum(string $name, array $cases, ?UnitEnum $default = null): self
     {
-        $values = array_map(fn(UnitEnum $enum) => '"' . ($enum->value ?? $enum->name) . '"', $cases);
+        $values = array_map(fn(UnitEnum $enum) => json_encode($enum->value ?? $enum->name), $cases);
+        $this->fields[] = [
+            'name' => $name,
+            'type' => 'enum(' . implode(',', $values) . ')',
+            'attr' => '',
+            ];
+        return $this;
+    }
+
+    /**
+     * @param string $name The field name.
+     * @param string[] $cases The enumeration as an array of strings.
+     * @param string|null $default The default value.
+     * @return $this The current object.
+     * @see addEnum()
+     */
+    public function addStdEnum(string $name, array $cases, ?string $default = null): self
+    {
+        $values = array_map('json_encode', $cases);
         $this->fields[] = ['type' => 'enum(' . implode(',', $values) . ')', 'attr' => '', 'name' => $name];
         return $this;
     }

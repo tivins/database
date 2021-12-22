@@ -52,6 +52,7 @@ $posts = $db->select('books', 'b')
       * [insert expression](#insert-expressions)
     * [Update query](#update-query)
     * [Merge query](#merge-query)
+    * [Create query](#create-query)
     * [Nested conditions](#nested-conditions)
     * [Expressions](#expressions)
     * [Having](#having)
@@ -196,13 +197,19 @@ $db->insert('geom')
     ->execute();
 ```
 
-Will execute a following query/arguments
-```sql
-insert into `geom` (`name`, `position`) values (?, POINT(?,?))
-```
-```php
-[$name, $x, $y]
-```
+Execute() will insert two rows in the table `book`.
+<details>
+  <summary>See the build result</summary>
+
+* Query
+  ```sql
+  insert into `geom` (`name`, `position`) values (?, POINT(?,?))
+  ```
+* Parameters
+  ```php
+  [$name, $x, $y]
+  ```
+</details>
 
 InsertExpression are also allowed with a [MergeQuery](#merge-query).
 
@@ -232,6 +239,19 @@ All methods of [`Conditions`][4] can be used on a [`DeleteQuery`][3] object.
 ```php
 $db->delete('book')
     ->whereIn('id', [3, 4, 5])
+    ->execute();
+```
+
+### Create query
+
+Perform a `create table` query on the current database.
+
+```php
+$query = $db->create('sample')
+    ->addAutoIncrement(name: 'id')
+    ->addInteger('counter', 0, unsigned: true, nullable: false)
+    ->addInteger('null_val', null, nullable: false)
+    ->addJSON('json_field')
     ->execute();
 ```
 
