@@ -7,18 +7,32 @@ use Tivins\Database\Exceptions\{ConditionException, ConnectionException, Databas
 class MergeTest extends TestBase
 {
     /**
+     * @throws ConnectionException
+     * @throws DatabaseException
+     */
+    private function getNumUsers(): int
+    {
+        return TestConfig::db()->select('users', 'u')
+        ->addCount('*')
+        ->execute()
+        ->fetchField();
+    }
+    /**
      * @throws ConnectionException | DatabaseException | ConditionException
      */
     public function testMerge()
     {
         $db = TestConfig::db();
-
         $username = 'user_' . time();
 
-        $db->merge('users')
-            ->keys(['uid' => 0])
-            ->fields(['name' => $username])
-            ->execute();
+        $db->truncateTable('users');
+        $this->assertEquals(0, $this->getNumUsers());
+
+
+        $merge = $db->merge('users')
+            ->keys(['name' => $username])
+            ->fields(['name' => $username, 'state' => 1]);
+        $merge->execute();
 
         $user = $db->select('users', 'u')
             ->condition('name', $username)
@@ -27,5 +41,23 @@ class MergeTest extends TestBase
             ->fetch();
 
         $this->assertEquals($username, $user->name);
+        $this->assertEquals(1, $user->state);
+
+        $merge = $db->merge('users')
+            ->keys(['name' => $username])
+            ->fields(['name' => $username, 'state' => 0]);
+        $merge->execute();
+
+        $user = $db->select('users', 'u')
+            ->condition('name', $username)
+            ->addFields('u')
+            ->execute()
+            ->fetch();
+
+        $this->assertEquals($username, $user->name);
+        $this->assertEquals(0, $user->state);
+
+
+        $this->assertEquals(1, $this->getNumUsers());
     }
 }

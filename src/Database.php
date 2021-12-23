@@ -245,6 +245,16 @@ class Database
     }
 
     /**
+     * @throws DatabaseException
+     */
+    public function getPrimary(string $tableName): array
+    {
+        $tableName = $this->prefixTableName($tableName);
+        $keys = $this->query('SHOW KEYS FROM ' . $tableName . ' where key_name = \'PRIMARY\'')->fetchAll();
+        return array_column($keys, 'Column_name');
+    }
+
+    /**
      * Alias of PDO::beginTransaction()
      * @throws PDOException
      */
