@@ -191,7 +191,7 @@ class Database
      */
     public function select(string $tableName, string $alias): SelectQuery
     {
-        return new SelectQuery($this, $this->prefix . $tableName, $alias);
+        return new SelectQuery($this, $this->prefixTableName($tableName), $alias);
     }
 
     /**

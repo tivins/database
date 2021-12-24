@@ -71,6 +71,9 @@ class MergeQuery extends UpdateQuery
         return $statement;
     }
 
+    /**
+     * Get the object fetched during build().
+     */
     public function getObject(): object|null
     {
         return $this->object;

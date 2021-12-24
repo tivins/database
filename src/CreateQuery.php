@@ -3,12 +3,7 @@
 namespace Tivins\Database;
 
 use UnitEnum;
-
-enum TextSize: string {
-    case Standard = '';
-    case Medium = 'medium';
-    case Long = 'long';
-}
+use Tivins\Database\Enums\TextSize;
 
 /**
  * Most of the parameters of this object are intended to be used with named-parameters.

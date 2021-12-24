@@ -74,7 +74,7 @@ class Conditions
      * @see Query
      * @see https://dev.mysql.com/doc/refman/8.0/en/comparison-operators.html
      */
-    public function condition(Conditions|string $field, $value = null, $operator = '='): self
+    public function condition(Conditions|string $field, $value = null, string $operator = '='): self
     {
         if ($field instanceof Conditions)
         {

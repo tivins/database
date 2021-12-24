@@ -12,19 +12,28 @@ class Statement
     )
     {}
 
-    public function rowCount(): int {
+    public function rowCount(): int
+    {
         return $this->statement->rowCount();
     }
-    public function fetchAll(): array {
+
+    public function fetchAll(): array
+    {
         return $this->statement->fetchAll();
     }
-    public function fetch(): ?object {
+
+    public function fetch(): ?object
+    {
         return ($res = $this->statement->fetch()) ? $res : null;
     }
-    public function fetchField(): string {
+
+    public function fetchField(): string
+    {
         return $this->statement->fetchColumn();
     }
-    public function fetchCol(): array {
+
+    public function fetchCol(): array
+    {
         return $this->statement->fetchAll(PDO::FETCH_COLUMN);
     }
 }

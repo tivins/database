@@ -67,7 +67,7 @@ class TransactionTest extends TestBase
     {
         $this->assertEquals($expectedCount,
             $db->select('users', 'u')
-                ->addCount('*', 'count')
+                ->addCount('*')
                 ->execute()
                 ->fetchField());
     }

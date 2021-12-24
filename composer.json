@@ -1,17 +1,31 @@
 {
   "name": "tivins/database",
+  "type": "library",
   "description": "A fluent, lightweight, and efficient PDO wrapper.",
-  "type":  "library",
+  "keywords": [
+    "php",
+    "database",
+    "pdo"
+  ],
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Tivins"
+    }
+  ],
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "Tivins\\Database\\": "src/",
-      "Tivins\\Database\\Tests\\": "tests/"
+      "Tivins\\Database\\": "src/"
     },
     "files": [
       "src/functions.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tivins\\Database\\Tests\\": "tests/"
+    }
   },
   "require": {
     "php": "^8.1",

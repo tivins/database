@@ -2,8 +2,6 @@
 
 namespace Tivins\Database;
 
-use Stringable;
-
 /**
  *
  */
@@ -16,7 +14,7 @@ class InsertQuery extends Query
     private ?array $fixedKeys = null;
 
     /**
-     * @param array<Stringable, Stringable> $data
+     * @param array<string, string> $data
      * @return $this The current object.
      */
     public function fields(array $data): self
@@ -26,7 +24,7 @@ class InsertQuery extends Query
     }
 
     /**
-     * @param array[] $data
+     * @param array<string,string>[] $data
      * @param array|null $keys The fixed keys, in case of $data is not key-indexed
      * @return $this The current object.
      * @see $fixedKeys
