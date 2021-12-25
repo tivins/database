@@ -32,9 +32,8 @@ class UpdateQuery extends Query
         }
         $data = implode(',', $data);
 
-        $condSql = '';
         $queryData = $this->buildConditions();
-        if (! $queryData->empty()) $condSql = " where $queryData->sql";
+        $condSql = $queryData->getPrefixed(' where ');
         $args = array_merge($args, $queryData->parameters);
 
         $sql = "update $this->tableName set $data$condSql";

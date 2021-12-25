@@ -144,7 +144,6 @@ class SelectQuery extends Query
      */
     public function build(): QueryData
     {
-        $condSql = '';
         $args = [];
         // fields
         $what = $this->fields;
@@ -156,11 +155,11 @@ class SelectQuery extends Query
 
         $from = "$this->tableName `$this->tableAlias`";
         $joins = empty($this->joins) ? '' : ' ' . implode(' ', $this->joins);
+
         $queryData = $this->buildConditions();
-        if (!$queryData->empty()) {
-            $condSql = " where $queryData->sql";
-            $args = array_merge($args, $queryData->parameters);
-        }
+        $condSql = $queryData->getPrefixed(' where ');
+        $args = array_merge($args, $queryData->parameters);
+
         $order = '';
         $group = '';
         $having = '';
@@ -177,7 +176,7 @@ class SelectQuery extends Query
         }
         if (!is_null($this->having)) {
             $queryData = $this->having->buildConditions();
-            $having = ' having ' . $queryData->sql;
+            $having = $queryData->getPrefixed(' having ');
             $args = array_merge($args, $queryData->parameters);
         }
         $sql  = trim("select $what from $from$joins$condSql$group$order$limits$having");

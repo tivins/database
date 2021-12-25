@@ -13,6 +13,10 @@ class Conditions
     public const MODE_OR  = 'or';
 
     protected array $conditions = [];
+
+    /**
+     * @var Conditions[]
+     */
     protected array $nestedConditions = [];
     protected string $mode = self::MODE_AND;
 
@@ -131,15 +135,14 @@ class Conditions
         if ($this->mode == self::MODE_OR) $query = "($query)";
         $parameters = array_merge(...array_column($this->conditions, 'data'));
 
+        $qData = new QueryData($query, $parameters);
+
         foreach ($this->nestedConditions as $nestedConditions) {
             $queryData = $nestedConditions->buildConditions();
-            if (!empty($queryData)) {
-                $query .= (empty($query) ? '' : ' ' . $this->mode . ' ') . $queryData->sql;
-                $parameters = array_merge($parameters, $queryData->parameters);
-            }
+            $qData->merge($queryData, empty($query) ? '' : $this->mode);
         }
 
-        return new QueryData($query, $parameters);
+        return $qData;
     }
 
     /**

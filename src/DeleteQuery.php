@@ -15,11 +15,7 @@ class DeleteQuery extends Query
 {
     public function build(): QueryData
     {
-        $queryData = $this->buildConditions();
-        if (! $queryData->empty()) {
-            $queryData->sql = 'where ' . $queryData->sql;
-        }
-        $queryData->sql = "delete from `$this->tableName` $queryData->sql";
-        return $queryData;
+        $qData = new QueryData("delete from `$this->tableName`");
+        return $qData->merge($this->buildConditions(), ' where ');
     }
 }

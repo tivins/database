@@ -240,6 +240,8 @@ class Database
     }
 
     /**
+     * Gets the columns used as primary key.
+     *
      * @throws DatabaseException
      */
     public function getPrimary(string $tableName): array
