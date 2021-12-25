@@ -181,7 +181,7 @@ class SelectTest extends TestBase
 
         $this->checkQuery($query, 'select u.* from t_users `u` where concat("user",?) = name', [12]);
 
-        $out = $query->execute()->fetchAll();
+        $query->execute()->fetchAll();
     }
 
     /**
@@ -221,8 +221,21 @@ class SelectTest extends TestBase
             )
             ->addFields('u',['uid']);
 
-        $build = $query->build();
+        $query->build();
         $this->checkQuery($query, 'select u.`uid` from t_users `u`', []);
         $query->execute();
+    }
+
+    /**
+     * @throws ConnectionException
+     * @throws ConditionException
+     */
+    public function testFetchRowFailure()
+    {
+        $db = TestConfig::db();
+
+        $this->expectException(DatabaseException::class);
+        $result = $db->fetchRow('unknown', 'field', 123);
+        $this->assertNull($result);
     }
 }

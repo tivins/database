@@ -71,4 +71,21 @@ class TransactionTest extends TestBase
                 ->execute()
                 ->fetchField());
     }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function testCommit()
+    {
+        $db = TestConfig::db();
+
+        $db->transaction();
+        $db->insert('users')
+            ->fields(['name'=>'user'.time()])
+            ->execute();
+        $db->commit();
+
+        $this->expectException(\PDOException::class);
+        $db->rollback();
+    }
 }

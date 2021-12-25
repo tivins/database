@@ -274,7 +274,7 @@ $query = $db->select('books', 'b')
 
 ## Conditions
 
-Some examples:
+Some examples :
 
 ```php
 ->condition('field', 2);      // eg: where field = 2
@@ -404,6 +404,13 @@ Then, run unit tests
 
 ```bash
 vendor/bin/phpunit tests/
+```
+
+To include a coverage test, use :
+
+```bash
+mkdir -p build/logs
+vendor/bin/phpunit tests/ --coverage-clover build/logs/clover.xml
 ```
 
 [1]: /src/SelectQuery.php

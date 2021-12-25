@@ -2,10 +2,10 @@
 
 namespace Tivins\Database;
 
-use Exception;
 use PDO;
 use PDOException;
-use Tivins\Database\{Connectors\Connector, Exceptions\ConnectionException, Exceptions\DatabaseException};
+use Tivins\Database\{Connectors\Connector};
+use Tivins\Database\Exceptions\{ConnectionException, DatabaseException, ConditionException};
 
 /**
  *
@@ -165,6 +165,7 @@ class Database
     /**
      * Shortcut to get a single row from the given table, column, value.
      *
+     * @throws DatabaseException|ConditionException
      * @example
      *
      * ```php
@@ -173,17 +174,11 @@ class Database
      */
     public function fetchRow(string $tableName, string $column, $value): ?object
     {
-        try {
-            return $this->select($tableName, 't')
-                ->addFields('t')
-                ->condition($column, $value)
-                ->execute()
-                ->fetch();
-        }
-        catch (Exception $exception) {
-            /** @todo LogException($exception) */
-            return null;
-        }
+        return $this->select($tableName, 't')
+            ->addFields('t')
+            ->condition($column, $value)
+            ->execute()
+            ->fetch();
     }
 
     /**
