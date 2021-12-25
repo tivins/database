@@ -1,13 +1,15 @@
 <?php
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Exceptions\{ ConnectionException, DatabaseException };
+use Tivins\Database\Exceptions\{ConditionException, ConnectionException, DatabaseException};
 use Tivins\Database\InsertExpression;
 
 class InsertTest extends TestBase
 {
     /**
-     * @throws ConnectionException | DatabaseException
+     * @throws ConnectionException
+     * @throws DatabaseException
+     * @throws ConditionException
      */
     public function testInsert()
     {

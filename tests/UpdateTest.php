@@ -2,14 +2,14 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Exceptions\ConnectionException;
+use Tivins\Database\Exceptions\{ConditionException, ConnectionException};
 use Tivins\Database\InsertExpression;
 
 class UpdateTest extends TestBase
 {
     /**
      * @throws ConnectionException
-     * @throws \Tivins\Database\Exceptions\ConditionException
+     * @throws ConditionException
      */
     public function testUpdateExpression()
     {

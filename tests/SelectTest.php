@@ -221,8 +221,7 @@ class SelectTest extends TestBase
             )
             ->addFields('u',['uid']);
 
-        $query->build();
-        $this->checkQuery($query, 'select u.`uid` from t_users `u`', []);
+        $this->checkQuery($query, 'select u.`uid` from t_users `u` where (u.name like ? or u.uid in (?,?,?))', ['user%',2,4,6]);
         $query->execute();
     }
 
@@ -234,14 +233,7 @@ class SelectTest extends TestBase
     {
         $db = TestConfig::db();
 
-        // $this->expectException(DatabaseException::class);
-        try {
-            
         $result = $db->fetchRow('unknown', 'field', 123);
         $this->assertNull($result);
-        }
-        catch (\Exception $ex) {
-            var_dump($ex);
-        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tivins\Database\Tests;
 
+use PDOException;
 use Tivins\Database\Database;
 use Tivins\Database\Exceptions\{ConnectionException, DatabaseException};
 
@@ -85,7 +86,7 @@ class TransactionTest extends TestBase
             ->execute();
         $db->commit();
 
-        $this->expectException(\PDOException::class);
+        $this->expectException(PDOException::class);
         $db->rollback();
     }
 }

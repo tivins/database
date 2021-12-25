@@ -123,7 +123,7 @@ class Conditions
      */
     public function buildConditions(): array
     {
-        if (empty($this->conditions) && empty($this->nestedConds)) {
+        if (empty($this->conditions) && empty($this->nestedConditions)) {
             return ['', []];
         }
 
