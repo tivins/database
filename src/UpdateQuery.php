@@ -2,6 +2,8 @@
 
 namespace Tivins\Database;
 
+use Tivins\Database\Exceptions\DatabaseException;
+
 class UpdateQuery extends Query
 {
     protected array $fields;
@@ -14,16 +16,26 @@ class UpdateQuery extends Query
 
     public function build(): QueryData
     {
+        $qData = new QueryData("update $this->tableName");
+        $qData->merge($this->buildUpdate(), ' set ');
+        $qData->merge($this->buildConditions(), ' where ');
+        return $qData;
+    }
+
+    /**
+     * @return QueryData
+     */
+    public function buildUpdate(): QueryData
+    {
         $args = [];
         $data = [];
         foreach ($this->fields as $key => $value) {
             if (is_numeric($key)) {
                 $data[] = $value;
             }
-            elseif ($value instanceof InsertExpression)
-            {
+            elseif ($value instanceof InsertExpression) {
                 $data[] = "`$key`={$value->getExpression()}";
-                $args = array_merge($args, $value->getParameters());
+                $args   = array_merge($args, $value->getParameters());
             }
             else {
                 $data[] = "`$key`=?";
@@ -31,12 +43,6 @@ class UpdateQuery extends Query
             }
         }
         $data = implode(',', $data);
-
-        $queryData = $this->buildConditions();
-        $condSql = $queryData->getPrefixed(' where ');
-        $args = array_merge($args, $queryData->parameters);
-
-        $sql = "update $this->tableName set $data$condSql";
-        return new QueryData($sql, $args);
+        return new QueryData($data, $args);
     }
 }
