@@ -7,6 +7,7 @@ A fluent, lightweight, and efficient PDO wrapper.
 [![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
 [![PHP Composer](https://github.com/tivins/database/actions/workflows/php.yml/badge.svg)](https://github.com/tivins/database/actions/workflows/php.yml)
 [![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
+[![Coverage Status](https://coveralls.io/repos/github/tivins/database/badge.svg?branch=main)](https://coveralls.io/github/tivins/database?branch=main)
 
 ## Install
 
