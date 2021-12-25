@@ -13,7 +13,6 @@ before_install:
 script:
    - composer install
    - composer require --dev phpunit/phpunit ^9
-   - composer require --dev php-coveralls/php-coveralls
    - vendor/bin/phpunit tests/
 after_success:
   - travis_retry php vendor/bin/php-coveralls

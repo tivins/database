@@ -15,18 +15,19 @@ A fluent, lightweight, and efficient PDO wrapper.
 
 * PHP >= 8.1
 * PDO extension
-* (dev-only) PHPUnit
+
+#### Development :
+
+* PHPUnit
 
 ### Download
 
-```sh
-# composer
-composer require tivins/database
-# github
-git clone git@github.com:tivins/database.git
-```
+* using composer
+  ```sh
+  composer require tivins/database:1.0-alpha.1
+  ```
 
-## Example
+## Quick example
 
 ```php
 
