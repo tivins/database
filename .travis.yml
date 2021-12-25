@@ -3,8 +3,6 @@ dist: focal
 php:
   - '8.1.0'
 env:
-  global:
-    - XDEBUG_MODE=coverage
   - DB_NAME=test DB_USER=travis DB_PASS= DB_HOST=127.0.0.1
 services:
   - mysql
@@ -14,6 +12,6 @@ install:
   - composer install --dev --no-interaction
 script:
    - mkdir -p build/logs
-   - vendor/bin/phpunit tests/
+   - vendor/bin/phpunit  --coverage-clover tests/
 after_success:
   - travis_retry php vendor/bin/php-coveralls
