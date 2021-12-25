@@ -127,7 +127,7 @@ class Conditions
 
         $query = implode(' ' . $this->mode . ' ', array_column($this->conditions, 'cond'));
         if ($this->mode == self::MODE_OR) $query = "($query)";
-        $parameters = array_flatten(array_column($this->conditions, 'data'));
+        $parameters = array_merge(...array_column($this->conditions, 'data'));
 
         foreach ($this->nestedConditions as $nestedConditions) {
             [$subQuery, $subParameters] = $nestedConditions->buildConditions();

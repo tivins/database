@@ -89,6 +89,45 @@ class InsertTest extends TestBase
     }
 
     /**
+     * @throws ConnectionException
+     * @throws DatabaseException
+     */
+    public function testInsertMultiplesFixed()
+    {
+        $db = TestConfig::db();
+
+        $db->dropTable('book')
+            ->create('book')
+            ->addAutoIncrement('id')
+            ->addText('title')
+            ->addText('author')
+            ->execute();
+
+        $keys = ['title', 'author'];
+        $expected = [
+            ['title1', 'author1'],
+            ['title2', 'author2'],
+            ['title3', 'author3'],
+        ];
+
+        $query = $db->insert('book')
+            ->multipleFields($expected, $keys)
+            ->execute();
+
+        $books = $db->select('book','b')
+            ->addFields('b')
+            ->execute()
+            ->fetchAll();
+
+        $expectedList = [
+            ['id' => 1, 'title' => 'title1', 'author' => 'author1'],
+            ['id' => 2, 'title' => 'title2', 'author' => 'author2'],
+            ['id' => 3, 'title' => 'title3', 'author' => 'author3'],
+        ];
+        $this->assertEquals(json_encode($expectedList), json_encode($books));
+    }
+
+    /**
      * @throws ConnectionException | DatabaseException
      */
     public function testInsertExpression()

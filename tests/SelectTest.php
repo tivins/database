@@ -154,8 +154,10 @@ class SelectTest extends TestBase
             ->addFields('u')
             ->limitFrom(5, 5)
             ->orderBy('u.uid', 'asc');
-        $results = $query->execute()->fetchAll();
+        $statement = $query->execute();
+        $results = $statement->fetchAll();
         $this->assertCount(5, $results);
+        $this->assertEquals(5, $statement->rowCount());
         $this->assertEquals('user5', reset($results)->name);
     }
 
@@ -181,4 +183,27 @@ class SelectTest extends TestBase
 
         $out = $query->execute()->fetchAll();
     }
+
+    /**
+     * @throws ConnectionException
+     * @throws DatabaseException
+     */
+    public function testFetchCol()
+    {
+        $db = TestConfig::db();
+        $db->truncateTable('users');
+        foreach (range(0, 19) as $index) {
+            $db->insert('users')
+                ->fields(['name' => 'user' . $index])
+                ->execute();
+        }
+        $out = $db->select('users', 'u')
+            ->addField('u', 'name')
+            ->orderBy('u.uid', 'asc')
+            ->limit(3)
+            ->execute()
+            ->fetchCol();
+        $this->assertEquals(['user0','user1','user2'], $out);
+    }
+
 }

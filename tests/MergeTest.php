@@ -32,6 +32,10 @@ class MergeTest extends TestBase
         $merge = $db->merge('users')
             ->keys(['name' => $username])
             ->fields(['name' => $username, 'state' => 1]);
+
+        $merge->build();
+        $this->assertNull($merge->getObject());
+
         $merge->execute();
 
         $user = $db->select('users', 'u')
@@ -42,6 +46,7 @@ class MergeTest extends TestBase
 
         $this->assertEquals($username, $user->name);
         $this->assertEquals(1, $user->state);
+        $this->assertEquals(1, $merge->getObject()?->uid);
 
         $merge = $db->merge('users')
             ->keys(['name' => $username])
