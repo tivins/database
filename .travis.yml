@@ -3,8 +3,7 @@ dist: focal
 php:
   - '8.1.0'
 env:
-  - DB_NAME=test DB_USER=travis DB_PASS= DB_HOST=127.0.0.1
-  - XDEBUG_MODE=coverage
+  - DB_NAME=test DB_USER=travis DB_PASS= DB_HOST=127.0.0.1 XDEBUG_MODE=coverage
 services:
   - mysql
 before_install:
