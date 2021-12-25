@@ -2,13 +2,8 @@
 
 namespace Tivins\Database\Exceptions;
 
-use Exception;
 use PDOException;
 
-class DatabaseException extends Exception
+class DatabaseException extends PDOException
 {
-    public function __construct(PDOException $exception)
-    {
-        parent::__construct($exception->getMessage(), (int) $exception->getCode(), $exception->getPrevious());
-    }
 }

@@ -2,7 +2,7 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Exceptions\{ConnectionException, DatabaseException};
+use Tivins\Database\Exceptions\{ConditionException, ConnectionException, DatabaseException};
 
 class SelectTest extends TestBase
 {
@@ -206,4 +206,23 @@ class SelectTest extends TestBase
         $this->assertEquals(['user0','user1','user2'], $out);
     }
 
+    /**
+     * @throws ConnectionException|ConditionException
+     */
+    public function testNestedConditions()
+    {
+        $db = TestConfig::db();
+
+        $query = $db->select('users', 'u')
+            ->condition(
+                $db->or()
+                    ->like('u.name', 'user%')
+                    ->whereIn('u.uid', [2,4,6])
+            )
+            ->addFields('u',['uid']);
+
+        $build = $query->build();
+        $this->checkQuery($query, 'select u.`uid` from t_users `u`', []);
+        $query->execute();
+    }
 }

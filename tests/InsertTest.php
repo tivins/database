@@ -71,7 +71,7 @@ class InsertTest extends TestBase
             ['title' => 'title3', 'author' => 'author3'],
         ];
 
-        $query = $db->insert('book')
+        $db->insert('book')
             ->multipleFields($expected)
             ->execute();
 
@@ -110,7 +110,7 @@ class InsertTest extends TestBase
             ['title3', 'author3'],
         ];
 
-        $query = $db->insert('book')
+        $db->insert('book')
             ->multipleFields($expected, $keys)
             ->execute();
 

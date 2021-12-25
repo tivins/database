@@ -16,9 +16,12 @@ A fluent, lightweight, and efficient PDO wrapper.
 * PHP >= 8.1
 * PDO extension
 
-#### Development :
+<details>
+  <summary>Development optional dependencies</summary>
 
-* PHPUnit
+* [PHPUnit](https://github.com/sebastianbergmann/phpunit/)
+* [php-coveralls](https://github.com/php-coveralls/php-coveralls)
+</details>
 
 ### Download
 

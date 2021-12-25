@@ -70,7 +70,7 @@ class Database
      *
      * Signature : ```php function(string $sql, array $parameters): void;```
      */
-    public function setLogCallback(callable $callback): void
+    public function setLogCallback(?callable $callback): void
     {
         $this->logCallback = $callback;
     }
