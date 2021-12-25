@@ -4,6 +4,7 @@ vendor/
 # PHP Unit
 phpunit.xml
 .phpunit.result.cache
+.phpunit.cache/
 
 # Doxygen
 docs/
