@@ -187,7 +187,7 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function build(): array
+    public function build(): QueryData
     {
         $statements = [];
         foreach ($this->fields as $field) {
@@ -198,7 +198,7 @@ class CreateQuery extends Query
         }
         $statements = implode(', ', $statements);
         $sql = "create table if not exists `$this->tableName` ($statements) engine=$this->engine";
-        return [$sql, []];
+        return new QueryData($sql);
     }
 
 }

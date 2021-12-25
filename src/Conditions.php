@@ -121,10 +121,10 @@ class Conditions
      * In this case, the query strings are 'glued' using their own condition mode ('and','or'),
      * and the parameters are concatenated.
      */
-    public function buildConditions(): array
+    public function buildConditions(): QueryData
     {
         if (empty($this->conditions) && empty($this->nestedConditions)) {
-            return ['', []];
+            return new QueryData();
         }
 
         $query = implode(' ' . $this->mode . ' ', array_column($this->conditions, 'cond'));
@@ -132,14 +132,14 @@ class Conditions
         $parameters = array_merge(...array_column($this->conditions, 'data'));
 
         foreach ($this->nestedConditions as $nestedConditions) {
-            [$subQuery, $subParameters] = $nestedConditions->buildConditions();
-            if (!empty($subQuery)) {
-                $query .= (empty($query) ? '' : ' ' . $this->mode . ' ') . $subQuery;
-                $parameters = array_merge($parameters, $subParameters);
+            $queryData = $nestedConditions->buildConditions();
+            if (!empty($queryData)) {
+                $query .= (empty($query) ? '' : ' ' . $this->mode . ' ') . $queryData->sql;
+                $parameters = array_merge($parameters, $queryData->parameters);
             }
         }
 
-        return [$query, $parameters];
+        return new QueryData($query, $parameters);
     }
 
     /**

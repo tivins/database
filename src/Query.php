@@ -25,11 +25,16 @@ abstract class Query extends Conditions
      */
     public function execute(): Statement
     {
-        return $this->db->query(...$this->build());
+        return $this->executeQueryData($this->build());
+    }
+
+    public function executeQueryData(QueryData $queryData): Statement
+    {
+        return $this->db->query($queryData->sql, $queryData->parameters);
     }
 
     /**
-     * @return array
+     * @return QueryData
      */
-    abstract public function build(): array;
+    abstract public function build(): QueryData;
 }

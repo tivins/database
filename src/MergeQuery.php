@@ -40,7 +40,7 @@ class MergeQuery extends UpdateQuery
     /**
      * @throws ConditionException | DatabaseException
      */
-    public function build(): array
+    public function build(): QueryData
     {
         $this->object = $this->findObject();
         if (! $this->object) {
@@ -64,7 +64,7 @@ class MergeQuery extends UpdateQuery
      */
     public function execute(): Statement
     {
-        $statement = $this->db->query(...$this->build());
+        $statement = $this->executeQueryData($this->build());
         if (! $this->object) {
             $this->object = $this->findObject();
         }

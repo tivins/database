@@ -23,5 +23,6 @@ class FailureCallbackTest extends TestBase
         $db->setFailureCallback($failure);
         $db->select('unknown_table', 't')->execute();
         $this->assertNotEmpty($passed);
+        $db->setFailureCallback(null); // restore default value
     }
 }

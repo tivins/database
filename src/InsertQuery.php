@@ -36,7 +36,7 @@ class InsertQuery extends Query
         return $this;
     }
 
-    public function build(): array
+    public function build(): QueryData
     {
         $keys             = [];
         $values           = [];
@@ -64,6 +64,6 @@ class InsertQuery extends Query
             $keys = $this->fixedKeys;
         }
         $sql = sprintf("insert into `%s` (%s) values %s", $this->tableName, implode(',', $keys), implode(',', $valuesStatements));
-        return [$sql, $params];
+        return new QueryData($sql, $params);
     }
 }

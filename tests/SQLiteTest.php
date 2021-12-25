@@ -15,8 +15,8 @@ class SQLiteTest extends TestCase
     public function testConnection()
     {
         $connector = new SQLiteConnector('sqlite.db');
-        $db = new Database($connector);
-
+        new Database($connector);
         $this->assertFileExists('sqlite.db');
+        unlink('sqlite.db');
     }
 }

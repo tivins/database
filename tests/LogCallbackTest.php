@@ -5,7 +5,6 @@ namespace Tivins\Database\Tests;
 use Tivins\Database\Exceptions\ConditionException;
 use Tivins\Database\Exceptions\ConnectionException;
 use Tivins\Database\Exceptions\DatabaseException;
-use function PHPUnit\Framework\assertEquals;
 
 class LogCallbackTest extends TestBase
 {

@@ -232,7 +232,7 @@ class SelectTest extends TestBase
     public function testFetchRowFailure()
     {
         $db = TestConfig::db();
-
+        $this->expectException(DatabaseException::class);
         $result = $db->fetchRow('unknown', 'field', 123);
         $this->assertNull($result);
     }

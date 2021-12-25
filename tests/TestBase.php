@@ -10,7 +10,7 @@ class TestBase extends TestCase
     protected function checkQuery(Query $query, string $expectedQueryString, array $expectedParams)
     {
         $query_data = json_encode($query->build());
-        $expected_data = json_encode([$expectedQueryString, $expectedParams]);
+        $expected_data = json_encode(['sql'=>$expectedQueryString, 'parameters'=>$expectedParams]);
         $this->assertEquals($expected_data, $query_data);
     }
 }

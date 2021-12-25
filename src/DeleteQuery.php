@@ -13,11 +13,13 @@ namespace Tivins\Database;
  */
 class DeleteQuery extends Query
 {
-    public function build(): array
+    public function build(): QueryData
     {
-        [$condSql, $params] = $this->buildConditions();
-        if (!empty($condSql)) $condSql = "where $condSql";
-        $sql = "delete from `$this->tableName` $condSql";
-        return [$sql, $params];
+        $queryData = $this->buildConditions();
+        if (! $queryData->empty()) {
+            $queryData->sql = 'where ' . $queryData->sql;
+        }
+        $queryData->sql = "delete from `$this->tableName` $queryData->sql";
+        return $queryData;
     }
 }

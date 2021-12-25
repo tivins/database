@@ -142,8 +142,9 @@ class SelectQuery extends Query
     /**
      *
      */
-    public function build(): array
+    public function build(): QueryData
     {
+        $condSql = '';
         $args = [];
         // fields
         $what = $this->fields;
@@ -155,9 +156,11 @@ class SelectQuery extends Query
 
         $from = "$this->tableName `$this->tableAlias`";
         $joins = empty($this->joins) ? '' : ' ' . implode(' ', $this->joins);
-        [$condSql, $condArgs] = $this->buildConditions();
-        if (!empty($condSql)) $condSql = " where $condSql";
-        $args = array_merge($args, $condArgs);
+        $queryData = $this->buildConditions();
+        if (!$queryData->empty()) {
+            $condSql = " where $queryData->sql";
+            $args = array_merge($args, $queryData->parameters);
+        }
         $order = '';
         $group = '';
         $having = '';
@@ -173,11 +176,11 @@ class SelectQuery extends Query
             $limits = ' limit ' . join(',', $this->limits);
         }
         if (!is_null($this->having)) {
-            list($havingSql, $havingArgs) = $this->having->buildConditions();
-            $having = ' having ' . $havingSql;
-            $args = array_merge($args, $havingArgs);
+            $queryData = $this->having->buildConditions();
+            $having = ' having ' . $queryData->sql;
+            $args = array_merge($args, $queryData->parameters);
         }
         $sql  = trim("select $what from $from$joins$condSql$group$order$limits$having");
-        return [$sql, $args];
+        return new QueryData($sql, $args);
     }
 }
