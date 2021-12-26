@@ -9,8 +9,8 @@ class Statement
 {
     public function __construct(
         private PDOStatement $statement
-    )
-    {}
+    ) {
+    }
 
     public function rowCount(): int
     {

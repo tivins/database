@@ -4,8 +4,10 @@ namespace Tivins\Database;
 
 use PDO;
 use PDOException;
-use Tivins\Database\{Connectors\Connector};
-use Tivins\Database\Exceptions\{ConnectionException, DatabaseException, ConditionException};
+use Tivins\Database\Connectors\Connector;
+use Tivins\Database\Exceptions\ConditionException;
+use Tivins\Database\Exceptions\ConnectionException;
+use Tivins\Database\Exceptions\DatabaseException;
 
 /**
  *
@@ -67,8 +69,11 @@ class Database
 
     /**
      * Defines a callback sent before executing the query.
+     * The prototype of the callback should be :
      *
-     * Signature : ```php function(string $sql, array $parameters): void;```
+     *      php function(string $sql, array $parameters): void;
+     *
+     * if $failureCallback is null, the callback feature is cancelled.
      */
     public function setLogCallback(?callable $callback): void
     {
@@ -81,7 +86,7 @@ class Database
      *
      *     function(Database $db, DatabaseException $exception): bool;
      *
-     * Where the function's return TRUE to abort exception, FALSE to keep unchanged the exception flow.
+     * Where the function's return TRUE to abort exception, or FALSE to keep unchanged the exception flow.
      *
      * if $failureCallback is null, the callback feature is cancelled.
      *
@@ -95,7 +100,9 @@ class Database
     }
 
     /**
+     * Returns the ID of the last inserted row or sequence value.
      *
+     * @alias PDO::lastInsertId()
      */
     public function lastId(): int
     {
@@ -146,9 +153,6 @@ class Database
         return new CreateQuery($this, $this->prefix . $tableName);
     }
 
-    /**
-     *
-     */
     public function or(): Conditions
     {
         return new Conditions(Conditions::MODE_OR);

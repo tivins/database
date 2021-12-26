@@ -217,11 +217,13 @@ class SelectTest extends TestBase
             ->condition(
                 $db->or()
                     ->like('u.name', 'user%')
+                    ->condition('u.name', '%user', 'like')
                     ->whereIn('u.uid', [2,4,6])
+                    ->condition('u.state', [0,1], 'in')
             )
             ->addFields('u',['uid']);
 
-        $this->checkQuery($query, 'select u.`uid` from t_users `u` where (u.name like ? or u.uid in (?,?,?))', ['user%',2,4,6]);
+        $this->checkQuery($query, 'select u.`uid` from t_users `u` where (u.name like ? or u.name like ? or u.uid in (?,?,?) or u.state in (?,?))', ['user%','%user',2,4,6,0,1]);
         $query->execute();
     }
 

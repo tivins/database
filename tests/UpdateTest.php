@@ -2,7 +2,7 @@
 
 namespace Tivins\Database\Tests;
 
-use Tivins\Database\Exceptions\{ConditionException, ConnectionException};
+use Tivins\Database\Exceptions\{ConditionException, ConnectionException, DatabaseException};
 use Tivins\Database\InsertExpression;
 
 class UpdateTest extends TestBase
@@ -29,5 +29,25 @@ class UpdateTest extends TestBase
 
         $object = $db->select('users', 'u')->addFields('u')->execute()->fetch();
         $this->assertEquals('TestUpdate0test1', $object->name);
+    }
+
+    /**
+     * @throws ConnectionException
+     * @throws ConditionException
+     */
+    public function testUpdateFail()
+    {
+        $db = TestConfig::db();
+
+        $this->expectException(DatabaseException::class);
+
+        $query = $db->update('users')
+            ->condition('uid', 1)
+            ->fields([
+                'test',
+            ]);
+        $query->execute();
+
+
     }
 }

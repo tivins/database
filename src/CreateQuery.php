@@ -61,11 +61,11 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function addBool(string $name, int $default): self
+    public function addBool(string $name, bool $default = false): self
     {
         $this->fields[] = [
             'type' => 'tinyint(1)',
-            'attr' => 'not null default ' . $default,
+            'attr' => 'not null default ' . (int)($default),
             'name' => $name,
         ];
         return $this;
@@ -200,5 +200,4 @@ class CreateQuery extends Query
         $sql = "create table if not exists `$this->tableName` ($statements) engine=$this->engine";
         return new QueryData($sql);
     }
-
 }

@@ -2,7 +2,7 @@
 
 A fluent, lightweight, and efficient PDO wrapper.
 
-## CI & Stats
+## CI, Coverage & Stats
 
 [![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
 [![PHP Composer](https://github.com/tivins/database/actions/workflows/php.yml/badge.svg)](https://github.com/tivins/database/actions/workflows/php.yml)
@@ -27,7 +27,7 @@ A fluent, lightweight, and efficient PDO wrapper.
 
 * using composer
   ```sh
-  composer require tivins/database:1.0-alpha.1
+  composer require tivins/database:1.0-alpha.2
   ```
 
 ## Quick example

@@ -9,8 +9,7 @@ class InsertExpression
     public function __construct(
         private string $expression,
         mixed ...$parameters
-    )
-    {
+    ) {
         $this->parameters = $parameters;
     }
 
@@ -29,5 +28,4 @@ class InsertExpression
     {
         return $this->parameters;
     }
-
 }

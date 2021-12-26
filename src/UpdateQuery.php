@@ -31,7 +31,7 @@ class UpdateQuery extends Query
         $data = [];
         foreach ($this->fields as $key => $value) {
             if (is_numeric($key)) {
-                $data[] = $value;
+                throw new DatabaseException('Invalid field format');
             }
             elseif ($value instanceof InsertExpression) {
                 $data[] = "`$key`={$value->getExpression()}";

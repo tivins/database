@@ -7,8 +7,7 @@ class QueryData
     public function __construct(
         public string $sql = '',
         public array $parameters = [],
-    )
-    {
+    ) {
     }
 
     public function getPrefixed(string $string): string

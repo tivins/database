@@ -1,6 +1,7 @@
 <?php
 
 namespace Tivins\Database;
+
 use Tivins\Database\Exceptions\ConditionException;
 
 /**
@@ -33,7 +34,7 @@ class Conditions
      */
     public function whereIn(string $field, array $values): self
     {
-        $stmt = "$field in (".implode(',',array_fill(0, count($values), '?')).")";
+        $stmt = "$field in (" . implode(',', array_fill(0, count($values), '?')) . ")";
         $this->pushCondition($stmt, $values);
         return $this;
     }
@@ -80,14 +81,16 @@ class Conditions
      */
     public function condition(Conditions|string $field, $value = null, string $operator = '='): self
     {
-        if ($field instanceof Conditions)
-        {
+        if ($field instanceof Conditions) {
             $this->nestedConditions[] = $field;
             return $this;
         }
-
-        if ($operator == 'in') return $this->whereIn($field, $value);
-        if ($operator == 'like') return $this->like($field, $value);
+        if ($operator == 'in') {
+            return $this->whereIn($field, $value);
+        }
+        if ($operator == 'like') {
+            return $this->like($field, $value);
+        }
         if (!in_array($operator, ['<','<=','=','!=','>=','>','<=>','<>'])) {
             throw new ConditionException('Invalid operator');
         }
@@ -132,7 +135,7 @@ class Conditions
         }
 
         $query = implode(' ' . $this->mode . ' ', array_column($this->conditions, 'cond'));
-        if ($this->mode == self::MODE_OR) $query = "($query)";
+        $query = $this->mode == self::MODE_OR ? "($query)" : $query;
         $parameters = array_merge(...array_column($this->conditions, 'data'));
 
         $qData = new QueryData($query, $parameters);

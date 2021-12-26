@@ -63,7 +63,8 @@ class InsertQuery extends Query
         if (!empty($this->fixedKeys)) {
             $keys = $this->fixedKeys;
         }
-        $sql = sprintf("insert into `%s` (%s) values %s", $this->tableName, implode(',', $keys), implode(',', $valuesStatements));
+        $sql = sprintf("insert into `%s` (%s) values %s", $this->tableName,
+            implode(',', $keys), implode(',', $valuesStatements));
         return new QueryData($sql, $params);
     }
 }
