@@ -59,7 +59,7 @@ $posts = $db->select('books', 'b')
     * [Merge](#merge-query)
     * [Create](#create-query)
     * [Delete](#delete-query)
-  * Conditions & Expressions
+  * Conditions and expressions
     * [Nested conditions](#nested-conditions)
     * [Expressions](#expressions)
       * [insert expression](#insert-expressions)
