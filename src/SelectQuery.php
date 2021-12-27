@@ -88,6 +88,16 @@ class SelectQuery extends Query
     /**
      *
      */
+    public function rightJoin(string $tableName, string $tableAlias, string $condition): self
+    {
+        $tableName = $this->db->prefixTableName($tableName);
+        $this->joins[] = "right join `$tableName` `$tableAlias` on $condition";
+        return $this;
+    }
+
+    /**
+     *
+     */
     public function innerJoin(string $tableName, string $tableAlias, string $condition): self
     {
         $tableName = $this->db->prefixTableName($tableName);

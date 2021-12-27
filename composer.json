@@ -1,6 +1,7 @@
 {
   "name": "tivins/database",
   "type": "library",
+  "minimum-stability": "stable",
   "description": "A fluent, lightweight, and efficient PDO wrapper.",
   "keywords": [
     "php",
@@ -13,7 +14,6 @@
       "name": "Tivins"
     }
   ],
-  "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
       "Tivins\\Database\\": "src/"
@@ -29,7 +29,7 @@
     "ext-pdo": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "9.5.11",
-    "php-coveralls/php-coveralls": "2.5.2"
+    "phpunit/phpunit": "^9.5",
+    "php-coveralls/php-coveralls": "^2.5"
   }
 }

@@ -67,6 +67,15 @@ class SelectTest extends TestBase
         $this->checkQuery($query,
             'select t.`id` as t_id from t_test `t` inner join `t_other` `o` on o.oid = t.id',
             []);
+
+
+        $query = $db->select('test', 't')
+            ->addField('t', 'id', 't_id')
+            ->rightJoin('other', 'o', 'o.oid = t.id')
+        ;
+        $this->checkQuery($query,
+            'select t.`id` as t_id from t_test `t` right join `t_other` `o` on o.oid = t.id',
+            []);
     }
 
     /**

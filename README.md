@@ -5,7 +5,7 @@ A fluent, lightweight, and efficient PDO wrapper.
 ## CI, Coverage & Stats
 
 [![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
-[![PHP Composer](https://github.com/tivins/database/actions/workflows/php.yml/badge.svg)](https://github.com/tivins/database/actions/workflows/php.yml)
+[![CI](https://github.com/tivins/database/actions/workflows/php.yml/badge.svg)](https://github.com/tivins/database/actions/workflows/php.yml)
 [![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
 [![Coverage Status](https://coveralls.io/repos/github/tivins/database/badge.svg?branch=main)](https://coveralls.io/github/tivins/database?branch=main)
 
@@ -33,8 +33,9 @@ A fluent, lightweight, and efficient PDO wrapper.
 ## Quick example
 
 ```php
-
 use Tivins\Database\{Database, Connectors\MySQLConnector};
+
+require 'vendor/autoload.php';
 
 $db = new Database(new MySQLConnector('dbname', 'user', 'password', 'localhost'));
 
@@ -52,26 +53,28 @@ $posts = $db->select('books', 'b')
 * Usage 
   * [Connectors](#connectors)
   * Queries :
-    * [Select query](#select-query)
-    * [Insert query](#insert-query)
-      * [insert expression](#insert-expressions)
-    * [Update query](#update-query)
-    * [Merge query](#merge-query)
-    * [Create query](#create-query)
+    * [Select](#select-query)
+    * [Insert](#insert-query)
+    * [Update](#update-query)
+    * [Merge](#merge-query)
+    * [Create](#create-query)
+    * [Delete](#delete-query)
+  * Conditions & Expressions
     * [Nested conditions](#nested-conditions)
     * [Expressions](#expressions)
+      * [insert expression](#insert-expressions)
     * [Having](#having)
-    * [Transactions](#transactions)
+  * [Transactions](#transactions)
   * [Error handling](#error-handling)
 * Development
-<!--  * [Insight](#insight) --> 
+  <!-- * [Insight](#insight) --> 
   * [Unit tests](#unit-tests)
 
 ## Usage
 
 ### Connectors
 
-Create a `Database` instance require a valid `Connector`.
+Creating a [`Database`][9] instance requires a valid [`Connector`][10] instance.
 
 ```php
 # MySQL
@@ -80,9 +83,15 @@ $connector = new MySQLConnector('dbname', 'user', 'password');
 $connector = new SQLiteConnector('path/to/file');
 ```
 
-### Create queries
+Then create an instance of Database, with the created connector:
+```php
+$database = new Database($connector);
+```
+A `ConnectionException` can be thrown when the `new Database()` attempt to connect the given Connector.
 
-Both usages below are valid:
+## Using queries
+
+Both usages below are valid :
 
 ```php
 // from database object
@@ -174,7 +183,7 @@ $db->insert('book')
     ->execute();
 ```
 
-Execute() will insert two rows in the table `book`.
+`execute()` will insert two rows in the table `book`.
 <details>
   <summary>See the build result</summary>
 
@@ -421,3 +430,5 @@ vendor/bin/phpunit tests/ --coverage-clover build/logs/clover.xml
 [6]: /src/Exceptions/ConditionException.php
 [7]: /src/Exceptions/DatabaseException.php
 [8]: /src/MergeQuery.php
+[9]: /src/Database.php
+[10]: /src/Connectors/Connector.php
