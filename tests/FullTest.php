@@ -41,17 +41,15 @@ class FullTest extends TestCase
         $this->insertLibrary();
 
         $this->selectGeneral();
+        $this->selectWhereInOrder();
     }
 
     /**
-     * @depends
      * @throws ConnectionException
      */
     public function selectGeneral()
     {
-        $db = TestConfig::db();
-
-        $posts = $db->select('books', 'b')
+        $posts = TestConfig::db()->select('books', 'b')
             ->leftJoin('authors', 'a', 'b.id_author = a.id')
             ->addFields('b')
             ->addField('a', 'name', 'author_name')
@@ -60,23 +58,37 @@ class FullTest extends TestCase
             ->fetchAll();
 
         $expected = [
-            (object) [
-                'id' => 1,
-                'title' => 'Les Misérables',
-                'id_author' => 1,
-                'year' => 1862,
-                'author_name' => 'Victor Hugo',
-            ],
-            (object) [
-                'id' => 2,
-                'title' => 'The Time Machine',
-                'id_author' => 2,
-                'year' => 1895,
-                'author_name' => 'H.G. Wells',
-            ],
+            (object)['id' => 1, 'title' => 'Les Misérables', 'id_author' => 1, 'year' => 1862, 'author_name' => 'Victor Hugo'],
+            (object)['id' => 2, 'title' => 'The Time Machine', 'id_author' => 2, 'year' => 1895, 'author_name' => 'H.G. Wells'],
         ];
-
         $this->assertEquals($expected, $posts);
+    }
+
+    /**
+     * @depends testFull
+     * @throws ConnectionException
+     */
+    public function selectWhereInOrder()
+    {
+        $posts = TestConfig::db()->select('books', 'b')
+            ->leftJoin('authors', 'a', 'b.id_author = a.id')
+            ->addField('a', 'id')
+            ->whereIn('b.year', [1808, 1864, 1862, 1837])
+            ->limit(2)
+            ->execute()
+            ->fetchCol();
+        $this->assertEquals([1, 3], $posts);
+
+
+        $posts = TestConfig::db()->select('books', 'b')
+            ->leftJoin('authors', 'a', 'b.id_author = a.id')
+            ->addField('a', 'id')
+            ->like('a.name', '%Jules%')
+            ->orderBy('b.year', 'asc')
+            ->limit(1)
+            ->execute()
+            ->fetchField();
+        $this->assertEquals(6, $posts);
     }
 
     /**
@@ -101,11 +113,18 @@ class FullTest extends TestCase
      */
     public function insertLibrary()
     {
-
         $this->createAuthors(array_column($this->books, 'author'));
+        $this->createBooks($this->books);
+    }
 
+    /**
+     * @throws ConditionException
+     * @throws ConnectionException
+     */
+    public function createBooks(array $books)
+    {
         $data = [];
-        foreach ($this->books as $book) {
+        foreach ($books as $book) {
             $author = $this->getAuthorByName($book['author']);
             $data[] = [
                 'title'     => $book['title'],
@@ -118,6 +137,7 @@ class FullTest extends TestCase
         $db->insert('books')
             ->multipleFields($data)
             ->execute();
+
     }
 
     /**
