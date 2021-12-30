@@ -2,11 +2,10 @@
 
 A fluent, lightweight, and efficient PDO wrapper.
 
-## CI, Coverage & Stats
+## CI, Coverage
 
 [![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
 [![CI](https://github.com/tivins/database/actions/workflows/php.yml/badge.svg)](https://github.com/tivins/database/actions/workflows/php.yml)
-[![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
 [![Coverage Status](https://coveralls.io/repos/github/tivins/database/badge.svg?branch=main)](https://coveralls.io/github/tivins/database?branch=main)
 
 ## Install
@@ -22,6 +21,8 @@ A fluent, lightweight, and efficient PDO wrapper.
 * [PHPUnit](https://github.com/sebastianbergmann/phpunit/)
 * [php-coveralls](https://github.com/php-coveralls/php-coveralls)
 </details>
+
+See also [composer.json](/composer.json)
 
 ### Download
 
@@ -86,9 +87,9 @@ $connector = new SQLiteConnector('path/to/file');
 or
 ```php
 $db = new Database (new MySQLConnector(
-  dbname:   'mydatabase', 
-  user:     'myuser', 
-  password: '3ncypt3dp4ssw0rd',
+  dbname:   'my_database', 
+  user:     'my_user', 
+  password: 'my_encrypted_password',
   host :    'localhost',
 ));
 ```
@@ -361,6 +362,10 @@ function makeSomething(Database $db)
 }
 ```
 
+## Full Example
+
+See [/tests/FullTest.php](/tests/FullTest.php)
+
 ## Error handling
 
 There are three main exception thrown by Database.
@@ -432,6 +437,13 @@ To include a coverage test, use :
 mkdir -p build/logs
 vendor/bin/phpunit tests/ --coverage-clover build/logs/clover.xml
 ```
+
+---
+
+Stats :
+
+[![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
+
 
 [1]: /src/SelectQuery.php
 [2]: /src/UpdateQuery.php
