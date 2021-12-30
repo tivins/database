@@ -33,7 +33,8 @@ A fluent, lightweight, and efficient PDO wrapper.
 ## Quick example
 
 ```php
-use Tivins\Database\{Database, Connectors\MySQLConnector};
+use Tivins\Database\Database;
+use Tivins\Database\Connectors\MySQLConnector;
 
 require 'vendor/autoload.php';
 
@@ -82,6 +83,16 @@ $connector = new MySQLConnector('dbname', 'user', 'password');
 # SQLite
 $connector = new SQLiteConnector('path/to/file');
 ```
+or
+```php
+$db = new Database (new MySQLConnector(
+  dbname:   'mydatabase', 
+  user:     'myuser', 
+  password: '3ncypt3dp4ssw0rd',
+  host :    'localhost',
+));
+```
+
 
 Then create an instance of Database, with the created connector:
 ```php
