@@ -22,6 +22,18 @@ class Statement
         return $this->statement->fetchAll();
     }
 
+    /**
+     * @param string $key
+     * @param string|null $value The name of the column for the value of returned object.
+     *      If value is null, the value of returned data will the full-row object.
+     * @return array
+     */
+    public function fetchAssocKey(string $key, string|null $value = null): array
+    {
+        $data = $this->statement->fetchAll();
+        return array_combine(array_column($data, $key), $value ? array_column($data, $value) : $data);
+    }
+
     public function fetch(): ?object
     {
         return ($res = $this->statement->fetch()) ? $res : null;

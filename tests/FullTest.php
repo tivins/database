@@ -11,7 +11,7 @@ use Tivins\Database\Exceptions\ConnectionException;
  *
  * It's not designed to be efficient, but, to test most code of this project.
  */
-class FullTest extends TestCase
+class FullTest extends TestBase
 {
     private array $books = [];
 
@@ -42,55 +42,8 @@ class FullTest extends TestCase
 
         $this->selectGeneral();
         $this->selectWhereInOrder();
+        $this->selectIndex();
     }
-
-    /**
-     * @throws ConnectionException
-     */
-    public function selectGeneral()
-    {
-        $posts = TestConfig::db()->select('books', 'b')
-            ->leftJoin('authors', 'a', 'b.id_author = a.id')
-            ->addFields('b')
-            ->addField('a', 'name', 'author_name')
-            ->limit(2)
-            ->execute()
-            ->fetchAll();
-
-        $expected = [
-            (object)['id' => 1, 'title' => 'Les Misérables', 'id_author' => 1, 'year' => 1862, 'author_name' => 'Victor Hugo'],
-            (object)['id' => 2, 'title' => 'The Time Machine', 'id_author' => 2, 'year' => 1895, 'author_name' => 'H.G. Wells'],
-        ];
-        $this->assertEquals($expected, $posts);
-    }
-
-    /**
-     * @depends testFull
-     * @throws ConnectionException
-     */
-    public function selectWhereInOrder()
-    {
-        $posts = TestConfig::db()->select('books', 'b')
-            ->leftJoin('authors', 'a', 'b.id_author = a.id')
-            ->addField('a', 'id')
-            ->whereIn('b.year', [1808, 1864, 1862, 1837])
-            ->limit(2)
-            ->execute()
-            ->fetchCol();
-        $this->assertEquals([1, 3], $posts);
-
-
-        $posts = TestConfig::db()->select('books', 'b')
-            ->leftJoin('authors', 'a', 'b.id_author = a.id')
-            ->addField('a', 'id')
-            ->like('a.name', '%Jules%')
-            ->orderBy('b.year', 'asc')
-            ->limit(1)
-            ->execute()
-            ->fetchField();
-        $this->assertEquals(6, $posts);
-    }
-
     /**
      */
     public function loadLibrary(string $filename): array
@@ -98,6 +51,9 @@ class FullTest extends TestCase
         $books = [];
         $fp    = fopen($filename, mode: 'r');
         while ($row = fgetcsv($fp)) {
+            if (empty(array_filter($row))) {
+                continue;
+            }
             if (!isset($header)) {
                 $header = $row;
                 continue;
@@ -166,4 +122,80 @@ class FullTest extends TestCase
             ->fetch();
     }
 
+
+    //----------------------
+
+
+    /**
+     * @throws ConnectionException
+     */
+    public function selectGeneral()
+    {
+        $posts = TestConfig::db()->select('books', 'b')
+            ->leftJoin('authors', 'a', 'b.id_author = a.id')
+            ->addFields('b')
+            ->addField('a', 'name', 'author_name')
+            ->limit(2)
+            ->execute()
+            ->fetchAll();
+
+        $expected = [
+            (object)['id' => 1, 'title' => 'Les Misérables', 'id_author' => 1, 'year' => 1862, 'author_name' => 'Victor Hugo'],
+            (object)['id' => 2, 'title' => 'The Time Machine', 'id_author' => 2, 'year' => 1895, 'author_name' => 'H.G. Wells'],
+        ];
+        $this->assertEquals($expected, $posts);
+    }
+
+    /**
+     * @depends testFull
+     * @throws ConnectionException
+     */
+    public function selectWhereInOrder()
+    {
+        $books = TestConfig::db()->select('books', 'b')
+            ->leftJoin('authors', 'a', 'b.id_author = a.id')
+            ->addField('a', 'id')
+            ->whereIn('b.year', [1808, 1864, 1862, 1837])
+            ->limit(2)
+            ->execute()
+            ->fetchCol();
+        $this->assertEquals([1, 3], $books);
+
+
+        $books = TestConfig::db()->select('books', 'b')
+            ->leftJoin('authors', 'a', 'b.id_author = a.id')
+            ->addField('a', 'id')
+            ->like('a.name', '%Jules%')
+            ->orderBy('b.year', 'asc')
+            ->limit(1)
+            ->execute()
+            ->fetchField();
+        $this->assertEquals(6, $books);
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    private function selectIndex()
+    {
+        $books = TestConfig::db()->select('books', 'b')
+            ->addExpression('substring(b.title,1,1)', 'firstLetter')
+            ->addCount('b.id', 'num')
+            ->groupBy('firstLetter')
+            ->orderBy('firstLetter', 'asc')
+            ->execute()
+            ->fetchAssocKey('firstLetter','num');
+
+        $this->assertIdentical([
+            '1' => 1,
+            'F' => 1,
+            'G' => 2,
+            'H' => 1,
+            'L' => 2,
+            'O' => 1,
+            'P' => 1,
+            'T' => 3,
+            'V' => 1,
+        ], $books);
+    }
 }
