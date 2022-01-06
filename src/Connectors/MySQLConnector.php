@@ -10,9 +10,11 @@ class MySQLConnector extends Connector
     private $user;
     private $password;
 
-    public function __construct(string $dbname, string $user, string $password, string $host = 'localhost')
+    public function __construct(string $dbname, string $user, string $password, ?string $host = null, ?int $port = null)
     {
-        $this->dsn = 'mysql:dbname=' . $dbname . ';host=' . $host;
+        $this->dsn = 'mysql:dbname=' . $dbname
+            . ($host ? ';host=' . $host : '')
+            . ($port ? ';port=' . $port : '');
         $this->user = $user;
         $this->password = $password;
     }

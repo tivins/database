@@ -188,13 +188,15 @@ class FullTest extends TestBase
 
         $this->assertIdentical([
             '1' => 1,
-            'F' => 1,
+            'D' => 1,
+            'F' => 3,
             'G' => 2,
-            'H' => 1,
-            'L' => 2,
+            'H' => 2,
+            'L' => 3,
+            'M' => 2,
             'O' => 1,
             'P' => 1,
-            'T' => 3,
+            'T' => 5,
             'V' => 1,
         ], $books);
     }

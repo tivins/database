@@ -194,6 +194,16 @@ $db->insert('book')
     ])
     ->execute();
 ```
+or,
+```php
+$db->insert('book')
+    ->multipleFields([
+          ['Book title', 'John Doe'],
+          ['Another book title', 'John Doe Jr'],
+        ], 
+        ['title', 'author'])
+    ->execute();
+```
 
 `execute()` will insert two rows in the table `book`.
 <details>

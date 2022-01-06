@@ -14,6 +14,9 @@
       "name": "Tivins"
     }
   ],
+  "support": {
+    "issues": "https://github.com/tivins/database/issues"
+  },
   "autoload": {
     "psr-4": {
       "Tivins\\Database\\": "src/"
