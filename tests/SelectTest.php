@@ -194,6 +194,32 @@ class SelectTest extends TestBase
     }
 
     /**
+     * @throws ConnectionException | DatabaseException
+     */
+    public function testConditionExpression2()
+    {
+        $db = TestConfig::db();
+
+        $query = $db->select('table', 't')
+            ->condition(
+                $db->or()
+                    ->condition('a', 2)
+                    ->condition('b', 6)
+            )
+            ->condition(
+                $db->or()
+                    ->condition('p', 7)
+                    ->condition('j', 8)
+            )
+            ->addFields('t')
+            ;
+        $this->checkQuery($query,
+            'select t.* from t_table `t` where (a = ? or b = ?)and(p = ? or j = ?)',
+            [2,6,7,8]);
+    }
+
+
+    /**
      * @throws ConnectionException
      * @throws DatabaseException
      */

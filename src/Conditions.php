@@ -158,9 +158,9 @@ class Conditions
 
         $qData = new QueryData($query, $parameters);
 
-        foreach ($this->nestedConditions as $nestedConditions) {
+        foreach ($this->nestedConditions as $k => $nestedConditions) {
             $queryData = $nestedConditions->buildConditions();
-            $qData->merge($queryData, empty($query) ? '' : $this->mode);
+            $qData->merge($queryData, $k == 0 ? '' : $this->mode);
         }
 
         return $qData;
