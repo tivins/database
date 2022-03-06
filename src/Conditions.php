@@ -13,6 +13,8 @@ class Conditions
     public const MODE_AND = 'and';
     public const MODE_OR  = 'or';
 
+    protected static array $operators = ['<','<=','=','!=','>=','>','<=>','<>'];
+
     protected array $conditions = [];
 
     /**
@@ -27,6 +29,22 @@ class Conditions
     public function __construct(string $mode = self::MODE_AND)
     {
         $this->mode = $mode;
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getOperators(): array
+    {
+        return self::$operators;
+    }
+
+    /**
+     * @param string[] $operators
+     */
+    public static function setOperators(array $operators): void
+    {
+        self::$operators = $operators;
     }
 
     /**
@@ -91,7 +109,7 @@ class Conditions
         if ($operator == 'like') {
             return $this->like($field, $value);
         }
-        if (!in_array($operator, ['<','<=','=','!=','>=','>','<=>','<>'])) {
+        if (!in_array($operator, self::$operators)) {
             throw new ConditionException('Invalid operator');
         }
         $this->pushCondition("$field $operator ?", [$value]);
