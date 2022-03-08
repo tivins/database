@@ -11,6 +11,15 @@ class CreateTest extends TestBase
     /**
      * @throws ConnectionException | DatabaseException
      */
+    public function testConnectorType()
+    {
+        $db = TestConfig::db();
+        self::assertEquals('mysql', $db->getConnectorType());
+    }
+
+    /**
+     * @throws ConnectionException | DatabaseException
+     */
     public function testCreate()
     {
         $db = TestConfig::db();

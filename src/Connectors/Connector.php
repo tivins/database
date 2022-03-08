@@ -13,6 +13,8 @@ use Tivins\Database\Exceptions\ConnectionException;
  */
 abstract class Connector
 {
+    protected string $connectorType = 'none';
+
     /**
      * Try the connector to get a valid PDO object.
      *
@@ -33,4 +35,9 @@ abstract class Connector
      * Return a valid PDO object.
      */
     abstract public function createHandler(): PDO;
+
+    public function getType(): string
+    {
+        return $this->connectorType;
+    }
 }

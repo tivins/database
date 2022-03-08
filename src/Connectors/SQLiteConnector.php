@@ -6,6 +6,8 @@ use PDO;
 
 class SQLiteConnector extends Connector
 {
+    protected string $connectorType = 'sqlite';
+
     private $dsn;
 
     public function __construct(string $filename)

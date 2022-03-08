@@ -6,6 +6,8 @@ use PDO;
 
 class MySQLConnector extends Connector
 {
+    protected string $connectorType = 'mysql';
+
     private $dsn;
     private $user;
     private $password;

@@ -39,7 +39,7 @@ class Database
      * Initialize a new Database object from the given connector.
      * @throws ConnectionException
      */
-    public function __construct(Connector $connector)
+    public function __construct(private Connector $connector)
     {
         $this->handler = $connector->connect();
         $this->configureAttributes();
@@ -285,5 +285,10 @@ class Database
     public function sqliteCreateFunction($function_name, $callback, $num_args = -1, $flags = 0): bool
     {
         return $this->handler->sqliteCreateFunction($function_name, $callback, $num_args, $flags);
+    }
+
+    public function getConnectorType(): string
+    {
+        return $this->connector->getType();
     }
 }
