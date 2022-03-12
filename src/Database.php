@@ -206,12 +206,12 @@ class Database
     /**
      * @throws DatabaseException
      */
-    public function dropAllTables(): self {
+    public function dropAllTables(): array {
         $tables = $this->query('show tables')->fetchCol();
         foreach ($tables as $table) {
             $this->dropTable($table);
         }
-        return $this;
+        return $tables;
     }
 
     public function prefixTableName(string $tableName): string
