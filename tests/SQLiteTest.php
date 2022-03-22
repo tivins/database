@@ -7,7 +7,7 @@ use Tivins\Database\Database;
 use Tivins\Database\Connectors\SQLiteConnector;
 use Tivins\Database\Exceptions\ConnectionException;
 
-class SQLiteTest extends TestCase
+class SQLiteTest //extends TestCase
 {
     /**
      * @throws ConnectionException
