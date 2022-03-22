@@ -13,7 +13,7 @@ class Conditions
     public const MODE_AND = 'and';
     public const MODE_OR  = 'or';
 
-    protected static array $operators = ['<','<=','=','!=','>=','>','<=>','<>'];
+    protected static array $operators = ['<','<=','=','!=','>=','>','<=>','<>', 'between'];
 
     protected array $conditions = [];
 
@@ -54,6 +54,12 @@ class Conditions
     {
         $stmt = "$field in (" . implode(',', array_fill(0, count($values), '?')) . ")";
         $this->pushCondition($stmt, $values);
+        return $this;
+    }
+
+    public function between(string $field, $low, $high): self
+    {
+        $this->pushCondition("$field between ? and ?", [$low, $high]);
         return $this;
     }
 

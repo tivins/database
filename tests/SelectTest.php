@@ -196,6 +196,31 @@ class SelectTest extends TestBase
     /**
      * @throws ConnectionException | DatabaseException
      */
+    public function testConditionBetween()
+    {
+        $db = TestConfig::db();
+        $query = $db->select('table', 't')
+            ->addFields('t')
+            ->between('x', 2, 6)
+            ;
+        $this->checkQuery($query,
+            'select t.* from t_table `t` where x between ? and ?',
+            [2,6]);
+
+        $query = $db->select('table', 't')
+            ->addFields('t')
+            ->between('x', 2, 6)
+            ->between('y', -2, 2)
+            ;
+        $this->checkQuery($query,
+            'select t.* from t_table `t` where x between ? and ? and y between ? and ?',
+            [2,6,-2,2]);
+}
+
+    /**
+     * @throws ConnectionException | DatabaseException
+     * @throws ConditionException
+     */
     public function testConditionExpression2()
     {
         $db = TestConfig::db();
