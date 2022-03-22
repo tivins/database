@@ -36,8 +36,15 @@ abstract class Connector
      */
     abstract public function createHandler(): PDO;
 
+    /**
+     * Get the 'show tables' query for the selector.
+     * @return string
+     */
+    abstract public function getShowTablesQuery(): string;
+
     public function getType(): string
     {
         return $this->connectorType;
     }
+
 }

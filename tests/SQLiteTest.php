@@ -12,11 +12,30 @@ class SQLiteTest extends TestCase
     /**
      * @throws ConnectionException
      */
-    public function testConnection()
+    private function getDatabase(): Database
     {
         $connector = new SQLiteConnector('sqlite.db');
-        new Database($connector);
+        return new Database($connector);
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function testConnection()
+    {
+        $this->getDatabase();
         $this->assertFileExists('sqlite.db');
         unlink('sqlite.db');
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function testShowTable()
+    {
+        $db = $this->getDatabase();
+        $db->query('create table test(id)');
+        $tables = $db->getTables();
+        self::assertEquals(['test'], $tables);
     }
 }

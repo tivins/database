@@ -21,8 +21,20 @@ class MySQLConnector extends Connector
         $this->password = $password;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function createHandler(): PDO
     {
         return new PDO($this->dsn, $this->user, $this->password);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShowTablesQuery(): string
+    {
+        return 'show tables';
+    }
+
 }

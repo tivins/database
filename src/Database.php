@@ -203,11 +203,17 @@ class Database
         return $this;
     }
 
+    public function getTables(): array
+    {
+        return $this->query($this->connector->getShowTablesQuery())->fetchCol();
+    }
+
     /**
      * @throws DatabaseException
      */
-    public function dropAllTables(): array {
-        $tables = $this->query('show tables')->fetchCol();
+    public function dropAllTables(): array
+    {
+        $tables = $this->getTables();
         foreach ($tables as $table) {
             $this->dropTable($table);
         }
