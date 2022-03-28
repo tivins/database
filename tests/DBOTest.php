@@ -14,7 +14,7 @@ class World extends DBObject
     protected int $wid = 0;
     #[DBOAccess(DBOAccess::UNIQ)]
     protected string $name = '';
-    #[DBOAccess()]
+    #[DBOAccess]
     protected string $info = '';
 
     /**

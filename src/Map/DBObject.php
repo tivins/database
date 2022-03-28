@@ -30,7 +30,7 @@ class DBObject implements \JsonSerializable
         return $obj;
     }
 
-    public function load()
+    public function load(): static
     {
         $obj = $this->db->select($this->getConst('TABLE'), 'o')
             ->addFields('o')
@@ -42,9 +42,10 @@ class DBObject implements \JsonSerializable
                 $this->$k = $obj->$k;
             }
         }
+        return $this;
     }
 
-    private function getConst($name)
+    private function getConst(string $name): string
     {
         return constant("static::{$name}");
     }
@@ -75,7 +76,7 @@ class DBObject implements \JsonSerializable
         return [$pkey, $uniques, $fields];
     }
 
-    public function save()
+    public function save(): static
     {
         [$pkey, $uniques, $fields] = $this->getProperties();
 
@@ -94,6 +95,7 @@ class DBObject implements \JsonSerializable
                 ->condition($pkey, $this->{$pkey})
                 ->execute();
         }
+        return $this;
     }
 
     /**
