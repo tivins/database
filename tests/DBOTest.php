@@ -8,7 +8,6 @@ use Tivins\Database\Tests\TestConfig;
 
 class World extends DBObject
 {
-    public const TABLE = 'world';
 
     #[DBOAccess(DBOAccess::PKEY)]
     protected int $wid = 0;
@@ -71,6 +70,10 @@ class World extends DBObject
         return $this;
     }
 
+    public function getTableName(): string
+    {
+        return 'world';
+    }
 }
 
 class DBOTest extends TestBase

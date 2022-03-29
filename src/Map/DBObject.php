@@ -2,18 +2,15 @@
 
 namespace Tivins\Database\Map;
 
-use Attribute;
-use phpDocumentor\Reflection\Types\Static_;
 use Tivins\Database\Database;
 
-class DBObject implements \JsonSerializable
+abstract class DBObject implements \JsonSerializable
 {
-
-    public const TABLE = '';
-
     public function __construct(protected Database $db)
     {
     }
+
+    abstract public function getTableName(): string;
 
     public function loadById(int $id): static
     {
@@ -32,7 +29,7 @@ class DBObject implements \JsonSerializable
 
     public function load(): static
     {
-        $obj = $this->db->select($this->getConst('TABLE'), 'o')
+        $obj = $this->db->select($this->getTableName(), 'o')
             ->addFields('o')
             ->execute()
             ->fetch();
@@ -45,10 +42,6 @@ class DBObject implements \JsonSerializable
         return $this;
     }
 
-    private function getConst(string $name): string
-    {
-        return constant("static::{$name}");
-    }
 
     public function getProperties(): array
     {
@@ -82,7 +75,7 @@ class DBObject implements \JsonSerializable
 
         if (!$this->{$pkey}) {
 
-            $this->db->insert($this->getConst('TABLE'))
+            $this->db->insert($this->getTableName())
                 ->fields($fields)
                 ->execute();
 
@@ -90,7 +83,7 @@ class DBObject implements \JsonSerializable
         }
         else {
 
-            $this->db->update($this->getConst('TABLE'))
+            $this->db->update($this->getTableName())
                 ->fields($fields)
                 ->condition($pkey, $this->{$pkey})
                 ->execute();
@@ -103,7 +96,7 @@ class DBObject implements \JsonSerializable
      */
     public function jsonSerialize(): mixed
     {
-        [$pkey, $uniques, $fields] = $this->getProperties();
+        [$pkey, , $fields] = $this->getProperties();
 
         return [$pkey => $this->{$pkey}] + $fields;
     }
