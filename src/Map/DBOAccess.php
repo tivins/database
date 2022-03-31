@@ -8,10 +8,15 @@ use Attribute;
 class DBOAccess
 {
     const DEFAULT = 0;
-    const PKEY = 1;
-    const UNIQ = 2;
+    const PKEY    = 1;
+    const UNIQ    = 2;
 
     public function __construct(public int $mode = self::DEFAULT)
     {
+    }
+
+    public function isUnique(): bool
+    {
+        return $this->mode == self::UNIQ;
     }
 }
