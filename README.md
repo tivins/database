@@ -95,7 +95,7 @@ $db = new Database (new MySQLConnector(
 ```
 
 
-Then create an instance of Database, with the created connector:
+Then create an instance of Database, with the created connector :
 ```php
 $database = new Database($connector);
 ```
@@ -311,7 +311,7 @@ Some examples :
 ->condition('field', 2);      // eg: where field = 2
 ->condition('field', 2, '>'); // eg: where field > 2
 ->condition('field', 2, '<'); // eg: where field < 2
-->whereIn('field', [2,6,8]);  // eg: where field int (2,6,8)
+->whereIn('field', [2,6,8]);  // eg: where field in (2,6,8)
 ->like('field', '%search%');  // eg: where field like '%search%'
 ->isNull('field');            // eg: where field is null
 ->isNotNull('field');         // eg: where field is not null
@@ -331,7 +331,7 @@ $db->select('book', 'b')
     )
     ->execute();
 ```
-And below is equivalent:
+And below is equivalent :
 
 ```php
 $db->select('book', 'b')
@@ -386,7 +386,7 @@ There are three main exception thrown by Database.
 
 All of these exceptions has an explicit message (from PDO, essentially).
 
-Usage short example:
+Usage short example :
 
 ```php
 try {
@@ -435,7 +435,7 @@ flush privileges;
 </phpunit>
 ```
 
-Then, run unit tests
+Then, run unit tests :
 
 ```bash
 vendor/bin/phpunit tests/
@@ -450,7 +450,7 @@ vendor/bin/phpunit tests/ --coverage-clover build/logs/clover.xml
 
 ---
 
-Stats :
+Stats :
 
 [![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
 
