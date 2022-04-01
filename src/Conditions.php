@@ -92,6 +92,18 @@ class Conditions
         return $this;
     }
 
+    public function isEqual(string $field, $value): self
+    {
+        $this->pushCondition("$field = ?", [$value]);
+        return $this;
+    }
+
+    public function isDifferent(string $field, $value): self
+    {
+        $this->pushCondition("$field != ?", [$value]);
+        return $this;
+    }
+
     /**
      * Add a specific condition to the current query.
      *

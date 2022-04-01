@@ -11,12 +11,20 @@ class DBOAccess
     const PKEY    = 1;
     const UNIQ    = 2;
 
-    public function __construct(public int $mode = self::DEFAULT)
+    public function __construct(
+        public int $mode = self::DEFAULT,
+        public ?int $length = null //
+    )
     {
+    }
+
+    public function isPrimary(): bool
+    {
+        return $this->mode === self::PKEY;
     }
 
     public function isUnique(): bool
     {
-        return $this->mode == self::UNIQ;
+        return $this->mode === self::UNIQ;
     }
 }

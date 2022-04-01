@@ -2,9 +2,13 @@
 
 namespace Tivins\Database\Map;
 
+use JsonSerializable;
+use ReflectionClass;
+use Tivins\Database\Conditions;
 use Tivins\Database\Database;
+use Tivins\Database\Exceptions\ConditionException;
 
-abstract class DBObject implements \JsonSerializable
+abstract class DBObject implements JsonSerializable
 {
     public function __construct(protected Database $db)
     {
@@ -14,9 +18,9 @@ abstract class DBObject implements \JsonSerializable
 
     public function loadById(int $id): static
     {
-        [$pkey, $uniques, $fields] = $this->getProperties();
-        $this->{$pkey} = $id;
-        $this->load();
+        [$pkey] = $this->getProperties();
+        //$this->{$pkey} = $id;
+        $this->load((new Conditions())->isEqual($pkey, $id));
         return $this;
     }
 
@@ -27,14 +31,16 @@ abstract class DBObject implements \JsonSerializable
         return $obj;
     }
 
-    public function load(): static
+    public function load(Conditions $conditions): static
     {
         $obj = $this->db->select($this->getTableName(), 'o')
             ->addFields('o')
+            ->condition($conditions)
             ->execute()
             ->fetch();
         if ($obj) {
             [$pkey, , $fields] = $this->getProperties();
+            $this->{$pkey} = $obj->{$pkey};
             foreach ($fields as $k => $v) {
                 $this->$k = $obj->$k;
             }
@@ -42,19 +48,22 @@ abstract class DBObject implements \JsonSerializable
         return $this;
     }
 
-
+    /**
+     * @return array
+     * @todo use cache
+     */
     public function getProperties(): array
     {
         $pkey    = '';
         $uniques = [];
         $fields  = [];
 
-        $ref   = new \ReflectionClass($this);
+        $ref   = new ReflectionClass($this);
         $props = $ref->getProperties();
         foreach ($props as $prop) {
             $attrs = $prop->getAttributes(DBOAccess::class);
             if (!empty($attrs)) {
-                $access = $attrs[0]->newInstance();// var_dump($attrs[0]->getName());
+                $access = $attrs[0]->newInstance();
                 if ($access->mode & DBOAccess::PKEY) {
                     $pkey = $prop->getName();
                 }
@@ -69,9 +78,12 @@ abstract class DBObject implements \JsonSerializable
         return [$pkey, $uniques, $fields];
     }
 
+    /**
+     * @throws ConditionException
+     */
     public function save(): static
     {
-        [$pkey, $uniques, $fields] = $this->getProperties();
+        [$pkey, , $fields] = $this->getProperties();
 
         if (!$this->{$pkey}) {
 
@@ -97,7 +109,6 @@ abstract class DBObject implements \JsonSerializable
     public function jsonSerialize(): mixed
     {
         [$pkey, , $fields] = $this->getProperties();
-
         return [$pkey => $this->{$pkey}] + $fields;
     }
 }

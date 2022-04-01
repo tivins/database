@@ -94,21 +94,28 @@ class DBOTest extends TestBase
             ->execute();
 
         $world = new World($db);
-        $world->setName("Test");
+        $world->setName("Test1");
+        $world->save();
+
+        $world = new World($db);
+        $world->setName('Test2');
         $world->save();
 
         $worlds = $db->select('world', 'w')->addFields('w')->execute()->fetchAll();
-        self::assertEquals('[{"wid":1,"name":"Test","info":""}]', json_encode($worlds));
+        self::assertEquals('[{"wid":1,"name":"Test1","info":""},{"wid":2,"name":"Test2","info":""}]', json_encode($worlds));
 
-        $world->setName('Test-changed');
+        $world->setName('Test2-changed');
         $world->setInfo("Hello world");
         $world->save();
 
         $worlds = $db->select('world', 'w')->addFields('w')->execute()->fetchAll();
-        self::assertEquals('[{"wid":1,"name":"Test-changed","info":"Hello world"}]', json_encode($worlds));
+        self::assertEquals('[{"wid":1,"name":"Test1","info":""},{"wid":2,"name":"Test2-changed","info":"Hello world"}]', json_encode($worlds));
         
         $world = World::getInstance($db, 1);
-        self::assertEquals('{"wid":1,"name":"Test-changed","info":"Hello world"}', json_encode($world));
+        self::assertEquals('{"wid":1,"name":"Test1","info":""}', json_encode($world));
+
+        $world = World::getInstance($db, 2);
+        self::assertEquals('{"wid":2,"name":"Test2-changed","info":"Hello world"}', json_encode($world));
 
     }
 }
