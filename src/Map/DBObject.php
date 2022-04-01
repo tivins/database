@@ -7,7 +7,6 @@ use ReflectionClass;
 use stdClass;
 use Tivins\Database\Conditions;
 use Tivins\Database\Database;
-use Tivins\Database\Exceptions\ConditionException;
 
 abstract class DBObject implements JsonSerializable
 {
@@ -17,6 +16,8 @@ abstract class DBObject implements JsonSerializable
 
     abstract public function getTableName(): string;
 
+    /**
+     */
     public function loadById(int $id): static
     {
         [$pkey] = $this->getProperties();
@@ -24,6 +25,9 @@ abstract class DBObject implements JsonSerializable
         return $this;
     }
 
+    /**
+     *
+     */
     public static function getInstance(Database $db, int $id): static
     {
         $obj = new static($db);
@@ -42,13 +46,13 @@ abstract class DBObject implements JsonSerializable
     }
 
     /**
-     * @throws ConditionException
+     *
      */
     public function load(Conditions $conditions): static
     {
         $obj = $this->db->select($this->getTableName(), 'o')
             ->addFields('o')
-            ->condition($conditions)
+            ->nest($conditions)
             ->execute()
             ->fetch();
         if ($obj) {
@@ -88,7 +92,7 @@ abstract class DBObject implements JsonSerializable
     }
 
     /**
-     * @throws ConditionException
+     *
      */
     public function save(): static
     {
@@ -106,7 +110,7 @@ abstract class DBObject implements JsonSerializable
 
             $this->db->update($this->getTableName())
                 ->fields($fields)
-                ->condition($pkey, $this->{$pkey})
+                ->isEqual($pkey, $this->{$pkey})
                 ->execute();
         }
         return $this;

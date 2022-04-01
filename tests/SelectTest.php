@@ -11,12 +11,13 @@ class SelectTest extends TestBase
      */
     public function testSelect()
     {
-        $db = TestConfig::db();
+        $db    = TestConfig::db();
         $query = $db->select('test', 't')
             ->addFields('t');
         $this->checkQuery($query,
             'select t.* from t_test `t`',
-            []);
+            []
+        );
     }
 
     /**
@@ -24,12 +25,13 @@ class SelectTest extends TestBase
      */
     public function testSelectFieldWithoutAlias()
     {
-        $db = TestConfig::db();
+        $db    = TestConfig::db();
         $query = $db->select('test', 't')
             ->addField('t', 'id');
         $this->checkQuery($query,
             'select t.`id` from t_test `t`',
-            []);
+            []
+        );
     }
 
     /**
@@ -37,12 +39,13 @@ class SelectTest extends TestBase
      */
     public function testSelectFieldAlias()
     {
-        $db = TestConfig::db();
+        $db    = TestConfig::db();
         $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id');
         $this->checkQuery($query,
             'select t.`id` as t_id from t_test `t`',
-            []);
+            []
+        );
     }
 
     /**
@@ -54,28 +57,28 @@ class SelectTest extends TestBase
 
         $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id')
-            ->leftJoin('other', 'o', 'o.oid = t.id')
-            ;
+            ->leftJoin('other', 'o', 'o.oid = t.id');
         $this->checkQuery($query,
             'select t.`id` as t_id from t_test `t` left join `t_other` `o` on o.oid = t.id',
-            []);
+            []
+        );
 
         $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id')
-            ->innerJoin('other', 'o', 'o.oid = t.id')
-        ;
+            ->innerJoin('other', 'o', 'o.oid = t.id');
         $this->checkQuery($query,
             'select t.`id` as t_id from t_test `t` inner join `t_other` `o` on o.oid = t.id',
-            []);
+            []
+        );
 
 
         $query = $db->select('test', 't')
             ->addField('t', 'id', 't_id')
-            ->rightJoin('other', 'o', 'o.oid = t.id')
-        ;
+            ->rightJoin('other', 'o', 'o.oid = t.id');
         $this->checkQuery($query,
             'select t.`id` as t_id from t_test `t` right join `t_other` `o` on o.oid = t.id',
-            []);
+            []
+        );
     }
 
     /**
@@ -87,11 +90,11 @@ class SelectTest extends TestBase
 
         $query = $db->select('test', 't')
             ->addFields('t')
-            ->groupBy('t.value')
-        ;
+            ->groupBy('t.value');
         $this->checkQuery($query,
             'select t.* from t_test `t` group by t.value',
-            []);
+            []
+        );
     }
 
     /**
@@ -99,16 +102,16 @@ class SelectTest extends TestBase
      */
     public function testNull()
     {
-        $db = TestConfig::db();
+        $db    = TestConfig::db();
         $query = $db
             ->select('test', 't')
             ->addFields('t')
             ->isNull('t.field')
-            ->isNotNull('t.another_field')
-            ;
+            ->isNotNull('t.another_field');
         $this->checkQuery($query,
             'select t.* from t_test `t` where t.field is null and t.another_field is not null',
-            []);
+            []
+        );
     }
 
     /**
@@ -120,12 +123,12 @@ class SelectTest extends TestBase
 
         $query = $db->select('geometries', 'g')
             ->addExpression('ST_Simplify(g.geom, 1024)', 'geom')
-            ->having($db->and()->isNotNull('geom'))
-            ;
+            ->having($db->and()->isNotNull('geom'));
 
         $this->checkQuery($query,
             'select ST_Simplify(g.geom, 1024) as geom from t_geometries `g` having geom is not null',
-            []);
+            []
+        );
 
     }
 
@@ -135,7 +138,7 @@ class SelectTest extends TestBase
     public function testLimits()
     {
         $db = TestConfig::db();
-        
+
         $db->truncateTable('users');
         foreach (range(0, 19) as $index) {
             $db->insert('users')
@@ -159,12 +162,12 @@ class SelectTest extends TestBase
         $this->assertEquals('user0', reset($results)->name);
 
 
-        $query = $db->select('users', 'u')
+        $query     = $db->select('users', 'u')
             ->addFields('u')
             ->limitFrom(5, 5)
             ->orderBy('u.uid', 'asc');
         $statement = $query->execute();
-        $results = $statement->fetchAll();
+        $results   = $statement->fetchAll();
         $this->assertCount(5, $results);
         $this->assertEquals(5, $statement->rowCount());
         $this->assertEquals('user5', reset($results)->name);
@@ -198,24 +201,24 @@ class SelectTest extends TestBase
      */
     public function testConditionBetween()
     {
-        $db = TestConfig::db();
+        $db    = TestConfig::db();
         $query = $db->select('table', 't')
             ->addFields('t')
-            ->between('x', 2, 6)
-            ;
+            ->between('x', 2, 6);
         $this->checkQuery($query,
             'select t.* from t_table `t` where x between ? and ?',
-            [2,6]);
+            [2, 6]
+        );
 
         $query = $db->select('table', 't')
             ->addFields('t')
             ->between('x', 2, 6)
-            ->between('y', -2, 2)
-            ;
+            ->between('y', -2, 2);
         $this->checkQuery($query,
             'select t.* from t_table `t` where x between ? and ? and y between ? and ?',
-            [2,6,-2,2]);
-}
+            [2, 6, -2, 2]
+        );
+    }
 
     /**
      * @throws ConnectionException | DatabaseException
@@ -228,19 +231,19 @@ class SelectTest extends TestBase
         $query = $db->select('table', 't')
             ->condition(
                 $db->or()
-                    ->condition('a', 2)
-                    ->condition('b', 6)
+                    ->isEqual('a', 2)
+                    ->isEqual('b', 6)
             )
             ->condition(
                 $db->or()
-                    ->condition('p', 7)
-                    ->condition('j', 8)
+                    ->isEqual('p', 7)
+                    ->isEqual('j', 8)
             )
-            ->addFields('t')
-            ;
+            ->addFields('t');
         $this->checkQuery($query,
             'select t.* from t_table `t` where (a = ? or b = ?)and(p = ? or j = ?)',
-            [2,6,7,8]);
+            [2, 6, 7, 8]
+        );
     }
 
 
@@ -263,7 +266,7 @@ class SelectTest extends TestBase
             ->limit(3)
             ->execute()
             ->fetchCol();
-        $this->assertEquals(['user0','user1','user2'], $out);
+        $this->assertEquals(['user0', 'user1', 'user2'], $out);
     }
 
     /**
@@ -276,14 +279,20 @@ class SelectTest extends TestBase
         $query = $db->select('users', 'u')
             ->condition(
                 $db->or()
+                    // like
                     ->like('u.name', 'user%')
                     ->condition('u.name', '%user', 'like')
-                    ->whereIn('u.uid', [2,4,6])
-                    ->condition('u.state', [0,1], 'in')
+                    // in
+                    ->whereIn('u.uid', [2, 4, 6])
+                    ->condition('u.state', [0, 1], 'in')
             )
-            ->addFields('u',['uid']);
+            ->addFields('u', ['uid']);
 
-        $this->checkQuery($query, 'select u.`uid` from t_users `u` where (u.name like ? or u.name like ? or u.uid in (?,?,?) or u.state in (?,?))', ['user%','%user',2,4,6,0,1]);
+        $this->checkQuery(
+            $query,
+            'select u.`uid` from t_users `u` where (u.name like ? or u.name like ? or u.uid in (?,?,?) or u.state in (?,?))',
+            ['user%', '%user', 2, 4, 6, 0, 1]
+        );
         $query->execute();
     }
 

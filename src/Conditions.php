@@ -104,6 +104,12 @@ class Conditions
         return $this;
     }
 
+    public function nest(Conditions $field): static
+    {
+        $this->nestedConditions[] = $field;
+        return $this;
+    }
+
     /**
      * Add a specific condition to the current query.
      *

@@ -4,6 +4,7 @@
 
 * Add `Conditions::isEqual()` and `Conditions::isDifferent()` shortcuts.
 * Add [`DBObject::map()`](src/Map/DBObject.php).
+* Add `Conditions::nest()`.
 
 ### 2022-03-29
 
