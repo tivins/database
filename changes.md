@@ -1,5 +1,10 @@
 # Changes
 
+### 2022-04-01
+
+* Add `Conditions::isEqual()` and `Conditions::isDifferent()` shortcuts.
+* Add [`DBObject::map()`](src/Map/DBObject.php).
+
 ### 2022-03-29
 
 * `DBObject` is now an abstract class.

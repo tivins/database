@@ -4,6 +4,7 @@ namespace Tivins\Database\Map;
 
 use JsonSerializable;
 use ReflectionClass;
+use stdClass;
 use Tivins\Database\Conditions;
 use Tivins\Database\Database;
 use Tivins\Database\Exceptions\ConditionException;
@@ -19,7 +20,6 @@ abstract class DBObject implements JsonSerializable
     public function loadById(int $id): static
     {
         [$pkey] = $this->getProperties();
-        //$this->{$pkey} = $id;
         $this->load((new Conditions())->isEqual($pkey, $id));
         return $this;
     }
@@ -31,6 +31,19 @@ abstract class DBObject implements JsonSerializable
         return $obj;
     }
 
+    public function map(stdClass $obj): static
+    {
+        [$pkey, , $fields] = $this->getProperties();
+        $this->{$pkey} = $obj->{$pkey};
+        foreach ($fields as $k => $v) {
+            $this->$k = $obj->$k;
+        }
+        return $this;
+    }
+
+    /**
+     * @throws ConditionException
+     */
     public function load(Conditions $conditions): static
     {
         $obj = $this->db->select($this->getTableName(), 'o')
@@ -39,11 +52,7 @@ abstract class DBObject implements JsonSerializable
             ->execute()
             ->fetch();
         if ($obj) {
-            [$pkey, , $fields] = $this->getProperties();
-            $this->{$pkey} = $obj->{$pkey};
-            foreach ($fields as $k => $v) {
-                $this->$k = $obj->$k;
-            }
+            $this->map($obj);
         }
         return $this;
     }
