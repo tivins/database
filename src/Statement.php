@@ -22,6 +22,11 @@ class Statement
         return $this->statement->fetchAll();
     }
 
+    public function fetchAllObjects(string $class): array
+    {
+        return $this->statement->fetchAll(PDO::FETCH_CLASS, $class);
+    }
+
     /**
      * @param string $key
      * @param string|null $value The name of the column for the value of returned object.

@@ -5,6 +5,8 @@
 * Add `Conditions::isEqual()` and `Conditions::isDifferent()` shortcuts.
 * Add [`DBObject::map()`](src/Map/DBObject.php).
 * Add `Conditions::nest()`.
+* DBObjects are now linked to the static class [`DBOManager`](src/Map/DBOManager.php).
+* `DBObject::__constructor()` doesn't now require a `Database` instance. 
 
 ### 2022-03-29
 

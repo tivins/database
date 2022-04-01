@@ -4,7 +4,9 @@ namespace Tivins\Database\Tests;
 use Tivins\Database\Exceptions\ConnectionException;
 use Tivins\Database\Map\DBOAccess;
 use Tivins\Database\Map\DBObject;
+use Tivins\Database\Map\DBOManager;
 use Tivins\Database\Tests\TestConfig;
+use function PHPUnit\Framework\assertTrue;
 
 class World extends DBObject
 {
@@ -84,6 +86,7 @@ class DBOTest extends TestBase
     public function testCreate()
     {
         $db    = TestConfig::db();
+        DBOManager::setDatabase($db);
 
         $db->dropTable('world')
             ->create('world')
@@ -111,11 +114,17 @@ class DBOTest extends TestBase
         $worlds = $db->select('world', 'w')->addFields('w')->execute()->fetchAll();
         self::assertEquals('[{"wid":1,"name":"Test1","info":""},{"wid":2,"name":"Test2-changed","info":"Hello world"}]', json_encode($worlds));
         
-        $world = World::getInstance($db, 1);
+        $world = World::getInstance(1);
         self::assertEquals('{"wid":1,"name":"Test1","info":""}', json_encode($world));
 
-        $world = World::getInstance($db, 2);
+        $world = World::getInstance(2);
         self::assertEquals('{"wid":2,"name":"Test2-changed","info":"Hello world"}', json_encode($world));
 
+        $worlds = World::loadCollection($db->select('world', 'w')->addFields('w')->execute());
+        self::assertEquals(
+            '[{"wid":1,"name":"Test1","info":""},{"wid":2,"name":"Test2-changed","info":"Hello world"}]',
+            json_encode($worlds)
+            );
+        assertTrue($worlds[0] instanceof World);
     }
 }

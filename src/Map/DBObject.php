@@ -6,11 +6,11 @@ use JsonSerializable;
 use ReflectionClass;
 use stdClass;
 use Tivins\Database\Conditions;
-use Tivins\Database\Database;
+use Tivins\Database\Statement;
 
 abstract class DBObject implements JsonSerializable
 {
-    public function __construct(protected Database $db)
+    public function __construct()
     {
     }
 
@@ -28,9 +28,9 @@ abstract class DBObject implements JsonSerializable
     /**
      *
      */
-    public static function getInstance(Database $db, int $id): static
+    public static function getInstance(int $id): static
     {
-        $obj = new static($db);
+        $obj = new static();
         $obj->loadById($id);
         return $obj;
     }
@@ -50,7 +50,7 @@ abstract class DBObject implements JsonSerializable
      */
     public function load(Conditions $conditions): static
     {
-        $obj = $this->db->select($this->getTableName(), 'o')
+        $obj = DBOManager::db()->select($this->getTableName(), 'o')
             ->addFields('o')
             ->nest($conditions)
             ->execute()
@@ -100,20 +100,29 @@ abstract class DBObject implements JsonSerializable
 
         if (!$this->{$pkey}) {
 
-            $this->db->insert($this->getTableName())
+            DBOManager::db()->insert($this->getTableName())
                 ->fields($fields)
                 ->execute();
 
-            $this->{$pkey} = $this->db->lastId();
+            $this->{$pkey} = DBOManager::db()->lastId();
         }
         else {
 
-            $this->db->update($this->getTableName())
+            DBOManager::db()->update($this->getTableName())
                 ->fields($fields)
                 ->isEqual($pkey, $this->{$pkey})
                 ->execute();
         }
         return $this;
+    }
+
+    /**
+     * @return static[]
+     */
+    public static function loadCollection(Statement $statement): array
+    {
+        return $statement->fetchAllObjects(static::class);
+        // return array_map(fn($obj): static => (new static())->map($obj), $data);
     }
 
     /**
