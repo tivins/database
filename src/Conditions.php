@@ -184,7 +184,7 @@ class Conditions
 
         foreach ($this->nestedConditions as $k => $nestedConditions) {
             $queryData = $nestedConditions->buildConditions();
-            $qData->merge($queryData, $k == 0 ? '' : $this->mode);
+            $qData->merge($queryData, $k == 0 ? '' : " $this->mode ");
         }
 
         return $qData;

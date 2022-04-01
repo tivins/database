@@ -120,7 +120,11 @@ class DBOTest extends TestBase
         $world = World::getInstance(2);
         self::assertEquals('{"wid":2,"name":"Test2-changed","info":"Hello world"}', json_encode($world));
 
-        $worlds = World::loadCollection($db->select('world', 'w')->addFields('w')->execute());
+        $worlds = World::loadCollection(
+            $db->select('world', 'w')
+                ->addFields('w')
+                ->execute()
+        );
         self::assertEquals(
             '[{"wid":1,"name":"Test1","info":""},{"wid":2,"name":"Test2-changed","info":"Hello world"}]',
             json_encode($worlds)

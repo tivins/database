@@ -122,7 +122,6 @@ abstract class DBObject implements JsonSerializable
     public static function loadCollection(Statement $statement): array
     {
         return $statement->fetchAllObjects(static::class);
-        // return array_map(fn($obj): static => (new static())->map($obj), $data);
     }
 
     /**

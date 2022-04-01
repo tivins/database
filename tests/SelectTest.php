@@ -222,30 +222,54 @@ class SelectTest extends TestBase
 
     /**
      * @throws ConnectionException | DatabaseException
-     * @throws ConditionException
      */
     public function testConditionExpression2()
     {
         $db = TestConfig::db();
 
         $query = $db->select('table', 't')
-            ->condition(
+            ->nest(
                 $db->or()
                     ->isEqual('a', 2)
                     ->isEqual('b', 6)
             )
-            ->condition(
+            ->nest(
                 $db->or()
                     ->isEqual('p', 7)
                     ->isEqual('j', 8)
             )
             ->addFields('t');
         $this->checkQuery($query,
-            'select t.* from t_table `t` where (a = ? or b = ?)and(p = ? or j = ?)',
+            'select t.* from t_table `t` where (a = ? or b = ?) and (p = ? or j = ?)',
             [2, 6, 7, 8]
         );
     }
 
+    public function testNested()
+    {
+        $db = TestConfig::db();
+
+        $conditions = $db->and();
+
+        $conditions->nest(
+            $db->or()
+                ->isEqual('a', 2)
+                ->isEqual('b', 3)
+        );
+        $conditions->nest(
+            $db->and()
+                ->isDifferent('c', 4)
+        );
+
+
+        $query = $db->select('table', 't')
+            ->addFields('t')
+            ->nest($conditions);
+        $this->checkQuery($query,
+            'select t.* from t_table `t` where (a = ? or b = ?) and c != ?',
+            [2, 3, 4]
+        );
+    }
 
     /**
      * @throws ConnectionException
