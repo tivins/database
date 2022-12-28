@@ -6,12 +6,11 @@ use PDO;
 
 class SQLiteConnector extends Connector
 {
-    protected string $connectorType = 'sqlite';
-
     private $dsn;
 
     public function __construct(string $filename)
     {
+        $this->connectorType = ConnectorType::MYSQL;
         $this->dsn = 'sqlite:' . $filename;
     }
 

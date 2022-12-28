@@ -5,6 +5,7 @@ namespace Tivins\Database;
 use PDO;
 use PDOException;
 use Tivins\Database\Connectors\Connector;
+use Tivins\Database\Connectors\ConnectorType;
 use Tivins\Database\Exceptions\ConditionException;
 use Tivins\Database\Exceptions\ConnectionException;
 use Tivins\Database\Exceptions\DatabaseException;
@@ -29,17 +30,13 @@ class Database
      */
     private $failureCallback = null;
 
-
-    /**
-     *
-     */
     private PDO $handler;
 
     /**
      * Initialize a new Database object from the given connector.
      * @throws ConnectionException
      */
-    public function __construct(private Connector $connector)
+    public function __construct(private readonly Connector $connector)
     {
         $this->handler = $connector->connect();
         $this->configureAttributes();
@@ -276,7 +273,7 @@ class Database
      * Alias of PDO::beginTransaction()
      * @throws PDOException
      */
-    public function transaction()
+    public function transaction(): void
     {
         $this->handler->beginTransaction();
     }
@@ -285,7 +282,7 @@ class Database
      * Alias of PDO::rollback()
      * @throws PDOException
      */
-    public function rollback()
+    public function rollback(): void
     {
         $this->handler->rollBack();
     }
@@ -294,17 +291,20 @@ class Database
      * Alias of PDO::commit()
      * @throws PDOException
      */
-    public function commit()
+    public function commit(): void
     {
         $this->handler->commit();
     }
 
+    /**
+     * Registers a User Defined Function for use in SQL statements.
+     */
     public function sqliteCreateFunction($function_name, $callback, $num_args = -1, $flags = 0): bool
     {
         return $this->handler->sqliteCreateFunction($function_name, $callback, $num_args, $flags);
     }
 
-    public function getConnectorType(): string
+    public function getConnectorType(): ConnectorType
     {
         return $this->connector->getType();
     }

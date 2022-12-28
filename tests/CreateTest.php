@@ -3,6 +3,7 @@
 namespace Tivins\Database\Tests;
 
 use Tivins\Database\Exceptions\{ ConnectionException, DatabaseException };
+use Tivins\Database\Connectors\ConnectorType;
 use Tivins\Database\Tests\data\Fruits;
 
 
@@ -14,7 +15,7 @@ class CreateTest extends TestBase
     public function testConnectorType()
     {
         $db = TestConfig::db();
-        self::assertEquals('mysql', $db->getConnectorType());
+        self::assertEquals(ConnectorType::MYSQL, $db->getConnectorType());
     }
 
     /**

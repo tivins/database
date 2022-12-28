@@ -13,7 +13,7 @@ use Tivins\Database\Exceptions\ConnectionException;
  */
 abstract class Connector
 {
-    protected string $connectorType = 'none';
+    protected ConnectorType $connectorType = ConnectorType::NONE;
 
     /**
      * Try the connector to get a valid PDO object.
@@ -42,7 +42,7 @@ abstract class Connector
      */
     abstract public function getShowTablesQuery(): string;
 
-    public function getType(): string
+    public function getType(): ConnectorType
     {
         return $this->connectorType;
     }

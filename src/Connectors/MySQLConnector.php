@@ -6,14 +6,13 @@ use PDO;
 
 class MySQLConnector extends Connector
 {
-    protected string $connectorType = 'mysql';
-
     private $dsn;
     private $user;
     private $password;
 
     public function __construct(string $dbname, string $user, string $password, ?string $host = null, ?int $port = null)
     {
+        $this->connectorType = ConnectorType::MYSQL;
         $this->dsn = 'mysql:dbname=' . $dbname
             . ($host ? ';host=' . $host : '')
             . ($port ? ';port=' . $port : '');
