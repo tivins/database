@@ -189,7 +189,7 @@ class SelectQuery extends Query
             $having = $queryData->getPrefixed(' having ');
             $args = array_merge($args, $queryData->parameters);
         }
-        $sql  = trim("select $what from $from$joins$condSql$group$order$limits$having");
+        $sql  = trim("select $what from $from$joins$condSql$group$having$order$limits");
         return new QueryData($sql, $args);
     }
 }
