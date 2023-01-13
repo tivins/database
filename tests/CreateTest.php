@@ -37,6 +37,7 @@ class CreateTest extends TestBase
             ->addPointer('reference_id')
             ->addIndex(['null_val']);
 
+
         $currentEngine = $query->getEngine();
         $this->assertEquals('InnoDB', $currentEngine);
         $this->checkQuery($query,
@@ -58,6 +59,10 @@ class CreateTest extends TestBase
 
         $query = $db->create('test')->setEngine('memory');
         $this->checkQuery($query, 'create table if not exists `t_test` () engine=memory', []);
+
+
+        $query = $db->create('test2')->addFloat('field', 1.2);
+        $this->checkQuery($query, 'create table if not exists `t_test2` (`field` float not null default 1.2) engine=InnoDB', []);
     }
 
     /**

@@ -108,6 +108,17 @@ class CreateQuery extends Query
         return $this;
     }
 
+    public function addFloat(string $name, ?float $default, bool $nullable = false): self
+    {
+        $this->fields[] = [
+            'type' => 'float',
+            'attr' => trim(($nullable || is_null($default) ? '' : 'not null')
+                . ' default ' . (is_null($default) ? 'null' : $default)),
+            'name' => $name,
+        ];
+        return $this;
+    }
+
     /**
      * Adds an unsigned integer field, with 0 as default value and is not nullable.
      *
