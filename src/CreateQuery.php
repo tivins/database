@@ -95,12 +95,13 @@ class CreateQuery extends Query
      * @param int|null $default The default value. If `null` is given, the $nullable will automatically set to `true`.
      * @param bool $unsigned Does the integer unsigned or not ?
      * @param bool $nullable Can column contain null value or not ?
+     * @param string $size 'tiny','small','medium', '' or 'big'.
      * @return $this The current object.
      */
-    public function addInteger(string $name, ?int $default, bool $unsigned = false, bool $nullable = false): self
+    public function addInteger(string $name, ?int $default, bool $unsigned = false, bool $nullable = false, string $size = ''): self
     {
         $this->fields[] = [
-            'type' => 'int' . ($unsigned ? ' unsigned' : ''),
+            'type' => $size . 'int' . ($unsigned ? ' unsigned' : ''),
             'attr' => trim(($nullable || is_null($default) ? '' : 'not null')
                     . ' default ' . (is_null($default) ? 'null' : $default)),
             'name' => $name,
