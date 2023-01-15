@@ -291,6 +291,24 @@ $query = $db->create('sample')
     ->execute();
 ```
 
+Field types :
+
+* Integers
+
+  ```php
+  $query->addPointer('id_user'); // Shortcut to Not-null Unsigned Integer
+  ```
+
+* UnitEnum or BackedEnum
+  ```php
+  Enum Fruits { case Apple; case Banana; }
+  $query->addEnum('fruits', Fruits::cases());
+  ```
+* Standard Enum
+  ```php
+  $query->addStdEnum('fruits', ['apple','banana'], 'apple');
+  ```
+
 ## Expressions
 
 You can use `SelectQuery::addExpression()` to add an expression to the selected fields.

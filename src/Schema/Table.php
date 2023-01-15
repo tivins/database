@@ -4,45 +4,106 @@ namespace Tivins\Database\Schema;
 
 class Table
 {
-    /**
-     * @var string
-     */
-    private string $name = '';
-
+    private readonly string $name;
+    public string $class;
+    public string $comment;
+    public string $pk = '';
+    public string $map_id = '';
+    private string $exchange = '';
     /**
      * @var Field[]
      */
-    private array $fields = [];
+    public array $fields = [];
+    public array $indexes = [];
 
-    /**
-     * @var array
-     */
-    private array $indexes = [];
-
-    public function __construct(string $name)
+    public function __construct(string $name, string $class, string $comment = '')
     {
-        $this->name = $name;
+        $this->name    = $name;
+        $this->class   = $class;
+        $this->comment = $comment;
     }
 
+    public function getPKName(): string
+    {
+        return $this->pk;
+    }
 
-    // --- generated getters/setters ---
+    public function getMapId(): string
+    {
+        return $this->map_id;
+    }
 
-
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return Table
-     */
-    public function setName(string $name): Table
+    public function getClass(): string
     {
-        $this->name = $name;
+        return $this->class;
+    }
+
+    public function set_class(string $class): Table
+    {
+        $this->class = $class;
+        return $this;
+    }
+
+    public function get_comment(): string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(string $comment): Table
+    {
+        $this->comment = $comment;
+        return $this;
+    }
+
+    public function getExchange(): string
+    {
+        return $this->exchange;
+    }
+
+    public function setExchange(string $structName): Table
+    {
+        $this->exchange = $structName;
+        return $this;
+    }
+
+    public function setMapId(string $map_id): Table
+    {
+        $this->map_id = $map_id;
+        return $this;
+    }
+
+    public function linkFieldTable(string $name, Table $table): static
+    {
+        $this->fields[$name]->fk = [
+            'table' => $table->name,
+            'pk'    => $table->pk,
+            'obj'   => $table,
+        ];
+        return $this;
+    }
+
+    public function addFields(Field ...$fields): static
+    {
+        foreach ($fields as $field) {
+            $this->fields[$field->name] = $field;
+        }
+        return $this;
+    }
+
+    public function setPrimaryKey(Field $field): static
+    {
+        $this->pk = $field->name;
+        return $this;
+    }
+
+    public function addIndex(string $name, array $array): static
+    {
+        $this->indexes[$name] = $array;
         return $this;
     }
 
@@ -54,31 +115,15 @@ class Table
         return $this->fields;
     }
 
-    /**
-     * @param Field[] $fields
-     * @return Table
-     */
-    public function setFields(array $fields): Table
+    public static function makeLinking(string $name, string $class, Table $t1, Table $t2): static
     {
-        $this->fields = $fields;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getIndexes(): array
-    {
-        return $this->indexes;
-    }
-
-    /**
-     * @param array $indexes
-     * @return Table
-     */
-    public function setIndexes(array $indexes): Table
-    {
-        $this->indexes = $indexes;
-        return $this;
+        $pk      = Field::newSerial($t1->pk . '_' . $t2->pk);
+        $left    = Field::newForeign($t1->pk, $t1);
+        $right   = Field::newForeign($t2->pk, $t2);
+        $created = Field::newTimestamp('created', 'the creation timestamp');
+        $deleted = Field::newTimestamp('deleted', 'the deletion timestamp')->setDefault(0);
+        return (new static($name, $class))
+            ->addFields($pk, $left, $right, $created, $deleted)
+            ->setPrimaryKey($pk);
     }
 }
