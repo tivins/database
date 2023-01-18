@@ -7,7 +7,7 @@ use Tivins\Database\Database;
 use Tivins\Database\Connectors\SQLiteConnector;
 use Tivins\Database\Exceptions\ConnectionException;
 
-class SQLiteTest //extends TestCase
+class SQLiteTest extends TestCase
 {
     /**
      * @throws ConnectionException
@@ -21,7 +21,7 @@ class SQLiteTest //extends TestCase
     /**
      * @throws ConnectionException
      */
-    public function testConnection()
+    public function testConnection(): void
     {
         $this->getDatabase();
         $this->assertFileExists('sqlite.db');
@@ -31,11 +31,25 @@ class SQLiteTest //extends TestCase
     /**
      * @throws ConnectionException
      */
-    public function testShowTable()
+    public function testShowTable(): void
     {
         $db = $this->getDatabase();
+        $db->dropTable('test');
         $db->query('create table test(id)');
         $tables = $db->getTables();
         self::assertEquals(['test'], $tables);
+
+        $db->sqliteCreateFunction('addOne', function($a) {
+            return $a + 1;
+        }, 1);
+
+        $db->insert('test')->fields(['id'=>1])->execute();
+
+        $idPlusOne = $db->select('test', 't')
+            ->addExpression('addOne(t.id)', 'id_1')
+            ->condition('t.id', 1)
+            ->execute()
+            ->fetchField();
+        assert(2, $idPlusOne);
     }
 }

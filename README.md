@@ -28,7 +28,7 @@ See also [composer.json](/composer.json)
 
 * using composer
   ```sh
-  composer require tivins/database:1.0-alpha.2
+  composer require tivins/database
   ```
 
 ## Quick example
@@ -463,7 +463,7 @@ To include a coverage test, use :
 
 ```bash
 mkdir -p build/logs
-vendor/bin/phpunit tests/ --coverage-clover build/logs/clover.xml
+vendor/bin/phpunit tests/ --coverage-clover cover.xml
 ```
 
 ---

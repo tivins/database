@@ -1,3 +1,6 @@
+# IDEs
+.idea/
+
 # Composer
 vendor/
 
@@ -5,11 +8,9 @@ vendor/
 phpunit.xml
 .phpunit.cache/
 
-# Coverage
-build/
+# tests
+/sqlite.db
 
 # Doxygen
 docs/
 
-# IDE
-.idea/

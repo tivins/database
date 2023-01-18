@@ -168,10 +168,9 @@ class Database
      *
      * @throws DatabaseException|ConditionException
      * @example
-     *
-     * ```php
-     * $db_user = $db->fetchRow('users', 'uid', $userId);
-     * ```
+     *      ```php
+     *      $db_user = $db->fetchRow('users', 'uid', $userId);
+     *      ```
      */
     public function fetchRow(string $tableName, string $column, $value): ?object
     {
