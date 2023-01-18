@@ -4,6 +4,7 @@ namespace Tivins\Database\Tests;
 
 use Tivins\Database\{Database, Connectors\MySQLConnector};
 use Tivins\Database\Exceptions\{ConnectionException, DatabaseException};
+use function PHPUnit\Framework\assertEquals;
 
 /**
  * Static class used to get the database object during tests.
@@ -41,7 +42,10 @@ class TestConfig
      */
     public static function initializeTables(): void
     {
-        self::$db->dropTable('users');
+        try {
+            self::$db->dropTable('users');
+        } catch(DatabaseException $ex) {
+        }
 
         self::$db->create('users')
             ->addAutoIncrement('uid', true)

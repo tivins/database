@@ -23,4 +23,15 @@
             <directory suffix=".php">src</directory>
         </include>
     </coverage>
+
+    <!-- @see README.md (§ Unit tests) -->
+    <!--
+    <php>
+        <env name="DB_NAME" value=""/>
+        <env name="DB_USER" value=""/>
+        <env name="DB_PASS" value=""/>
+        <env name="DB_HOST" value="localhost"/>
+        <env name="XDEBUG_MODE" value="coverage"/>
+    </php>
+    -->
 </phpunit>

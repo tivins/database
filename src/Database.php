@@ -193,9 +193,9 @@ class Database
     /**
      * @throws DatabaseException
      */
-    public function dropTable(string $tableName): self
+    public function dropTable(string $tableName, bool $prefix = true): self
     {
-        $tableName = $this->prefixTableName($tableName);
+        $tableName = $prefix ? $this->prefixTableName($tableName) : $tableName;
         $this->query("drop table if exists `$tableName`");
         return $this;
     }
@@ -212,7 +212,7 @@ class Database
     {
         $tables = $this->getTables();
         foreach ($tables as $table) {
-            $this->dropTable($table);
+            $this->dropTable($table, prefix: false);
         }
         return $tables;
     }

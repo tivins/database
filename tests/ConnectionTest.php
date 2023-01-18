@@ -3,14 +3,15 @@
 namespace Tivins\Database\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Tivins\Database\Connectors\ConnectorType;
 use Tivins\Database\Connectors\MySQLConnector;
 use Tivins\Database\Database;
 use Tivins\Database\Exceptions\ConnectionException;
+use function PHPUnit\Framework\assertEquals;
 
 class ConnectionTest extends TestCase
 {
     /**
-     * @throws ConnectionException
      */
     public function testFail()
     {
@@ -24,4 +25,14 @@ class ConnectionTest extends TestCase
             )
         );
     }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function testConnector()
+    {
+        $db = TestConfig::db();
+        $this->assertEquals(ConnectorType::MYSQL, $db->getConnectorType());
+    }
+
 }

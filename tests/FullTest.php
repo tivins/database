@@ -3,6 +3,7 @@
 namespace Tivins\Database\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Tivins\Database\Conditions;
 use Tivins\Database\Exceptions\ConditionException;
 use Tivins\Database\Exceptions\ConnectionException;
 
@@ -44,8 +45,17 @@ class FullTest extends TestBase
         $this->selectWhereInOrder();
         $this->selectIndex();
     }
-    /**
-     */
+
+    public function testOperators()
+    {
+        $db = TestConfig::db();
+        $operators = Conditions::getOperators();
+        self::assertContains('=', $operators);
+        Conditions::setOperators([]);
+        self::assertEmpty(Conditions::getOperators());
+        Conditions::setOperators($operators);
+    }
+
     public function loadLibrary(string $filename): array
     {
         $books = [];
