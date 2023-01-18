@@ -36,6 +36,7 @@ class SQLiteTest extends TestCase
         $db = $this->getDatabase();
         $db->dropTable('test');
         $db->query('create table test(id)');
+
         $tables = $db->getTables();
         self::assertEquals(['test'], $tables);
 

@@ -24,6 +24,6 @@ class SQLiteConnector extends Connector
      */
     public function getShowTablesQuery(): string
     {
-        return 'SELECT name FROM sqlite_schema WHERE type =\'table\' AND name NOT LIKE \'sqlite_%\'';
+        return 'SELECT name FROM sqlite_master WHERE type =\'table\' AND name NOT LIKE \'sqlite_%\'';
     }
 }
