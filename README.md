@@ -58,9 +58,11 @@ $posts = $db->select('books', 'b')
     * [Select](#select-query)
     * [Insert](#insert-query)
     * [Update](#update-query)
-    * [Merge](#merge-query)
     * [Create](#create-query)
     * [Delete](#delete-query)
+    * Extended
+      * [SelectInsert](#select-insert-query) 
+      * [Merge](#merge-query)
   * Conditions and expressions
     * [Nested conditions](#nested-conditions)
     * [Expressions](#expressions)
@@ -308,6 +310,33 @@ Field types :
   ```php
   $query->addStdEnum('fruits', ['apple','banana'], 'apple');
   ```
+
+### Select-Insert Query
+
+Perform a select, then an insert if not found.
+
+```php
+$qry = $db->selectInsert('users')->matching(['name' => 'test', 'state' => 1]);
+$qry->fetch()->id; // 1
+$qry->getProcessedOperation(); // MergeOperation::INSERT
+
+$qry = $db->selectInsert('users')->matching(['name' => 'test', 'state' => 1]);
+$qry->fetch()->id; // 1
+$qry->getProcessedOperation(); // MergeOperation::SELECT
+```
+
+By default, array given in `matching()` are used to insert the new record.
+
+You can define the fields for the insert query:
+
+```php
+$matches = ['email' => 'user@example.com'];
+$obj = $db->selectInsert('users')
+    ->matching($matches)
+    ->fields($matches + ['name' =>  'user', 'created' => time()])
+    ->fetch();
+```
+
 
 ## Expressions
 

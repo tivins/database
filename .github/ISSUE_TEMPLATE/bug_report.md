@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help us improve.
 title: ''
 labels: ''
 assignees: ''
@@ -18,7 +18,7 @@ A clear and concise description of what you expected to happen.
 
 **Environement (please complete the following information):**
  - PHP version: [e.g. 5.7, 7.4, 8.1]
- - Version of Database [e.g. commit number]
+ - Version of Database [e.g. commit hash]
 
 **Additional context**
 Add any other context about the problem here.

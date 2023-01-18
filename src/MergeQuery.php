@@ -5,7 +5,7 @@ namespace Tivins\Database;
 use Tivins\Database\Exceptions\{ConditionException, DatabaseException};
 
 /**
- *
+ * Create an insert/update merged query.
  */
 class MergeQuery extends UpdateQuery
 {

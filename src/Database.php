@@ -107,16 +107,26 @@ class Database
     }
 
     /**
+     * Creates a select query for $tableName.
+     */
+    public function select(string $tableName, string $alias): SelectQuery
+    {
+        return new SelectQuery($this, $this->prefixTableName($tableName), $alias);
+    }
+    /**
+     * Creates a MergeQuery for $tableName.
+     */
+    public function selectInsert(string $tableName): SelectInsertQuery
+    {
+        return new SelectInsertQuery($this, $tableName);
+    }
+    /**
      * Creates a MergeQuery for $tableName.
      */
     public function merge(string $tableName): MergeQuery
     {
         return new MergeQuery($this, $tableName);
     }
-
-    /*
-        Select, Insert, Update, Merge, Delete
-    */
 
     /**
      * Creates an InsertQuery for $tableName.
@@ -179,14 +189,6 @@ class Database
             ->condition($column, $value)
             ->execute()
             ->fetch();
-    }
-
-    /**
-     * Creates a MergeQuery for $tableName.
-     */
-    public function select(string $tableName, string $alias): SelectQuery
-    {
-        return new SelectQuery($this, $this->prefixTableName($tableName), $alias);
     }
 
     /**
