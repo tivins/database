@@ -2,34 +2,28 @@
 
 A fluent, lightweight, and efficient PDO wrapper.
 
-## CI, Coverage
+---
 
-[![Build Status](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
-[![CI](https://github.com/tivins/database/actions/workflows/php.yml/badge.svg)](https://github.com/tivins/database/actions/workflows/php.yml)
+[![Travis CI](https://app.travis-ci.com/tivins/database.svg?branch=main)](https://app.travis-ci.com/tivins/database)
+[![Github CI](https://github.com/tivins/database/actions/workflows/php.yml/badge.svg)](https://github.com/tivins/database/actions/workflows/php.yml)
 [![Coverage Status](https://coveralls.io/repos/github/tivins/database/badge.svg?branch=main)](https://coveralls.io/github/tivins/database?branch=main)
 
 ## Install
 
 ### Requirements
 
-* PHP >= 8.1
-* PDO extension
+* [PHP](https://php/net) >= 8.1
+* [PDO ext](https://www.php.net/pdo) 
+* Optional development dependencies 
+  * [PHPUnit](https://github.com/sebastianbergmann/phpunit/)
 
-<details>
-  <summary>Development optional dependencies</summary>
+See [composer.json](/composer.json).
 
-* [PHPUnit](https://github.com/sebastianbergmann/phpunit/)
-* [php-coveralls](https://github.com/php-coveralls/php-coveralls)
-</details>
+### Install with composer
 
-See also [composer.json](/composer.json)
-
-### Download
-
-* using composer
-  ```sh
-  composer require tivins/database
-  ```
+```sh
+composer require tivins/database
+```
 
 ## Quick example
 
@@ -66,6 +60,7 @@ $posts = $db->select('books', 'b')
   * Conditions and expressions
     * [Nested conditions](#nested-conditions)
     * [Expressions](#expressions)
+      * [Predefined expressions](#predefined-expressions) 
       * [insert expression](#insert-expressions)
     * [Having](#having)
   * [Transactions](#transactions)
@@ -92,7 +87,8 @@ $db = new Database (new MySQLConnector(
   dbname:   'my_database', 
   user:     'my_user', 
   password: 'my_encrypted_password',
-  host :    'localhost',
+  host:     'localhost',
+  port:     3306,
 ));
 ```
 
@@ -350,6 +346,16 @@ $query = $db->select('books', 'b')
     ->execute();
 ```
 
+### Predefined expressions
+
+**Count (`addCount()`)**
+```php
+$total = $db->select('table','t')
+    ->addCount('*')
+    ->execute()
+    ->fetchField();
+```
+
 ## Conditions
 
 Some examples :
@@ -495,9 +501,16 @@ mkdir -p build/logs
 vendor/bin/phpunit tests/ --coverage-clover cover.xml
 ```
 
----
 
-Stats :
+
+
+## License 
+
+Database is released under the MIT License. See the bundled [LICENSE][license] file for details. 
+In addition, some parts of this project have their own licenses attached (either in the source files or in a `LICENSE` file next to them).
+
+
+## Stats
 
 [![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
 
@@ -512,3 +525,4 @@ Stats :
 [8]: /src/MergeQuery.php
 [9]: /src/Database.php
 [10]: /src/Connectors/Connector.php
+[license]: https://github.com/tivins/database/blob/master/LICENSE

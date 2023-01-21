@@ -18,7 +18,7 @@ class LogCallbackTest extends TestBase
         $db = TestConfig::db();
 
         $db->setLogCallback(function (string $sql, array $parameter) {
-            $this->assertEquals('select u.* from t_users `u` where u.uid = ?', $sql);
+            $this->assertEquals('select `u`.* from t_users `u` where u.uid = ?', $sql);
             $this->assertEquals([2], $parameter);
         });
 

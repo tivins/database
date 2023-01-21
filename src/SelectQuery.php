@@ -26,7 +26,7 @@ class SelectQuery extends Query
      */
     public function addField(string $tableAlias, string $field, string $fieldAlias = ''): self
     {
-        $this->fields[] = "$tableAlias.`$field`" . ($fieldAlias ? " as $fieldAlias" : '');
+        $this->fields[] = "`$tableAlias`.`$field`" . ($fieldAlias ? " as `$fieldAlias`" : '');
         return $this;
     }
 
@@ -36,10 +36,10 @@ class SelectQuery extends Query
     public function addFields(string $tableAlias, ?array $fields = null): self
     {
         if (is_null($fields)) {
-            $this->fields[] = "$tableAlias.*";
+            $this->fields[] = "`$tableAlias`.*";
         } else {
             foreach ($fields as $field) {
-                $this->fields[] = "$tableAlias.`$field`";
+                $this->fields[] = "`$tableAlias`.`$field`";
             }
         }
         return $this;
@@ -50,7 +50,7 @@ class SelectQuery extends Query
      */
     public function addExpression(string $expression, string $fieldAlias, array $values = []): self
     {
-        $this->expressions[] = ['sql' => "$expression as $fieldAlias", 'data' => $values];
+        $this->expressions[] = ['sql' => "$expression as `$fieldAlias`", 'data' => $values];
         return $this;
     }
 
@@ -71,7 +71,7 @@ class SelectQuery extends Query
      */
     public function addCount(string $field, ?string $fieldAlias = null): self
     {
-        $this->expressions[] = ['sql' => "count($field)" . ($fieldAlias ? " as $fieldAlias" : ''), 'data' => []];
+        $this->expressions[] = ['sql' => "count($field)" . ($fieldAlias ? " as `$fieldAlias`" : ''), 'data' => []];
         return $this;
     }
 

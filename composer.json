@@ -6,7 +6,11 @@
   "keywords": [
     "php",
     "database",
-    "pdo"
+    "pdo",
+    "mysql",
+    "query",
+    "sqlite",
+    "fluent"
   ],
   "license": "MIT",
   "authors": [

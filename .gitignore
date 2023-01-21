@@ -9,8 +9,9 @@ phpunit.xml
 .phpunit.cache/
 
 # tests
-/sqlite.db
+/tests/sqlite.db
 
 # Doxygen
 docs/
+
 
