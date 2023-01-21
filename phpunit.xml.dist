@@ -31,6 +31,7 @@
         <env name="DB_USER" value=""/>
         <env name="DB_PASS" value=""/>
         <env name="DB_HOST" value="localhost"/>
+        <env name="DB_PORT" value="3306"/>
         <env name="XDEBUG_MODE" value="coverage"/>
     </php>
     -->

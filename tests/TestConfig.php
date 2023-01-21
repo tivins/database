@@ -29,7 +29,7 @@ class TestConfig
                 getenv('DB_USER'),
                 getenv('DB_PASS'),
                 getenv('DB_HOST'),
-                3306
+                getenv('DB_PORT') ?: 3306,
             )
         );
         self::$db->setTablePrefix('t_');
