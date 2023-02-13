@@ -1,6 +1,8 @@
 # A PDO Wrapper
 
-A fluent, lightweight, and efficient PDO wrapper.
+A Secure, fluent, lightweight, and efficient PDO wrapper.
+
+Help to protect again SQL injections.
 
 ---
 
