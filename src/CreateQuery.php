@@ -27,10 +27,10 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function addAutoIncrement(string $name, bool $unsigned = true): self
+    public function addAutoIncrement(string $name, bool $unsigned = true, $size = ''): self
     {
         $this->fields[] = [
-            'type' => 'int',
+            'type' => $size . 'int',
             'attr' => ($unsigned ? 'unsigned' : '') . ' auto_increment',
             'name' => $name
         ];

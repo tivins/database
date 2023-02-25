@@ -19,6 +19,18 @@ class SelectTest extends TestBase
             []
         );
     }
+    public function testSelectEqual()
+    {
+        $db    = TestConfig::db();
+        $query = $db->select('test', 't')
+            ->addFields('t')
+            ->equalsTo('name', 'foo');
+
+        $this->checkQuery($query,
+            'select `t`.* from t_test `t` where name = ?',
+            ['foo']
+        );
+    }
 
     /**
      * @throws ConnectionException | DatabaseException

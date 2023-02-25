@@ -65,6 +65,9 @@ $posts = $db->select('books', 'b')
       * [Predefined expressions](#predefined-expressions) 
       * [insert expression](#insert-expressions)
     * [Having](#having)
+  * Transversal
+    * [Order by](#order-by)
+    * [Range/Limit](#rangelimit)
   * [Transactions](#transactions)
   * [Error handling](#error-handling)
 * Development
@@ -157,13 +160,6 @@ $tagsQuery = $db->select('tags', 't')
     ->orderBy('t.name', 'asc');
 ```
 
-**Range/Limit**
-```php
-$query->limit(10);          # implicit start from 0.
-$query->limitFrom(0, 10);   # explicit start from 0.
-$query->limitFrom(100, 50); # will fetch 50 rows from 100th row.
-```
-
 **Condition Expression**
 
 ```php
@@ -171,6 +167,25 @@ $db->select('books', 'b')
     ->addFields('b')
     ->conditionExpression('concat(b.id, "-", ?) = b.reference', $someValue)
     ->execute();
+```
+
+#### Range/Limit
+```php
+$query->limit(10);          # implicit start from 0.
+$query->limitFrom(0, 10);   # explicit start from 0.
+$query->limitFrom(100, 50); # will fetch 50 rows from 100th row.
+```
+
+#### Order by
+
+`orderBy()` **add** a new order statement in the query. It can be called multiple times.
+```php
+$query->orderBy('field', 'desc');
+```
+Multiple times. In the following example, the results will be sorted by `post_type`, and then, by `date`:
+```php
+$query->orderBy('post_type', 'desc')
+      ->orderBy('date', 'asc');
 ```
 
 ### Insert query
@@ -509,7 +524,8 @@ vendor/bin/phpunit tests/ --coverage-clover cover.xml
 ## License 
 
 Database is released under the MIT License. See the bundled [LICENSE][license] file for details. 
-In addition, some parts of this project have their own licenses attached (either in the source files or in a `LICENSE` file next to them).
+
+In addition, if you are using the `--dev` mode, some parts of the project have their own licenses attached (either in the source files or in a `LICENSE` file next to them).
 
 
 ## Stats

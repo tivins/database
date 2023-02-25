@@ -128,6 +128,9 @@ class Conditions
             return $this;
         }
         if ($operator == 'in') {
+            if (!is_array($value)) {
+                throw new ConditionException('Invalid value');
+            }
             return $this->whereIn($field, $value);
         }
         if ($operator == 'like') {
@@ -138,6 +141,20 @@ class Conditions
         }
         $this->pushCondition("$field $operator ?", [$value]);
         return $this;
+    }
+
+    /**
+     * Shortcut to `->condition($field,$value)` (and suppress ConditionException).
+     *
+     * @param string $field
+     * @param mixed $value
+     * @return $this
+     * @noinspection PhpDocMissingThrowsInspection
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function equalsTo(string $field, mixed $value = null): self
+    {
+        return $this->condition($field, $value);
     }
 
     /**
