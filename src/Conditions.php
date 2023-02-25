@@ -201,9 +201,13 @@ class Conditions
 
         foreach ($this->nestedConditions as $k => $nestedConditions) {
             $queryData = $nestedConditions->buildConditions();
-            $qData->merge($queryData, $k == 0 ? '' : " $this->mode ");
+            $qData->merge($queryData, " $this->mode ");
         }
 
+        // Empiric fix.
+        if (str_starts_with($qData->sql, ' and ')) {
+            $qData->sql = substr($qData->sql, 5);
+        };
         return $qData;
     }
 

@@ -331,6 +331,26 @@ class SelectTest extends TestBase
         );
         $query->execute();
     }
+    public function testNestedConditions2()
+    {
+        $db = TestConfig::db();
+
+        $query = $db->select('users', 'u')
+            ->like("u.name","john%")
+            ->condition(
+                $db->or()
+                    ->like('u.name', '%doe')
+                    ->like('u.name', '%foo')
+            )
+            ->addFields('u', ['uid']);
+
+        $this->checkQuery(
+            $query,
+            'select `u`.`uid` from t_users `u` where u.name like ? and (u.name like ? or u.name like ?)',
+            ['john%','%doe', '%foo']
+        );
+        $query->execute();
+    }
 
     /**
      * @throws ConnectionException
