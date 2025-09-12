@@ -2,6 +2,7 @@
 
 namespace Tivins\Database;
 
+use Exception;
 use PDO;
 use PDOException;
 use Tivins\Database\Connectors\Connector;
@@ -201,9 +202,12 @@ class Database
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getTables(): array
     {
-        return $this->query($this->connector->getShowTablesQuery())->fetchCol();
+        return $this->query($this->getConnectorType()->getShowTablesQuery())->fetchCol();
     }
 
     /**

@@ -19,11 +19,4 @@ class SQLiteConnector extends Connector
         return new PDO($this->dsn);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getShowTablesQuery(): string
-    {
-        return 'SELECT name FROM sqlite_master WHERE type =\'table\' AND name NOT LIKE \'sqlite_%\'';
-    }
 }

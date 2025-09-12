@@ -28,12 +28,4 @@ class MySQLConnector extends Connector
         return new PDO($this->dsn, $this->user, $this->password);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getShowTablesQuery(): string
-    {
-        return 'show tables';
-    }
-
 }
