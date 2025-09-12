@@ -46,7 +46,7 @@ class CreateQuery extends Query
         if ($this->isSQLite()) {
             $this->fields[] = [
                 'type' => 'integer',
-                'attr' => 'primary key auto_increment',
+                'attr' => 'primary key autoincrement',
                 'name' => $name
             ];
         } else {
