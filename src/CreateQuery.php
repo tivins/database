@@ -209,7 +209,8 @@ class CreateQuery extends Query
             $statements[] = $index['type'] . ' (' . implode(',', $index['columns']) . ')';
         }
         $statements = implode(', ', $statements);
-        $sql = "create table if not exists `$this->tableName` ($statements) engine=$this->engine";
+        $sql = "create table if not exists `$this->tableName` ($statements)";
+        if ($this->engine) $sql .= " engine=$this->engine";
         return new QueryData($sql);
     }
 }
