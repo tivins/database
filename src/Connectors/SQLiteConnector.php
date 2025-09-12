@@ -10,7 +10,7 @@ class SQLiteConnector extends Connector
 
     public function __construct(string $filename)
     {
-        $this->connectorType = ConnectorType::MYSQL;
+        $this->connectorType = ConnectorType::SQLITE;
         $this->dsn = 'sqlite:' . $filename;
     }
 
