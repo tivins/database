@@ -157,7 +157,7 @@ class Database
      */
     public function create(string $tableName): CreateQuery
     {
-        return new CreateQuery($this, $this->prefix . $tableName);
+        return new CreateQuery($this, $this->prefix . $tableName, $this->connector);
     }
 
     public function or(): Conditions
