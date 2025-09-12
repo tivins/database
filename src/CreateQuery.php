@@ -2,6 +2,8 @@
 
 namespace Tivins\Database;
 
+use Tivins\Database\Connectors\Connector;
+use Tivins\Database\Connectors\SQLiteConnector;
 use UnitEnum;
 use Tivins\Database\Enums\TextSize;
 
@@ -16,25 +18,45 @@ class CreateQuery extends Query
 
     private string $engine = 'InnoDB';
 
+    private Connector $connector;
+
+    public function __construct(Database $db, string $tableName, Connector $connector)
+    {
+        parent::__construct($db, $tableName);
+        $this->connector = $connector;
+    }
+
+    private function isSQLite(): bool {
+        return get_class($this->connector) == SQLiteConnector::class;
+    }
+
     public function getEngine(): string
     {
         return $this->engine;
     }
 
-    public function setEngine(string $engine): CreateQuery
+    public function setEngine(string $engine): static
     {
         $this->engine = $engine;
         return $this;
     }
 
-    public function addAutoIncrement(string $name, bool $unsigned = true, $size = ''): self
+    public function addAutoIncrement(string $name, bool $unsigned = true, $size = ''): static
     {
-        $this->fields[] = [
-            'type' => $size . 'int',
-            'attr' => ($unsigned ? 'unsigned' : '') . ' auto_increment',
-            'name' => $name
-        ];
-        $this->indexes[] = ['type' => 'primary key', 'columns' => [$name]];
+        if ($this->isSQLite()) {
+            $this->fields[] = [
+                'type' => 'integer',
+                'attr' => 'primary key auto_increment',
+                'name' => $name
+            ];
+        } else {
+            $this->fields[] = [
+                'type' => $size . 'int',
+                'attr' => ($unsigned ? 'unsigned' : '') . ' auto_increment',
+                'name' => $name
+            ];
+            $this->indexes[] = ['type' => 'primary key', 'columns' => [$name]];
+        }
         return $this;
     }
 
@@ -51,7 +73,7 @@ class CreateQuery extends Query
      * @param bool $nullable Is it nullable or not ?
      * @return $this The current object.
      */
-    public function addString(string $name, int $length = 255, bool $nullable = true): self
+    public function addString(string $name, int $length = 255, bool $nullable = true): static
     {
         $this->fields[] = [
             'type' => 'varchar(' . $length . ')',
@@ -61,7 +83,7 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function addBool(string $name, bool $default = false): self
+    public function addBool(string $name, bool $default = false): static
     {
         $this->fields[] = [
             'type' => 'tinyint(1)',
@@ -71,7 +93,7 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function addText(string $name, bool $nullable = true, TextSize $size = TextSize::Standard): self
+    public function addText(string $name, bool $nullable = true, TextSize $size = TextSize::Standard): static
     {
         $this->fields[] = [
             'type' => $size->value . 'text',
@@ -98,10 +120,10 @@ class CreateQuery extends Query
      * @param string $size 'tiny','small','medium', '' or 'big'.
      * @return $this The current object.
      */
-    public function addInteger(string $name, ?int $default, bool $unsigned = false, bool $nullable = false, string $size = ''): self
+    public function addInteger(string $name, ?int $default, bool $unsigned = false, bool $nullable = false, string $size = ''): static
     {
         $this->fields[] = [
-            'type' => $size . 'int' . ($unsigned ? ' unsigned' : ''),
+            'type' => $size . 'integer' . ($unsigned ? ' unsigned' : ''),
             'attr' => trim(($nullable || is_null($default) ? '' : 'not null')
                     . ' default ' . (is_null($default) ? 'null' : $default)),
             'name' => $name,
@@ -109,7 +131,7 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function addFloat(string $name, ?float $default, bool $nullable = false): self
+    public function addFloat(string $name, ?float $default, bool $nullable = false): static
     {
         $this->fields[] = [
             'type' => 'float',
@@ -126,7 +148,7 @@ class CreateQuery extends Query
      * @param string $name The field name.
      * @return $this The current object.
      */
-    public function addPointer(string $name): self
+    public function addPointer(string $name): static
     {
         return $this->addInteger($name, 0, unsigned: true);
     }
@@ -152,7 +174,7 @@ class CreateQuery extends Query
      *
      * @see addStdEnum()
      */
-    public function addEnum(string $name, array $cases, ?UnitEnum $default = null): self
+    public function addEnum(string $name, array $cases, ?UnitEnum $default = null): static
     {
         $values = array_map(fn(UnitEnum $enum) => json_encode($enum->value ?? $enum->name), $cases);
         $this->fields[] = [
@@ -170,14 +192,14 @@ class CreateQuery extends Query
      * @return $this The current object.
      * @see addEnum()
      */
-    public function addStdEnum(string $name, array $cases, ?string $default = null): self
+    public function addStdEnum(string $name, array $cases, ?string $default = null): static
     {
         $values = array_map('json_encode', $cases);
         $this->fields[] = ['type' => 'enum(' . implode(',', $values) . ')', 'attr' => '', 'name' => $name];
         return $this;
     }
 
-    public function addJSON(string $name, ?string $default = null, bool $nullable = true): self
+    public function addJSON(string $name, ?string $default = null, bool $nullable = true): static
     {
         $this->fields[] = [
             'type' => 'json',
@@ -187,13 +209,13 @@ class CreateQuery extends Query
         return $this;
     }
 
-    public function addUniqueKey(array $columns): self
+    public function addUniqueKey(array $columns): static
     {
         $this->indexes[] = ['type' => 'unique', 'columns' => $columns];
         return $this;
     }
 
-    public function addIndex(array $columns): self
+    public function addIndex(array $columns): static
     {
         $this->indexes[] = ['type' => 'index', 'columns' => $columns];
         return $this;
