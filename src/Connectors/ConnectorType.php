@@ -7,4 +7,5 @@ enum ConnectorType
     case NONE;
     case MYSQL;
     case SQLITE;
+    case NATIVE;
 }

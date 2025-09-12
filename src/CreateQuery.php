@@ -3,9 +3,9 @@
 namespace Tivins\Database;
 
 use Tivins\Database\Connectors\Connector;
-use Tivins\Database\Connectors\SQLiteConnector;
-use UnitEnum;
+use Tivins\Database\Connectors\ConnectorType;
 use Tivins\Database\Enums\TextSize;
+use UnitEnum;
 
 /**
  * Most of the parameters of this object are intended to be used with named-parameters.
@@ -26,8 +26,9 @@ class CreateQuery extends Query
         $this->connector = $connector;
     }
 
-    private function isSQLite(): bool {
-        return get_class($this->connector) == SQLiteConnector::class;
+    private function isSQLite(): bool
+    {
+        return $this->connector->getType() == ConnectorType::SQLITE;
     }
 
     public function getEngine(): string
@@ -125,7 +126,7 @@ class CreateQuery extends Query
         $this->fields[] = [
             'type' => $size . 'integer' . ($unsigned ? ' unsigned' : ''),
             'attr' => trim(($nullable || is_null($default) ? '' : 'not null')
-                    . ' default ' . (is_null($default) ? 'null' : $default)),
+                . ' default ' . (is_null($default) ? 'null' : $default)),
             'name' => $name,
         ];
         return $this;
@@ -181,7 +182,7 @@ class CreateQuery extends Query
             'name' => $name,
             'type' => 'enum(' . implode(',', $values) . ')',
             'attr' => '',
-            ];
+        ];
         return $this;
     }
 

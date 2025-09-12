@@ -85,6 +85,8 @@ Creating a [`Database`][9] instance requires a valid [`Connector`][10] instance.
 $connector = new MySQLConnector('dbname', 'user', 'password');
 # SQLite
 $connector = new SQLiteConnector('path/to/file');
+# Native (PDO object)
+$connector = new NativeConnector($existingPDOHandler);
 ```
 or
 ```php
