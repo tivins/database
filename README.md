@@ -1,8 +1,8 @@
 # A PDO Wrapper
 
-A Secure, fluent, lightweight, and efficient PDO wrapper.
+A secure, fluent, lightweight, and efficient PDO wrapper.
 
-Help to protect again SQL injections.
+Helps protect against SQL injections.
 
 ---
 
@@ -14,14 +14,14 @@ Help to protect again SQL injections.
 
 ### Requirements
 
-* [PHP](https://php/net) >= 8.1
-* [PDO ext](https://www.php.net/pdo) 
-* Optional development dependencies 
+* [PHP](https://php.net) >= 8.1
+* [PDO extension](https://www.php.net/pdo) 
+* Optional development dependencies: 
   * [PHPUnit](https://github.com/sebastianbergmann/phpunit/)
 
 See [composer.json](/composer.json).
 
-### Install with composer
+### Installation with Composer
 
 ```sh
 composer require tivins/database
@@ -46,32 +46,31 @@ $posts = $db->select('books', 'b')
     ->fetchAll();
 ```
 
-## Summary
+## Table of Contents
 
-* Usage 
+* [Usage](#usage)
   * [Connectors](#connectors)
-  * Queries :
+  * [Queries](#using-queries)
     * [Select](#select-query)
     * [Insert](#insert-query)
     * [Update](#update-query)
     * [Create](#create-query)
     * [Delete](#delete-query)
-    * Extended
+    * [Extended Queries](#extended-queries)
       * [SelectInsert](#select-insert-query) 
       * [Merge](#merge-query)
-  * Conditions and expressions
+  * [Conditions and Expressions](#conditions)
     * [Nested conditions](#nested-conditions)
     * [Expressions](#expressions)
       * [Predefined expressions](#predefined-expressions) 
-      * [insert expression](#insert-expressions)
+      * [Insert expressions](#insert-expressions)
     * [Having](#having)
-  * Transversal
+  * [Common Operations](#common-operations)
     * [Order by](#order-by)
     * [Range/Limit](#rangelimit)
   * [Transactions](#transactions)
   * [Error handling](#error-handling)
-* Development
-  <!-- * [Insight](#insight) --> 
+* [Development](#development)
   * [Unit tests](#unit-tests)
 
 ## Usage
@@ -81,45 +80,45 @@ $posts = $db->select('books', 'b')
 Creating a [`Database`][9] instance requires a valid [`Connector`][10] instance.
 
 ```php
-# MySQL
+// MySQL
 $connector = new MySQLConnector('dbname', 'user', 'password');
-# SQLite
+// SQLite
 $connector = new SQLiteConnector('path/to/file');
-# Native (PDO object)
+// Native (PDO object)
 $connector = new NativeConnector($existingPDOHandler);
 ```
-or
+Or
 ```php
-$db = new Database (new MySQLConnector(
-  dbname:   'my_database', 
-  user:     'my_user', 
-  password: 'my_encrypted_password',
-  host:     'localhost',
-  port:     3306,
+$db = new Database(new MySQLConnector(
+    dbname:   'my_database', 
+    user:     'my_user', 
+    password: 'my_encrypted_password',
+    host:     'localhost',
+    port:     3306,
 ));
 ```
 
 
-Then create an instance of Database, with the created connector :
+Then create a Database instance with the created connector:
 ```php
 $database = new Database($connector);
 ```
-A `ConnectionException` can be thrown when the `new Database()` attempt to connect the given Connector.
+A `ConnectionException` can be thrown when the `new Database()` constructor attempts to connect using the given Connector.
 
-## Using queries
+## Using Queries
 
-Both usages below are valid :
+Both approaches below are valid:
 
 ```php
-// from database object
+// From database object
 $query = $db->select('users', 'u');
-// from new object
+// From new object
 $query = new SelectQuery($db, 'users', 'u');
 ```
 
-### Select query
+### Select Query
 
-**Basic**
+**Basic Usage**
 ```php
 $data = $db->select('books', 'b')
     ->addFields('b')
@@ -128,9 +127,9 @@ $data = $db->select('books', 'b')
     ->fetchAll();
 ```
 
-**Join** 
+**Joins** 
 
-use as well `innerJoin`, `leftJoin`.
+You can also use `innerJoin` and `leftJoin`.
 
 ```php
 $db->select('books', 'b')
@@ -142,7 +141,7 @@ $db->select('books', 'b')
     ->fetchAll();
 ```
 
-**Expression**
+**Expressions**
 ```php
 $db->select('books', 'b')
     ->addField('b', 'title')
@@ -152,7 +151,7 @@ $db->select('books', 'b')
     ->fetchAll();
 ```
 
-**Group by**
+**Group By**
 ```php
 $tagsQuery = $db->select('tags', 't')
     ->innerJoin('book_tags', 'bt', 'bt.tag_id = t.id')
@@ -162,7 +161,7 @@ $tagsQuery = $db->select('tags', 't')
     ->orderBy('t.name', 'asc');
 ```
 
-**Condition Expression**
+**Condition Expressions**
 
 ```php
 $db->select('books', 'b')
@@ -173,24 +172,24 @@ $db->select('books', 'b')
 
 #### Range/Limit
 ```php
-$query->limit(10);          # implicit start from 0.
-$query->limitFrom(0, 10);   # explicit start from 0.
-$query->limitFrom(100, 50); # will fetch 50 rows from 100th row.
+$query->limit(10);          // implicit start from 0
+$query->limitFrom(0, 10);   // explicit start from 0
+$query->limitFrom(100, 50); // will fetch 50 rows from 100th row
 ```
 
-#### Order by
+#### Order By
 
-`orderBy()` **add** a new order statement in the query. It can be called multiple times.
+`orderBy()` **adds** a new order statement to the query. It can be called multiple times.
 ```php
 $query->orderBy('field', 'desc');
 ```
-Multiple times. In the following example, the results will be sorted by `post_type`, and then, by `date`:
+Multiple times. In the following example, the results will be sorted by `post_type`, then by `date`:
 ```php
 $query->orderBy('post_type', 'desc')
       ->orderBy('date', 'asc');
 ```
 
-### Insert query
+### Insert Query
 ```php
 $db->insert('book')
     ->fields([
@@ -200,7 +199,7 @@ $db->insert('book')
     ->execute();
 ```
 
-#### Multiples inserts
+#### Multiple inserts
 
 
 ```php
@@ -211,18 +210,17 @@ $db->insert('book')
     ])
     ->execute();
 ```
-or,
+Or,
 ```php
 $db->insert('book')
     ->multipleFields([
-          ['Book title', 'John Doe'],
-          ['Another book title', 'John Doe Jr'],
-        ], 
-        ['title', 'author'])
+        ['Book title', 'John Doe'],
+        ['Another book title', 'John Doe Jr'],
+    ], ['title', 'author'])
     ->execute();
 ```
 
-`execute()` will insert two rows in the table `book`.
+`execute()` will insert two rows into the `book` table.
 <details>
   <summary>See the build result</summary>
 
@@ -238,7 +236,7 @@ $db->insert('book')
 
 #### Insert expressions
 
-Expressions can be used inside the array given to `fields()` function.
+Expressions can be used inside the array passed to the `fields()` method.
 
 
 ```php
@@ -250,7 +248,7 @@ $db->insert('geom')
     ->execute();
 ```
 
-Execute() will insert two rows in the table `book`.
+`execute()` will insert one row into the `geom` table.
 <details>
   <summary>See the build result</summary>
 
@@ -264,9 +262,9 @@ Execute() will insert two rows in the table `book`.
   ```
 </details>
 
-InsertExpression are also allowed with a [MergeQuery](#merge-query).
+`InsertExpression` is also allowed with a [MergeQuery](#merge-query).
 
-### Update query
+### Update Query
 
 ```php
 $db->update('book')
@@ -275,7 +273,7 @@ $db->update('book')
     ->execute();
 ```
 
-### Merge query
+### Merge Query
 
 ```php
 $db->merge('book')
@@ -284,10 +282,10 @@ $db->merge('book')
     ->execute();
 ```
 
-### Delete query
+### Delete Query
 
-Perform a `delete` query on the given table.
-All methods of [`Conditions`][4] can be used on a [`DeleteQuery`][3] object.
+Performs a `DELETE` query on the given table.
+All methods from [`Conditions`][4] can be used on a [`DeleteQuery`][3] object.
 
 ```php
 $db->delete('book')
@@ -295,9 +293,9 @@ $db->delete('book')
     ->execute();
 ```
 
-### Create query
+### Create Query
 
-Perform a `create table` query on the current database.
+Performs a `CREATE TABLE` query on the current database.
 
 ```php
 $query = $db->create('sample')
@@ -308,27 +306,27 @@ $query = $db->create('sample')
     ->execute();
 ```
 
-Field types :
+Field types:
 
-* Integers
+* **Integers**
 
   ```php
   $query->addPointer('id_user'); // Shortcut to Not-null Unsigned Integer
   ```
 
-* UnitEnum or BackedEnum
+* **UnitEnum or BackedEnum**
   ```php
   Enum Fruits { case Apple; case Banana; }
   $query->addEnum('fruits', Fruits::cases());
   ```
-* Standard Enum
+* **Standard Enum**
   ```php
   $query->addStdEnum('fruits', ['apple','banana'], 'apple');
   ```
 
 ### Select-Insert Query
 
-Perform a select, then an insert if not found.
+Performs a SELECT, then an INSERT if not found.
 
 ```php
 $qry = $db->selectInsert('users')->matching(['name' => 'test', 'state' => 1]);
@@ -340,15 +338,15 @@ $qry->fetch()->id; // 1
 $qry->getProcessedOperation(); // MergeOperation::SELECT
 ```
 
-By default, array given in `matching()` are used to insert the new record.
+By default, the array given in `matching()` is used to insert the new record.
 
-You can define the fields for the insert query:
+You can define the fields for the INSERT query:
 
 ```php
 $matches = ['email' => 'user@example.com'];
 $obj = $db->selectInsert('users')
     ->matching($matches)
-    ->fields($matches + ['name' =>  'user', 'created' => time()])
+    ->fields($matches + ['name' => 'user', 'created' => time()])
     ->fetch();
 ```
 
@@ -357,7 +355,7 @@ $obj = $db->selectInsert('users')
 
 You can use `SelectQuery::addExpression()` to add an expression to the selected fields.
 
-Signature : `->addExpression(string $expression, string $alias, array $args)`.
+**Signature:** `->addExpression(string $expression, string $alias, array $args)`
 
 ```php
 $query = $db->select('books', 'b')
@@ -365,11 +363,11 @@ $query = $db->select('books', 'b')
     ->execute();
 ```
 
-### Predefined expressions
+### Predefined Expressions
 
 **Count (`addCount()`)**
 ```php
-$total = $db->select('table','t')
+$total = $db->select('table', 't')
     ->addCount('*')
     ->execute()
     ->fetchField();
@@ -377,41 +375,41 @@ $total = $db->select('table','t')
 
 ## Conditions
 
-Some examples :
+Some examples:
 
 ```php
-->condition('field', 2);      // eg: where field = 2
-->condition('field', 2, '>'); // eg: where field > 2
-->condition('field', 2, '<'); // eg: where field < 2
-->whereIn('field', [2,6,8]);  // eg: where field in (2,6,8)
-->like('field', '%search%');  // eg: where field like '%search%'
-->isNull('field');            // eg: where field is null
-->isNotNull('field');         // eg: where field is not null
+->condition('field', 2);      // e.g.: where field = 2
+->condition('field', 2, '>'); // e.g.: where field > 2
+->condition('field', 2, '<'); // e.g.: where field < 2
+->whereIn('field', [2,6,8]);  // e.g.: where field in (2,6,8)
+->like('field', '%search%');  // e.g.: where field like '%search%'
+->isNull('field');            // e.g.: where field is null
+->isNotNull('field');         // e.g.: where field is not null
 ```
 
-### Nested conditions
+### Nested Conditions
 
-Conditions are available for [`SelectQuery`][1], [`UpdateQuery`][2] and [`DeleteQuery`][3].
+Conditions are available for [`SelectQuery`][1], [`UpdateQuery`][2], and [`DeleteQuery`][3].
 
 ```php
 $db->select('book', 'b')
     ->fields('b', ['id', 'title', 'author'])
     ->condition(
         $db->or()
-        ->condition('id', 3, '>')
-        ->like('title', '%php%')
+            ->condition('id', 3, '>')
+            ->like('title', '%php%')
     )
     ->execute();
 ```
-And below is equivalent :
+The following is equivalent:
 
 ```php
 $db->select('book', 'b')
     ->fields('b', ['id', 'title', 'author'])
     ->condition(
         (new Conditions(Conditions::MODE_OR))
-        ->condition('id', 3, '>')
-        ->like('title', '%php%')
+            ->condition('id', 3, '>')
+            ->like('title', '%php%')
     )
     ->execute();
 ```
@@ -420,24 +418,23 @@ $db->select('book', 'b')
 
 ```php
 $db->select('maps_polygons', 'p')
-    // ->...
+    // ...
     ->having($db->and()->isNotNull('geom'))
-    ->execute()
-    //...
-    ;
+    ->execute();
+    // ...
 ```
 
 ## Transactions
 
 ```php
 use Tivins\Database{ Database, DatabaseException, MySQLConnector };
+
 function makeSomething(Database $db)
 {
-    $db->transaction()
+    $db->transaction();
     try {
         // do some stuff
-    }
-    catch (DatabaseException $exception) {
+    } catch (DatabaseException $exception) {
         $db->rollback();
         // log exception...
     }
@@ -446,27 +443,26 @@ function makeSomething(Database $db)
 
 ## Full Example
 
-See [/tests/FullTest.php](/tests/FullTest.php)
+See [FullTest.php](/tests/FullTest.php)
 
 ## Error handling
 
-There are three main exception thrown by Database.
+There are three main exceptions thrown by the Database class:
 
-* [ConnectionException][5], raised by the Database constructor, if a connection cannot be established.
-* [DatabaseException][7], thrown when a PDO exception is raised from the query execution.
-* [ConditionException][6], raised when a given operator is not allowed.
+* **[ConnectionException][5]** - raised by the Database constructor if a connection cannot be established
+* **[DatabaseException][7]** - thrown when a PDO exception is raised from query execution
+* **[ConditionException][6]** - raised when a given operator is not allowed
 
-All of these exceptions has an explicit message (from PDO, essentially).
+All of these exceptions have explicit messages (essentially from PDO).
 
-Usage short example :
+**Short usage example:**
 
 ```php
 try {
     $this->db = new Database($connector);
-}
-catch (ConnectionException $exception) {
+} catch (ConnectionException $exception) {
     $this->logErrorInternally($exception->getMessage());
-    $this->displayError("Cannot join the database.");
+    $this->displayError("Cannot connect to the database.");
 }
 ```
 ```php
@@ -475,25 +471,24 @@ try {
         ->fields([
             'name' => 'DuplicateName',
         ])
-        ->execute();  
-}
-catch (DatabaseException $exception) {
+        ->execute();
+} catch (DatabaseException $exception) {
     $this->logErrorInternally($exception->getMessage());
     $this->displayError("Cannot create the user.");
 }
 ```
 
-## Unit tests
+## Unit Tests
 
-Create a test database, and a grant to a user on it.
-Add a `phpunit.xml` at the root of the repository.
+Create a test database and grant permissions to a user on it.
+Add a `phpunit.xml` file at the root of the repository.
 
 ```mysql
-/* NB: This is a quick-start example. */
-create database test_db;
-create user test_user@localhost identified by 'test_passwd';
-grant all on test_db.* to test_user@localhost;
-flush privileges;
+-- This is a quick-start example
+CREATE DATABASE test_db;
+CREATE USER test_user@localhost IDENTIFIED BY 'test_passwd';
+GRANT ALL ON test_db.* TO test_user@localhost;
+FLUSH PRIVILEGES;
 ```
 
 ```xml
@@ -507,17 +502,17 @@ flush privileges;
 </phpunit>
 ```
 
-Then, run unit tests :
+Then run the unit tests:
 
 ```bash
 vendor/bin/phpunit tests/
 ```
 
-To include a coverage test, use :
+To include coverage testing, use:
 
 ```bash
 mkdir -p build/logs
-vendor/bin/phpunit tests/ --coverage-clover cover.xml
+vendor/bin/phpunit tests/ --coverage-clover build/logs/cover.xml
 ```
 
 
@@ -525,12 +520,12 @@ vendor/bin/phpunit tests/ --coverage-clover cover.xml
 
 ## License 
 
-Database is released under the MIT License. See the bundled [LICENSE][license] file for details. 
+This project is released under the MIT License. See the bundled [LICENSE][license] file for details. 
 
 In addition, if you are using the `--dev` mode, some parts of the project have their own licenses attached (either in the source files or in a `LICENSE` file next to them).
 
 
-## Stats
+## Statistics
 
 [![Download Status](https://img.shields.io/packagist/dm/tivins/database.svg)](https://packagist.org/packages/tivins/database/stats)
 
